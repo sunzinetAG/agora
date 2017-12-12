@@ -1,27 +1,35 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
 <div class="agoraLatestList">
-	<ul class="list-group">
-		<f:for each="{latestThreads}" as="latest">
-			<li class="list-group-item">
-				<div class="strong h6">
-					<f:link.action action="list" pluginName="Forum" controller="Post" arguments="{thread:latest}">
-						{latest.title}
-					</f:link.action>
-					<div class="subHeader small">
-						<label class="latestForum">
-							<f:translate key="tx_agora_domain_model_thread.list_latest.forum" />:
-							<f:link.action action="list" pluginName="Forum" controller="Forum" arguments="{forum:latest.forum}">
-								{latest.forum.title}
-							</f:link.action>
-						</label>
-						<label class="latestCreator">
-							<f:translate key="tx_agora_domain_model_thread.list_latest.username" />:
-								{latest.creator.username}
-						</label>
-						<label class="latestTime">
-						</label>
-					</div>
-				</div>
-			</li>
-		</f:for>
-	</ul>
+    <ul class="list-group">
+        <f:for each="{latestThreads}" as="latest">
+            <li class="list-group-item">
+                <div class="strong h6">
+                    <f:link.action action="list" pluginName="Forum" controller="Post" arguments="{thread:latest}">
+                        {latest.title}
+                    </f:link.action>
+                    <div class="subHeader small">
+                        <label class="latestForum">
+                            <f:translate key="tx_agora_domain_model_thread.list_latest.forum"/>
+                            :
+                            <f:link.action action="list" pluginName="Forum" controller="Forum"
+                                           arguments="{forum:latest.forum}">
+                                {latest.forum.title}
+                            </f:link.action>
+                        </label>
+                        <label class="latestCreator">
+                            <f:translate key="tx_agora_domain_model_thread.list_latest.username"/>
+                            :
+                            {latest.creator.username}
+                        </label>
+                        <label class="latestTime">
+                        </label>
+                    </div>
+                </div>
+            </li>
+        </f:for>
+    </ul>
 </div>
+</html>

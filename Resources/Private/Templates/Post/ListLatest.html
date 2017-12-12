@@ -1,32 +1,33 @@
 <div class="agoraLatestList">
-	<ul class="list-group">
-		<f:for each="{latestPosts}" as="latest">
-			<li class="list-group-item">
-				<div class="text small">
-					<f:link.action action="show" pluginName="Forum" controller="Post" arguments="{post:latest}">
-						<f:format.crop
-								maxCharacters="{settings.post.cropLatestsPosts}"
-								respectWordBoundaries="true"
-								respectHtml="false">
-							{latest.text -> f:format.raw()}
-						</f:format.crop>
-					</f:link.action>
-				</div>
-				<div class="strong h6">
-					<f:link.action action="show" pluginName="Forum" controller="Post" arguments="{post:latest}">
-						{latest.topic}
-					</f:link.action>
-					<div class="subHeader small">
-						<label class="latestCreator">
-							<f:translate key="tx_agora_domain_model_thread.list_latest.username" />:
-							{latest.creator.username}
-						</label>
-						<label class="latestTime">
+    <ul class="list-group">
+        <f:for each="{latestPosts}" as="latest">
+            <li class="list-group-item">
+                <div class="text small">
+                    <f:link.action action="show" pluginName="Forum" controller="Post" arguments="{post:latest}">
+                        <f:format.crop
+                                maxCharacters="{settings.post.cropLatestsPosts}"
+                                respectWordBoundaries="true"
+                                respectHtml="false">
+                            {latest.text -> f:format.raw()}
+                        </f:format.crop>
+                    </f:link.action>
+                </div>
+                <div class="strong h6">
+                    <f:link.action action="show" pluginName="Forum" controller="Post" arguments="{post:latest}">
+                        {latest.topic}
+                    </f:link.action>
+                    <div class="subHeader small">
+                        <label class="latestCreator">
+                            <f:translate key="tx_agora_domain_model_thread.list_latest.username"/>
+                            :
+                            {latest.creator.username}
+                        </label>
+                        <label class="latestTime">
 
-						</label>
-					</div>
-				</div>
-			</li>
-		</f:for>
-	</ul>
+                        </label>
+                    </div>
+                </div>
+            </li>
+        </f:for>
+    </ul>
 </div>

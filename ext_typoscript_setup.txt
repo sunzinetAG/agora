@@ -1,6 +1,6 @@
-config.tx_extbase{
-    persistence{
-        classes{
+config.tx_extbase {
+    persistence {
+        classes {
             AgoraTeam\Agora\Domain\Model\User {
                 mapping {
                     tableName = fe_users
@@ -20,8 +20,7 @@ config.tx_extbase{
                     }
                 }
             }
-
-    	}
+        }
     }
 }
 

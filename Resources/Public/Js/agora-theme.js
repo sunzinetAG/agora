@@ -1,13 +1,15 @@
 (function () {
-	var converter1 = Markdown.getSanitizingConverter();
+    if (document.getElementById("wmd-input")) {
+        var converter1 = Markdown.getSanitizingConverter();
 
-	converter1.hooks.chain("preBlockGamut", function (text, rbg) {
-		return text.replace(/^ {0,3}""" *\n((?:.*?\n)+?) {0,3}""" *$/gm, function (whole, inner) {
-			return "<blockquote>" + rbg(inner) + "</blockquote>\n";
-		});
-	});
+        converter1.hooks.chain("preBlockGamut", function (text, rbg) {
+            return text.replace(/^ {0,3}""" *\n((?:.*?\n)+?) {0,3}""" *$/gm, function (whole, inner) {
+                return "<blockquote>" + rbg(inner) + "</blockquote>\n";
+            });
+        });
 
-	var editor1 = new Markdown.Editor(converter1);
+        var editor1 = new Markdown.Editor(converter1);
 
-	editor1.run();
+        editor1.run();
+    }
 })();

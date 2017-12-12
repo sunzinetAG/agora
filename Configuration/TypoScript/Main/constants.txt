@@ -1,43 +1,45 @@
-
 plugin.tx_agora {
-	view {
-		# cat=plugin.tx_agora/file; type=string; label=Path to template root (FE)
-		templateRootPath = EXT:agora/Resources/Private/Templates/
-		# cat=plugin.tx_agora/file; type=string; label=Path to template partials (FE)
-		partialRootPath = EXT:agora/Resources/Private/Partials/
-		# cat=plugin.tx_agora/file; type=string; label=Path to template layouts (FE)
-		layoutRootPath = EXT:agora/Resources/Private/Layouts/
+    view {
+        # cat=plugin.tx_agora/file; type=string; label=Path to template root (FE)
+        templateRootPath = EXT:agora/Resources/Private/Templates/
+        # cat=plugin.tx_agora/file; type=string; label=Path to template partials (FE)
+        partialRootPath = EXT:agora/Resources/Private/Partials/
+        # cat=plugin.tx_agora/file; type=string; label=Path to template layouts (FE)
+        layoutRootPath = EXT:agora/Resources/Private/Layouts/
         widget {
             TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper {
                 templateRootPath = EXT:agora/Resources/Private/Templates/
             }
         }
-	}
-	email {
-		# cat=plugin.tx_agora/file; type=string; label=Path to template root (FE)
-		templateRootPath = EXT:agora/Resources/Private/Email/Templates/
-		# cat=plugin.tx_agora/file; type=string; label=Path to template partials (FE)
-		partialRootPath = EXT:agora/Resources/Private/Email/Partials/
-		# cat=plugin.tx_agora/file; type=string; label=Path to template layouts (FE)
-		layoutRootPath = EXT:agora/Resources/Private/Email/Layouts/
-	}
-	persistence {
-		# cat=plugin.tx_agora//a; type=string; label=Default storage PID
-		storagePid =
-	}
+    }
+
+    email {
+        # cat=plugin.tx_agora/file; type=string; label=Path to template root (FE)
+        templateRootPath = EXT:agora/Resources/Private/Email/Templates/
+        # cat=plugin.tx_agora/file; type=string; label=Path to template partials (FE)
+        partialRootPath = EXT:agora/Resources/Private/Email/Partials/
+        # cat=plugin.tx_agora/file; type=string; label=Path to template layouts (FE)
+        layoutRootPath = EXT:agora/Resources/Private/Email/Layouts/
+    }
+
+    persistence {
+        # cat=plugin.tx_agora//a; type=string; label=Default storage PID
+        storagePid =
+    }
 }
 
 module.tx_agora {
-	view {
-		# cat=module.tx_agora/file; type=string; label=Path to template root (BE)
-		templateRootPath = EXT:agora/Resources/Private/Backend/Templates/
-		# cat=module.tx_agora/file; type=string; label=Path to template partials (BE)
-		partialRootPath = EXT:agora/Resources/Private/Backend/Partials/
-		# cat=module.tx_agora/file; type=string; label=Path to template layouts (BE)
-		layoutRootPath = EXT:agora/Resources/Private/Backend/Layouts/
-	}
-	persistence {
-		# cat=module.tx_agora//a; type=string; label=Default storage PID
-		storagePid =
-	}
+    view {
+        # cat=module.tx_agora/file; type=string; label=Path to template root (BE)
+        templateRootPath = EXT:agora/Resources/Private/Backend/Templates/
+        # cat=module.tx_agora/file; type=string; label=Path to template partials (BE)
+        partialRootPath = EXT:agora/Resources/Private/Backend/Partials/
+        # cat=module.tx_agora/file; type=string; label=Path to template layouts (BE)
+        layoutRootPath = EXT:agora/Resources/Private/Backend/Layouts/
+    }
+
+    persistence {
+        # cat=module.tx_agora//a; type=string; label=Default storage PID
+        storagePid =
+    }
 }

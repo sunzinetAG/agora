@@ -60,7 +60,7 @@ Property details
 .. only:: html
 
 	.. contents::
-		:local:
+:local:
 		:depth: 1
 
 

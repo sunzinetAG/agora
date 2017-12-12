@@ -1,4 +1,5 @@
 <?php
+
 namespace AgoraTeam\Agora\ViewHelpers\Widget;
 
 /*                                                                        *
@@ -49,28 +50,33 @@ use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper;
  *
  * @api
  */
-class PaginateViewHelper extends AbstractWidgetViewHelper {
+class PaginateViewHelper extends AbstractWidgetViewHelper
+{
 
-	/**
-	 * @var \AgoraTeam\Agora\ViewHelpers\Widget\Controller\PaginateController
-	 * @inject
-	 */
-	protected $controller;
+    /**
+     * @var \AgoraTeam\Agora\ViewHelpers\Widget\Controller\PaginateController
+     * @inject
+     */
+    protected $controller;
 
-	/**
-	 * Render
-	 *
-	 * @param QueryResultInterface|ObjectStorage|array $objects
-	 * @param string $as
-	 * @param array $configuration
-	 *
-	 * @return string
-	 */
-	public function render($objects, $as, array $configuration = array(
-		'itemsPerPage' => 10,
-		'insertAbove' => FALSE,
-		'insertBelow' => TRUE,
-		'maximumNumberOfLinks' => 99)) {
-		return $this->initiateSubRequest();
-	}
+    /**
+     * Render
+     *
+     * @param QueryResultInterface|ObjectStorage|array $objects
+     * @param string $as
+     * @param array $configuration
+     * @return string
+     */
+    public function render(
+        $objects,
+        $as,
+        array $configuration = array(
+            'itemsPerPage' => 10,
+            'insertAbove' => false,
+            'insertBelow' => true,
+            'maximumNumberOfLinks' => 99
+        )
+    ) {
+        return $this->initiateSubRequest();
+    }
 }

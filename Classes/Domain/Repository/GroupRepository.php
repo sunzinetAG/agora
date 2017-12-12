@@ -11,6 +11,7 @@ namespace AgoraTeam\Agora\Domain\Repository;
 /**
  * The repository for Users
  */
-class GroupRepository extends Repository {
+class GroupRepository extends Repository
+{
 
 }

@@ -30,10 +30,6 @@
 										<numIndex index="0">Latest Posts</numIndex>
 										<numIndex index="1">Post->listLatest</numIndex>
 									</numIndex>
-									<numIndex index="4">
-										<numIndex index="0">Inbox</numIndex>
-										<numIndex index="1">Message->list;Message->listConversation;Message->new;Message->create</numIndex>
-									</numIndex>
 								</items>
 							</config>
 						</TCEforms>
@@ -44,30 +40,17 @@
 							<label>listView</label>
 							<displayCond>
 								<OR>
-									FIELD:switchableControllerActions:=:User->observedThreads
-								</OR>
-								<OR>
-									FIELD:switchableControllerActions:=:User->favoritePosts
+									<numIndex index="0">FIELD:switchableControllerActions:=:User->observedThreads
+									</numIndex>
+									<numIndex index="1">FIELD:switchableControllerActions:=:User->favoritePosts
+									</numIndex>
 								</OR>
 							</displayCond>
 							<config>
 								<type>input</type>
 								<eval>trim</eval>
 								<size>30</size>
-								<wizards type="array">
-									<_PADDING type="integer">2</_PADDING>
-									<link type="array">
-										<type>popup</type>
-										<title>Link</title>
-										<icon>link_popup.gif</icon>
-										<script>browse_links.php?mode=wizard&amp;act=file</script>
-										<JSopenParams>height=500,width=500,status=0,menubar=0,scrollbars=1</JSopenParams>
-										<params type="array">
-											<blindLinkOptions>file,mail,spec,folder,url</blindLinkOptions>
-											<blindLinkFields>target,title,class,params</blindLinkFields>
-										</params>
-									</link>
-								</wizards>
+								<renderType>inputLink</renderType>
 							</config>
 						</TCEforms>
 					</settings.listView>

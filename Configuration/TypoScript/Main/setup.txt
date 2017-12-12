@@ -1,94 +1,104 @@
-config.tx_extbase{
-	persistence{
-		classes{
-			AgoraTeam\Agora\Domain\Model\User {
-				mapping {
-					tableName = fe_users
-					recordType =
-				}
-			}
+config.tx_extbase {
+    persistence {
+        classes {
+            AgoraTeam\Agora\Domain\Model\User {
+                mapping {
+                    tableName = fe_users
+                    recordType =
+                }
+            }
 
-			AgoraTeam\Agora\Domain\Model\Group {
-				mapping {
-					tableName = fe_groups
-					recordType =
-				}
-			}
-
-		}
-	}
+            AgoraTeam\Agora\Domain\Model\Group {
+                mapping {
+                    tableName = fe_groups
+                    recordType =
+                }
+            }
+        }
+    }
 }
 
-
 plugin.tx_agora {
-	view {
-		templateRootPath = {$plugin.tx_agora.view.templateRootPath}
-		partialRootPath = {$plugin.tx_agora.view.partialRootPath}
-		layoutRootPath = {$plugin.tx_agora.view.layoutRootPath}
+    view {
+        templateRootPaths.10 = {$plugin.tx_agora.view.templateRootPath}
+        partialRootPaths.10 = {$plugin.tx_agora.view.partialRootPath}
+        layoutRootPaths.10 = {$plugin.tx_agora.view.layoutRootPath}
         widget {
             TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper {
                 templateRootPath = {$plugin.tx_agora.view.widget.TYPO3\CMS\Fluid\ViewHelpers\Widget\PaginateViewHelper.templateRootPath}
             }
         }
-	}
-	persistence {
-		storagePid = {$plugin.tx_agora.persistence.storagePid}
-	}
-	features {
-		# uncomment the following line to enable the new Property Mapper.
-		# rewrittenPropertyMapper = 1
-	}
+    }
+
+    persistence {
+        storagePid = {$plugin.tx_agora.persistence.storagePid}
+    }
+
+    features {
+        # uncomment the following line to enable the new Property Mapper.
+        # rewrittenPropertyMapper = 1
+    }
+
     settings {
         forum {
-            numberOfItemsInLatestView = 10
+            listPid = {$plugin.tx_agora.listPid}
+            numberOfItemsInLatestView = 5
             numberOfItemsPerPage = 10
-			dateFormat = m.d.y h:i
+            dateFormat = m.d.y h:i
         }
+
         thread {
-            numberOfItemsInLatestView = 10
+            numberOfItemsInLatestView = 5
             numberOfItemsPerPage = 10
-			dateFormat = m-d-y h:i
-			numberOfItemsInObservedThreadsWidget = 5
-            notificationsForThreadOwner = 1
+            dateFormat = m-d-y h:i
+            numberOfItemsInObservedThreadsWidget = 5
+            notificationsForThreadOwner = 0
             defaultThreadEmailAdress = email_adress@example.de
             defaultThreadEmailUserName = ThreadAdmin
         }
+
         post {
-			numberOfItemsInLatestView = 10
+            numberOfItemsInLatestView = 5
             numberOfItemsPerPage = 10
             dateFormat = m-d-y h:i
             defaultCreatorName = Anonymous
-            notificationsForPostOwner = 1
+            notificationsForPostOwner = 0
             defaultPostEmailAdress = email_aress@example.de
             defaultPostEmailUserName = PostAdmin
-			cropLatestsPosts = 100
+            cropLatestsPosts = 100
         }
-		email {
-			templateRootPath = {$plugin.tx_agora.email.templateRootPath}
-			partialRootPath = {$plugin.tx_agora.email.partialRootPath}
-			layoutRootPath = {$plugin.tx_agora.email.layoutRootPath}
-		}
+
+        email {
+            templateRootPath = {$plugin.tx_agora.email.templateRootPath}
+            partialRootPath = {$plugin.tx_agora.email.partialRootPath}
+            layoutRootPath = {$plugin.tx_agora.email.layoutRootPath}
+        }
     }
 }
 
 page {
-	includeCSSLibs {
-	}
-	includeJSLibs {
-	}
-	includeJSFooterlibs {
-	}
+    includeCSSLibs {
+
+    }
+
+    includeJSLibs {
+
+    }
+
+    includeJSFooterlibs {
+
+    }
 }
 
-
- # Module configuration
+# Module configuration
 module.tx_agora {
-	persistence {
-		storagePid = {$module.tx_agora.persistence.storagePid}
-	}
-	view {
-		templateRootPath = {$module.tx_agora.view.templateRootPath}
-		partialRootPath = {$module.tx_agora.view.partialRootPath}
-		layoutRootPath = {$module.tx_agora.view.layoutRootPath}
-	}
+    persistence {
+        storagePid = {$module.tx_agora.persistence.storagePid}
+    }
+
+    view {
+        templateRootPath = {$module.tx_agora.view.templateRootPath}
+        partialRootPath = {$module.tx_agora.view.partialRootPath}
+        layoutRootPath = {$module.tx_agora.view.layoutRootPath}
+    }
 }
