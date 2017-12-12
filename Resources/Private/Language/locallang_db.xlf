@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-02-21T19:59:58Z" product-name="agora">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-02-21T19:59:58Z"
+		  product-name="agora">
 		<header/>
 		<body>
 			<trans-unit id="tx_agora_domain_model_forum">
@@ -13,8 +14,8 @@
 				<source>Description</source>
 			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_forum.sub_forums">
-                <source>subForums</source>
-            </trans-unit>
+				<source>subForums</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_forum.parent">
 				<source>Parent</source>
 			</trans-unit>
@@ -43,14 +44,14 @@
 				<source>Post</source>
 			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.crdate">
-                <source>Creation Date</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.publishing_date">
-                <source>Publishing Date</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.thread">
-                <source>Thread</source>
-            </trans-unit>
+				<source>Creation Date</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.publishing_date">
+				<source>Publishing Date</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.thread">
+				<source>Thread</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.topic">
 				<source>Topic</source>
 			</trans-unit>
@@ -61,8 +62,8 @@
 				<source>Quoted Post</source>
 			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.replies">
-                <source>Replies</source>
-            </trans-unit>
+				<source>Replies</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.voting">
 				<source>Voting</source>
 			</trans-unit>

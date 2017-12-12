@@ -15,35 +15,35 @@
 .. only:: html
 
 	:Klassifikation:
-		extension_key
+    		extension_key
 
-	:Version:
-		|release|
+    	:Version:
+    		|release|
 
 	:Sprache:
-		de
+    		de
 
-	:Beschreibung:
-		Geben Sie eine Beschreibung ein.
+    	:Beschreibung:
+    		Geben Sie eine Beschreibung ein.
 
-	:Schlüsselwörter:
-		komma-getrennte,Liste,von,Schlüsselwörtern
+    	:Schlüsselwörter:
+    		komma-getrennte,Liste,von,Schlüsselwörtern
 
-	:Copyright:
-		###YEAR###
+    	:Copyright:
+    		###YEAR###
 
-	:Autor:
-		###AUTHOR###
+    	:Autor:
+    		###AUTHOR###
 
-	:E-Mail:
-		author@example.com
+    	:E-Mail:
+    		author@example.com
 
-	:Lizenz:
-		Dieses Dokument wird unter der Open Content License, siehe
-		http://www.opencontent.org/opl.shtml veröffentlicht.
+    	:Lizenz:
+    		Dieses Dokument wird unter der Open Content License, siehe
+    		http://www.opencontent.org/opl.shtml veröffentlicht.
 
 	:Gerendert:
-		|today|
+    		|today|
 
 	Der Inhalt dieses Dokuments bezieht sich auf TYPO3,
 	ein GNU/GPL CMS-Framework auf `www.typo3.org <http://www.typo3.org/>`_.
@@ -54,13 +54,13 @@
 .. toctree::
 	:maxdepth: 5
 	:titlesonly:
-	:glob:
+    	:glob:
 
-..	Introduction/Index
-..	UserManual/Index
-..	AdministratorManual/Index
-..	Configuration/Index
-..	DeveloperCorner/Index
-..	KnownProblems/Index
-..	ToDoList/Index
-..	ChangeLog/Index
+    ..	Introduction/Index
+    ..	UserManual/Index
+    ..	AdministratorManual/Index
+    ..	Configuration/Index
+    ..	DeveloperCorner/Index
+    ..	KnownProblems/Index
+    ..	ToDoList/Index
+    ..	ChangeLog/Index

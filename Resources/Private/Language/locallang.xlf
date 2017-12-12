@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-02-21T19:59:58Z" product-name="agora">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-02-21T19:59:58Z"
+		  product-name="agora">
 		<header/>
 		<body>
 			<trans-unit id="tx_agora_domain_model_forum">
@@ -12,9 +13,9 @@
 			<trans-unit id="tx_agora_domain_model_forum.description">
 				<source>Description</source>
 			</trans-unit>
-		    <trans-unit id="tx_agora_domain_model_forum.sub_forums">
-                <source>subParent</source>
-            </trans-unit>
+			<trans-unit id="tx_agora_domain_model_forum.sub_forums">
+				<source>subParent</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_forum.parent">
 				<source>Parent</source>
 			</trans-unit>
@@ -84,8 +85,8 @@
 				<source>Quoted Post</source>
 			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.replies">
-                <source>Replies</source>
-            </trans-unit>
+				<source>Replies</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.voting">
 				<source>Voting</source>
 			</trans-unit>
@@ -105,40 +106,40 @@
 				<source>Rmove favorite Post</source>
 			</trans-unit>
 
-            <trans-unit id="tx_agora_domain_model_post.new">
-                <source>New Post</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.reply">
-                <source>Reply</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.edit">
-                <source>Edit</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.save">
-                <source>Save</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.replies">
-                <source>%s replies</source>
-            </trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.new">
+				<source>New Post</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.reply">
+				<source>Reply</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.edit">
+				<source>Edit</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.save">
+				<source>Save</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.replies">
+				<source>%s replies</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.create">
-                <source>Create Post</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.created_at">
-                <source>created at %s</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.edited_at">
-                <source>edited at %s</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.by">
-                <source>by %s</source>
-            </trans-unit>
+				<source>Create Post</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.created_at">
+				<source>created at %s</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.edited_at">
+				<source>edited at %s</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.by">
+				<source>by %s</source>
+			</trans-unit>
 
-            <trans-unit id="tx_agora_domain_model_post.flashMessages.created">
-                <source>Post created.</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_post.flashMessages.updated">
-                <source>Post updated.</source>
-            </trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.flashMessages.created">
+				<source>Post created.</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.flashMessages.updated">
+				<source>Post updated.</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.flashMessages.deleted">
 				<source>Post deleted.</source>
 			</trans-unit>
@@ -150,12 +151,12 @@
 				<source>Access denied.</source>
 			</trans-unit>
 
-            <trans-unit id="tx_agora_domain_model_thread.favorite">
-                <source>Favorite thread</source>
-            </trans-unit>
-            <trans-unit id="tx_agora_domain_model_thread.removeFavorite">
-                <source>Remove favorite thread</source>
-            </trans-unit>
+			<trans-unit id="tx_agora_domain_model_thread.favorite">
+				<source>Favorite thread</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_thread.removeFavorite">
+				<source>Remove favorite thread</source>
+			</trans-unit>
 
 			<trans-unit id="tx_agora_domain_model_thread">
 				<source>Thread</source>
@@ -207,14 +208,14 @@
 			</trans-unit>
 
 			<trans-unit id="tx_agora_domain_model_thread.list_latest.forum">
-                <source>Forum</source>
-            </trans-unit>
+				<source>Forum</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_thread.list_latest.editTime">
-                <source>Time</source>
-            </trans-unit>
+				<source>Time</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_thread.list_latest.username">
-                <source>User</source>
-            </trans-unit>
+				<source>User</source>
+			</trans-unit>
 
 			<trans-unit id="tx_agora_domain_model_thread.flashMessages.created">
 				<source>Thread created.</source>
@@ -347,40 +348,40 @@
 				<source>User</source>
 			</trans-unit>
 			<trans-unit id="email_ownernotificationgeetings">
-                <source>Hello</source>
-            </trans-unit>
-            <trans-unit id="email_ownernotificationmessage">
-                <source>Your thread %s was succesfully created at %s.</source>
-            </trans-unit>
-            <trans-unit id="email_ownernotificationend">
-                <source>Thank you!</source>
-            </trans-unit>
-            <trans-unit id="email_postownernotificationgeetings">
-                <source>Hello</source>
-            </trans-unit>
-            <trans-unit id="email_postownernotificationmessage">
-                <source>Your post %s  was just  commented at  %s.</source>
-            </trans-unit>
-            <trans-unit id="email_postownernotificationend">
-                <source>Have a nice day!</source>
-            </trans-unit>
-            <trans-unit id="email_regularusernotificationgeetings">
-                <source>Hello</source>
-            </trans-unit>
-            <trans-unit id="email_regularusernotificationmessage">
-                <source>The thread your are following %s was commented at %s.</source>
-            </trans-unit>
-            <trans-unit id="email_regularusernotificationend">
-                <source>Have a nice day!</source>
-            </trans-unit>
+				<source>Hello</source>
+			</trans-unit>
+			<trans-unit id="email_ownernotificationmessage">
+				<source>Your thread %s was succesfully created at %s.</source>
+			</trans-unit>
+			<trans-unit id="email_ownernotificationend">
+				<source>Thank you!</source>
+			</trans-unit>
+			<trans-unit id="email_postownernotificationgeetings">
+				<source>Hello</source>
+			</trans-unit>
+			<trans-unit id="email_postownernotificationmessage">
+				<source>Your post %s was just commented at %s.</source>
+			</trans-unit>
+			<trans-unit id="email_postownernotificationend">
+				<source>Have a nice day!</source>
+			</trans-unit>
+			<trans-unit id="email_regularusernotificationgeetings">
+				<source>Hello</source>
+			</trans-unit>
+			<trans-unit id="email_regularusernotificationmessage">
+				<source>The thread your are following %s was commented at %s.</source>
+			</trans-unit>
+			<trans-unit id="email_regularusernotificationend">
+				<source>Have a nice day!</source>
+			</trans-unit>
 
-            <trans-unit id="navigation.forum.start">
+			<trans-unit id="navigation.forum.start">
 				<source>Start</source>
 			</trans-unit>
-            <trans-unit id="anonymous">
+			<trans-unit id="anonymous">
 				<source>Anonymous</source>
 			</trans-unit>
-            <trans-unit id="by">
+			<trans-unit id="by">
 				<source>by</source>
 			</trans-unit>
 

@@ -8,9 +8,9 @@
         doc = window.document,
         re = window.RegExp,
         nav = window.navigator,
-        SETTINGS = { lineLength: 72 },
+        SETTINGS = {lineLength: 72},
 
-    // Used to work around some browser bugs where we can't use feature testing.
+        // Used to work around some browser bugs where we can't use feature testing.
         uaSniffed = {
             isIE: /msie/.test(nav.userAgent.toLowerCase()),
             isIE_5or6: /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase()),
@@ -90,29 +90,34 @@
     // - run() actually starts the editor; should be called after all necessary plugins are registered. Calling this more than once is a no-op.
     // - refreshPreview() forces the preview to be updated. This method is only available after run() was called.
     Markdown.Editor = function (markdownConverter, idPostfix, options) {
-        
+
         options = options || {};
 
         if (typeof options.handler === "function") { //backwards compatible behavior
-            options = { helpButton: options };
+            options = {helpButton: options};
         }
         options.strings = options.strings || {};
         if (options.helpButton) {
             options.strings.help = options.strings.help || options.helpButton.title;
         }
-        var getString = function (identifier) { return options.strings[identifier] || defaultsStrings[identifier]; }
+        var getString = function (identifier) {
+            return options.strings[identifier] || defaultsStrings[identifier];
+        }
 
         idPostfix = idPostfix || "";
 
         var hooks = this.hooks = new Markdown.HookCollection();
         hooks.addNoop("onPreviewRefresh");       // called with no arguments after the preview has been refreshed
         hooks.addNoop("postBlockquoteCreation"); // called with the user's selection *after* the blockquote was created; should return the actual to-be-inserted text
-        hooks.addFalse("insertImageDialog");     /* called with one parameter: a callback to be called with the URL of the image. If the application creates
-                                                  * its own image insertion dialog, this hook should return true, and the callback should be called with the chosen
-                                                  * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
-                                                  */
+        hooks.addFalse("insertImageDialog");
+        /* called with one parameter: a callback to be called with the URL of the image. If the application creates
+         * its own image insertion dialog, this hook should return true, and the callback should be called with the chosen
+         * image url (or null if the user cancelled). If this hook returns false, the default dialog will be used.
+         */
 
-        this.getConverter = function () { return markdownConverter; }
+        this.getConverter = function () {
+            return markdownConverter;
+        }
 
         var that = this,
             panels;
@@ -123,7 +128,9 @@
 
             panels = new PanelCollection(idPostfix);
             var commandManager = new CommandManager(hooks, getString);
-            var previewManager = new PreviewManager(markdownConverter, panels, function () { hooks.onPreviewRefresh(); });
+            var previewManager = new PreviewManager(markdownConverter, panels, function () {
+                hooks.onPreviewRefresh();
+            });
             var undoManager, uiManager;
 
             if (!/\?noundo/.test(doc.location.href)) {
@@ -142,7 +149,9 @@
             uiManager = new UIManager(idPostfix, panels, undoManager, previewManager, commandManager, options.helpButton, getString);
             uiManager.setUndoRedoButtonStates();
 
-            var forceRefresh = that.refreshPreview = function () { previewManager.refresh(true); };
+            var forceRefresh = that.refreshPreview = function () {
+                previewManager.refresh(true);
+            };
 
             forceRefresh();
         };
@@ -151,7 +160,8 @@
 
     // before: contains all the text in the input box BEFORE the selection.
     // after: contains all the text in the input box AFTER the selection.
-    function Chunks() { }
+    function Chunks() {
+    }
 
     // startRegex: a regular expression to find the start tag
     // endRegex: a regular expresssion to find the end tag
@@ -208,8 +218,14 @@
         if (remove) {
             beforeReplacer = afterReplacer = "";
         } else {
-            beforeReplacer = function (s) { that.before += s; return ""; }
-            afterReplacer = function (s) { that.after = s + that.after; return ""; }
+            beforeReplacer = function (s) {
+                that.before += s;
+                return "";
+            }
+            afterReplacer = function (s) {
+                that.after = s + that.after;
+                return "";
+            }
         }
 
         this.selection = this.selection.replace(/^(\s*)/, beforeReplacer).replace(/(\s*)$/, afterReplacer);
@@ -847,14 +863,12 @@
             if (window.innerHeight) {
                 result = window.pageYOffset;
             }
-            else
-                if (doc.documentElement && doc.documentElement.scrollTop) {
-                    result = doc.documentElement.scrollTop;
-                }
-                else
-                    if (doc.body) {
-                        result = doc.body.scrollTop;
-                    }
+            else if (doc.documentElement && doc.documentElement.scrollTop) {
+                result = doc.documentElement.scrollTop;
+            }
+            else if (doc.body) {
+                result = doc.body.scrollTop;
+            }
 
             return result;
         };
@@ -1023,9 +1037,9 @@
 
         var background = doc.createElement("div"),
             style = background.style;
-        
+
         background.className = "wmd-prompt-background";
-        
+
         style.position = "absolute";
         style.top = "0";
 
@@ -1109,7 +1123,6 @@
         };
 
 
-
         // Create the text input box form/window.
         var createDialog = function () {
 
@@ -1130,7 +1143,9 @@
             // The web form container for the text box and buttons.
             var form = doc.createElement("form"),
                 style = form.style;
-            form.onsubmit = function () { return close(false); };
+            form.onsubmit = function () {
+                return close(false);
+            };
             style.padding = "0";
             style.margin = "0";
             style.cssFloat = "left";
@@ -1152,7 +1167,9 @@
             // The ok button
             var okButton = doc.createElement("input");
             okButton.type = "button";
-            okButton.onclick = function () { return close(false); };
+            okButton.onclick = function () {
+                return close(false);
+            };
             okButton.value = "OK";
             style = okButton.style;
             style.margin = "10px";
@@ -1163,7 +1180,9 @@
             // The cancel button
             var cancelButton = doc.createElement("input");
             cancelButton.type = "button";
-            cancelButton.onclick = function () { return close(true); };
+            cancelButton.onclick = function () {
+                return close(true);
+            };
             cancelButton.value = "Cancel";
             style = cancelButton.style;
             style.margin = "10px";
@@ -1417,14 +1436,17 @@
             }
             else {
                 image.style.backgroundPosition = button.XShift + " " + disabledYShift;
-                button.onmouseover = button.onmouseout = button.onclick = function () { };
+                button.onmouseover = button.onmouseout = button.onclick = function () {
+                };
             }
         }
 
         function bindCommand(method) {
             if (typeof method === "string")
                 method = commandManager[method];
-            return function () { method.apply(commandManager, arguments); }
+            return function () {
+                method.apply(commandManager, arguments);
+            }
         }
 
         function makeSpritedButtonRow() {
@@ -1486,14 +1508,18 @@
             buttons.hr = makeButton("wmd-hr-button", getString("hr"), "-180px", bindCommand("doHorizontalRule"));
             makeSpacer(3);
             buttons.undo = makeButton("wmd-undo-button", getString("undo"), "-200px", null);
-            buttons.undo.execute = function (manager) { if (manager) manager.undo(); };
+            buttons.undo.execute = function (manager) {
+                if (manager) manager.undo();
+            };
 
             var redoTitle = /win/.test(nav.platform.toLowerCase()) ?
                 getString("redo") :
                 getString("redomac"); // mac and other non-Windows platforms
 
             buttons.redo = makeButton("wmd-redo-button", redoTitle, "-220px", null);
-            buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
+            buttons.redo.execute = function (manager) {
+                if (manager) manager.redo();
+            };
 
             if (helpOptions) {
                 var helpButton = document.createElement("li");
@@ -1688,7 +1714,7 @@
     // sure the URL and the optinal title are "nice".
     function properlyEncoded(linkdef) {
         return linkdef.replace(/^\s*(.*?)(?:\s+"(.+)")?\s*$/, function (wholematch, link, title) {
-            
+
             var inQueryString = false;
 
             // Having `[^\w\d-./]` in there is just a shortcut that lets us skip
@@ -1713,7 +1739,7 @@
                         inQueryString = true;
                         return "?";
                         break;
-                    
+
                     // In the query string, a plus and a space are identical -- normalize.
                     // Not strictly necessary, but identical behavior to the previous version
                     // of this function.
@@ -1724,7 +1750,7 @@
                 }
                 return encodeURI(match);
             })
-            
+
             if (title) {
                 title = title.trim ? title.trim() : title.replace(/^\s*/, "").replace(/\s*$/, "");
                 title = title.replace(/"/g, "quot;").replace(/\(/g, "&#40;").replace(/\)/g, "&#41;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -1747,7 +1773,7 @@
 
         }
         else {
-            
+
             // We're moving start and end tag back into the selection, since (as we're in the else block) we're not
             // *removing* a link, but *adding* one, so whatever findTags() found is now back to being part of the
             // link text. linkEnteredCallback takes care of escaping any brackets.
@@ -1785,7 +1811,7 @@
                     // would mean a zero-width match at the start. Since zero-width matches advance the string position,
                     // the first bracket could then not act as the "not a backslash" for the second.
                     chunk.selection = (" " + chunk.selection).replace(/([^\\](?:\\\\)*)(?=[[\]])/g, "$1\\").substr(1);
-                    
+
                     var linkDef = " [999]: " + properlyEncoded(link);
 
                     var num = that.addLinkDef(chunk, linkDef);
@@ -1827,7 +1853,7 @@
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
         chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-        
+
         // There's no selection, end the cursor wasn't at the end of the line:
         // The user wants to split the current list item / code line / blockquote line
         // (for the latter it doesn't really matter) in two. Temporarily select the
@@ -1855,7 +1881,7 @@
                 commandMgr.doCode(chunk);
             }
         }
-        
+
         if (fakeSelection) {
             chunk.after = chunk.selection + chunk.after;
             chunk.selection = "";
@@ -1884,15 +1910,15 @@
         // text *directly before* the selection already was a blockquote:
 
         /*
-        if (chunk.before) {
-        chunk.before = chunk.before.replace(/\n?$/, "\n");
-        }
-        chunk.before = chunk.before.replace(/(((\n|^)(\n[ \t]*)*>(.+\n)*.*)+(\n[ \t]*)*$)/,
-        function (totalMatch) {
-        chunk.startTag = totalMatch;
-        return "";
-        });
-        */
+         if (chunk.before) {
+         chunk.before = chunk.before.replace(/\n?$/, "\n");
+         }
+         chunk.before = chunk.before.replace(/(((\n|^)(\n[ \t]*)*>(.+\n)*.*)+(\n[ \t]*)*$)/,
+         function (totalMatch) {
+         chunk.startTag = totalMatch;
+         return "";
+         });
+         */
 
         // This comes down to:
         // Go backwards as many lines a possible, such that each line
@@ -1999,10 +2025,10 @@
 
         if (!/\n/.test(chunk.selection)) {
             chunk.selection = chunk.selection.replace(/^(> *)/,
-            function (wholeMatch, blanks) {
-                chunk.startTag += blanks;
-                return "";
-            });
+                function (wholeMatch, blanks) {
+                    chunk.startTag += blanks;
+                    return "";
+                });
         }
     };
 

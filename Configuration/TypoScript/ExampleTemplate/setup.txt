@@ -3,12 +3,14 @@ page {
         agoraBootstrap = EXT:agora/Resources/Public/Library/Bootstrap/css/bootstrap.min.css
         agoraBootstrapTheme = EXT:agora/Resources/Public/Library/Bootstrap/css/bootstrap-theme.min.css
     }
+
     includeJSFooterlibs {
         agoraMarkdownConverter = EXT:agora/Resources/Public/Library/Markdown/Markdown.Converter.js
         agoraMarkdownSanitizer = EXT:agora/Resources/Public/Library/Markdown/Markdown.Sanitizer.js
         agoraMarkdownEditor = EXT:agora/Resources/Public/Library/Markdown/Markdown.Editor.js
         agoraTheme = EXT:agora/Resources/Public/Js/agora-theme.js
     }
+
     includeCSS {
         agoraTheme = EXT:agora/Resources/Public/Css/agora-theme.css
         pagedown = EXT:agora/Resources/Public/Css/pagedown.css

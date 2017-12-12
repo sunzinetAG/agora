@@ -14,34 +14,34 @@ Agora - TYPO3 Forum
 .. only:: html
 
 	:Classification:
-		agora
+    		agora
 
-	:Version:
-		|release|
+    	:Version:
+    		|release|
 
 	:Language:
-		en
+    		en
 
-	:Description:
+    	:Description:
 
-	:Keywords:
-		comma,separated,list,of,keywords
+    	:Keywords:
+    		comma,separated,list,of,keywords
 
-	:Copyright:
-		2015
+    	:Copyright:
+    		2015
 
-	:Author:
-		Philipp Thiele, Björn Christopher Bresser
+    	:Author:
+    		Philipp Thiele, Björn Christopher Bresser
 
-	:Email:
-		philipp.thiele@phth.de, bjoern.bresser@gmail.com
+    	:Email:
+    		philipp.thiele@phth.de, bjoern.bresser@gmail.com
 
-	:License:
-		This document is published under the Open Content License
-		available from http://www.opencontent.org/opl.shtml
+    	:License:
+    		This document is published under the Open Content License
+    		available from http://www.opencontent.org/opl.shtml
 
 	:Rendered:
-		|today|
+    		|today|
 
 	The content of this document is related to TYPO3,
 	a GNU/GPL CMS/Framework available from `www.typo3.org <http://www.typo3.org/>`_.
@@ -51,14 +51,14 @@ Agora - TYPO3 Forum
 .. toctree::
 	:maxdepth: 5
 	:titlesonly:
-	:glob:
+    	:glob:
 
-	Introduction/Index
-	User/Index
-	Administrator/Index
-	Configuration/Index
-	Developer/Index
-	KnownProblems/Index
-	ToDoList/Index
-	ChangeLog/Index
-	Targets
+    	Introduction/Index
+    	User/Index
+    	Administrator/Index
+    	Configuration/Index
+    	Developer/Index
+    	KnownProblems/Index
+    	ToDoList/Index
+    	ChangeLog/Index
+    	Targets

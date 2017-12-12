@@ -17,6 +17,15 @@
             </f:for>
             <li>
                 <f:link.action action="list" controller="Post" arguments="{thread:thread}">
+                    <f:if condition="{thread.closed}">
+                        <i class="glyphicon glyphicon-lock"></i>
+                    </f:if>
+                    <f:if condition="{thread.solved}">
+                        <i class="glyphicon glyphicon-flag"></i>
+                    </f:if>
+                    <f:if condition="{thread.sticky}">
+                        <i class="glyphicon glyphicon-pushpin"></i>
+                    </f:if>
                     {thread.title}
                 </f:link.action>
             </li>
@@ -36,8 +45,19 @@
 <f:if condition="{thread}">
     <f:then>
         <h2>{thread.forum.title}</h2>
-        <h3>{thread.title}</h3>
-        </f:then>
+        <h3>
+            <f:if condition="{thread.closed}">
+                <i class="glyphicon glyphicon-lock"></i>
+            </f:if>
+            <f:if condition="{thread.solved}">
+                <i class="glyphicon glyphicon-flag"></i>
+            </f:if>
+            <f:if condition="{thread.sticky}">
+                <i class="glyphicon glyphicon-pushpin"></i>
+            </f:if>
+            {thread.title}
+        </h3>
+    </f:then>
     <f:else>
         <h2>{forum.title}</h2>
     </f:else>
