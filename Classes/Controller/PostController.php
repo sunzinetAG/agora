@@ -83,7 +83,8 @@ class PostController extends ActionController
             );
             $this->redirect('list', 'Thread', 'agora', array('forum' => $thread->getForum()));
         }
-        $posts = $this->postRepository->findByThread($thread);
+        $posts = $this->postRepository->findByThreadOnFirstLevel($thread);
+        $firstPost = $this->postRepository->findByThread($thread)->getFirst();
 
         // Check if current user observes thread
         $user = $this->getUser();
@@ -94,6 +95,7 @@ class PostController extends ActionController
             array(
                 'thread' => $thread,
                 'posts' => $posts,
+                'firstPost' => $firstPost,
                 'user' => $user,
                 'observedThread' => $observedThread
             )
@@ -335,6 +337,7 @@ class PostController extends ActionController
         \AgoraTeam\Agora\Domain\Model\Post $originalPost,
         \AgoraTeam\Agora\Domain\Model\Post $post
     ) {
+
         if (!$originalPost->getThread()->isWritableForUser($this->getUser())) {
             $this->addFlashMessage(
                 \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
@@ -353,7 +356,9 @@ class PostController extends ActionController
         $newPost = $this->postService->copy($originalPost);
         $newPost->setTopic($post->getTopic());
         $newPost->setText($post->getText());
+        $newPost->setForum($post->getThread()->getForum());
 
+        /* Move all replies to the newPost and update the postReposiory */
         foreach ($originalPost->getReplies()->toArray() as $reply) {
             $newPost->addReply($reply);
             $reply->setQuotedPost($newPost);
@@ -362,6 +367,7 @@ class PostController extends ActionController
 
         $this->postService->archive($originalPost);
         $newPost->addHistoricalVersion($originalPost);
+
         $this->postRepository->update($originalPost);
         $this->postRepository->add($newPost);
 
