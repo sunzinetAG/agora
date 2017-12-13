@@ -42,7 +42,8 @@ return [
     'types' => array(
         '1' => array(
             'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title,
-									description, parent, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
+									description, parent,
+									--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
 									groups_with_read_access, groups_with_write_access, groups_with_modification_access,
 									users_with_read_access, users_with_write_access, users_with_modification_access,
 									starttime, endtime'

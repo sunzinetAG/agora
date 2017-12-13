@@ -27,7 +27,6 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
  */
 class ThreadRepository extends Repository
 {
-
     /**
      * Find threads by forum
      *
