@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\Thread;
 
 /**
  * The repository for Posts
@@ -33,6 +34,21 @@ class PostRepository extends Repository
     protected $defaultOrderings = array(
         'publishing_date' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING
     );
+
+    /**
+     * @param Thread $thread
+     */
+    public function findByThreadOnFirstLevel($thread) {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('thread', $thread),
+                $query->equals('quotedPost', 0)
+            )
+        );
+        $result = $query->execute();
+        return $result;
+    }
 
     /**
      * Finds the latest Posts
