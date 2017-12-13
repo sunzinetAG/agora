@@ -86,6 +86,8 @@ class PostService
     {
         // detach thread so that an archived post will not shown up in thread history
         $post->setThread(0);
+        // detach the quoted post
+        $post->setQuotedPost(0);
 
         //$emptyReplyStorage = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage');
         //$post->setReplies($emptyReplyStorage);

@@ -54,7 +54,6 @@ class Post extends Entity
      * QuotedPost
      *
      * @var \AgoraTeam\Agora\Domain\Model\Post
-     * @lazy
      */
     protected $quotedPost = null;
 
@@ -245,7 +244,7 @@ class Post extends Entity
      * @param \AgoraTeam\Agora\Domain\Model\Post $quotedPost
      * @return void
      */
-    public function setQuotedPost(\AgoraTeam\Agora\Domain\Model\Post $quotedPost)
+    public function setQuotedPost($quotedPost)
     {
         $this->quotedPost = $quotedPost;
     }
