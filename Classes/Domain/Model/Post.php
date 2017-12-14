@@ -40,6 +40,7 @@ class Post extends Entity
      * Text
      *
      * @var string
+     * @validate NotEmpty
      */
     protected $text = '';
 
