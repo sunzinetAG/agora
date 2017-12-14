@@ -31,6 +31,7 @@ class Forum extends Entity
      * title
      *
      * @var string
+     * @validate notEmpty
      */
     protected $title = '';
 

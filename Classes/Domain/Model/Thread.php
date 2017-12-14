@@ -31,8 +31,9 @@ class Thread extends Entity
      * title
      *
      * @var string
+     * @validate notEmpty
      */
-    protected $title = '';
+    protected $title;
 
     /**
      * solved
