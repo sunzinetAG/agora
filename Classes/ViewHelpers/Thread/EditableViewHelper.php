@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\ViewHelpers\Thread;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\AccessibleInterface;
+
 /**
  * EditableViewHelper
  */
@@ -46,11 +48,9 @@ class EditableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBas
         $content = '';
 
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
-            if ($thread->isWritableForUser($user)) {
+            if ($thread->checkAccess($user, AccessibleInterface::TYPE_WRITE)) {
                 $content = $this->renderChildren();
             }
-        } elseif (!$thread->isWriteProtected()) {
-            $content = $this->renderChildren();
         }
 
         return $content;

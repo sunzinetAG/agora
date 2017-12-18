@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\ViewHelpers\Thread;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\AccessibleInterface;
 
 /**
  * VisibleViewHelper
@@ -46,11 +47,11 @@ class VisibleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBase
         $content = '';
 
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
-            if ($thread->isAccessibleForUser($user)) {
+            if ($thread->checkAccess($user, AccessibleInterface::TYPE_READ)) {
                 $content = $this->renderChildren();
             }
-        } elseif (!$thread->isReadProtected()) {
-            $content = $this->renderChildren();
+//        } elseif (!$thread->isReadProtected()) {
+//            $content = $this->renderChildren();
         }
 
         return $content;

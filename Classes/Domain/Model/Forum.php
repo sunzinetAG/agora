@@ -24,7 +24,7 @@ namespace AgoraTeam\Agora\Domain\Model;
 /**
  * Forum
  */
-class Forum extends Entity
+class Forum extends Entity implements AccessibleInterface
 {
 
     /**
@@ -694,6 +694,9 @@ class Forum extends Entity
         }
     }
 
+
+
+
     /**
      * checks if the forum is accessible for the given user
      *
@@ -774,6 +777,23 @@ class Forum extends Entity
         }
 
         return $isWritable;
+    }
+
+    /**
+     * @param User|null $user
+     * @param string $accessType
+     * @return bool
+     */
+    public function checkAccess(User $user = null, $accessType = self::TYPE_READ)
+    {
+        switch ($accessType) {
+            case self::TYPE_EDIT_POST:
+            case self::TYPE_NEW_POST:
+            case self::TYPE_WRITE:
+                return $this->isWritableForUser($user);
+            default:
+                return $this->isAccessibleForUser($user);
+        }
     }
 
 }

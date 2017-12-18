@@ -24,7 +24,7 @@ namespace AgoraTeam\Agora\Domain\Model;
 /**
  * Thread
  */
-class Thread extends Entity
+class Thread extends Entity implements AccessibleInterface
 {
 
     /**
@@ -738,48 +738,21 @@ class Thread extends Entity
     }
 
     /**
-     * checks if the thread is accessible for the given user
-     *
-     * @param mixed $user
+     * @param User|null $user
+     * @param string $accessType
      * @return bool
      */
-    public function isAccessibleForUser($user)
+    public function checkAccess(User $user = null, $accessType = self::TYPE_READ)
     {
-        return $this->getForum()->isAccessibleForUser($user);
-    }
+        switch ($accessType) {
+            default:
+                $return = $this->forum->checkAccess($user, $accessType);
+        }
 
-    /**
-     * checks if the thread is writable for the given user
-     *
-     * @param mixed $user
-     * @return bool
-     */
-    public function isWritableForUser($user)
-    {
-        $return = $this->getForum()->isWritableForUser($user);
         if ($this->isClosed()) {
             $return = false;
         }
+
         return $return;
-    }
-
-    /**
-     * Returns the boolean state of the read protected flag
-     *
-     * @return boolean
-     */
-    public function isReadProtected()
-    {
-        return $this->getForum()->isReadProtected();
-    }
-
-    /**
-     * Returns the boolean state of the write protected flag
-     *
-     * @return boolean
-     */
-    public function isWriteProtected()
-    {
-        return $this->getForum()->isWriteProtected();
     }
 }

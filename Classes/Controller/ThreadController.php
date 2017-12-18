@@ -21,6 +21,7 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Service\MailService;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 
 /**
  * ThreadController
@@ -52,21 +53,7 @@ class ThreadController extends ActionController
      */
     public function listAction(\AgoraTeam\Agora\Domain\Model\Forum $forum)
     {
-
-        if (!$forum->isAccessibleForUser($this->getUser())) {
-            $this->addFlashMessage(
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_forum.flashMessages.accessDenied.text',
-                    'agora'
-                ),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_forum.flashMessages.accessDenied.headline',
-                    'agora'
-                ),
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
-            );
-            $this->redirect('list', 'Forum');
-        }
+        $this->authenticationService->assertReadAuthorization($forum);
 
         $threads = $this->threadRepository->findByForum($forum);
 
@@ -102,21 +89,7 @@ class ThreadController extends ActionController
         \AgoraTeam\Agora\Domain\Model\Thread $thread = null,
         $text = ''
     ) {
-
-        if (!$forum->isWritableForUser($this->getUser())) {
-            $this->addFlashMessage(
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_forum.flashMessages.editDenied.text',
-                    'agora'
-                ),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_forum.flashMessages.editDenied.headline',
-                    'agora'
-                ),
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
-            );
-            $this->redirect('list', 'Thread', 'agora', array('forum' => $forum));
-        }
+        $this->authenticationService->assertNewThreadAuthorization($forum);
 
         $this->view->assign('forum', $forum)
             ->assign('thread', $thread)
@@ -137,20 +110,7 @@ class ThreadController extends ActionController
         \AgoraTeam\Agora\Domain\Model\Thread $thread,
         $text
     ) {
-        if (!$forum->isWritableForUser($this->getUser())) {
-            $this->addFlashMessage(
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_forum.flashMessages.editDenied.text',
-                    'agora'
-                ),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_forum.flashMessages.editDenied.headline',
-                    'agora'
-                ),
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
-            );
-            $this->redirect('list', 'Thread', 'agora', array('forum' => $forum));
-        }
+        $this->authenticationService->assertNewThreadAuthorization($forum);
 
         /** @var \AgoraTeam\Agora\Domain\Model\Post $post */
         $post = new \AgoraTeam\Agora\Domain\Model\Post;
@@ -170,12 +130,7 @@ class ThreadController extends ActionController
         $forum->addThread($thread);
         $this->forumRepository->update($forum);
 
-        $this->addFlashMessage(
-            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_agora_domain_model_forum.flashMessages.created',
-                'agora'),
-            '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
-        );
+        $this->addLocalizedFlashmessage('tx_agora_domain_model_forum.flashMessages.created');
         if ($this->settings['thread']['notificationsForThreadOwner'] == 1 &&
             is_a($this->getUser(), '\AgoraTeam\Agora\Domain\Model\User')
         ) {
@@ -212,20 +167,7 @@ class ThreadController extends ActionController
      */
     public function editAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
     {
-        if (!$thread->isWritableForUser($this->getUser())) {
-            $this->addFlashMessage(
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_thread.flashMessages.editDenied.text',
-                    'agora'
-                ),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_thread.flashMessages.editDenied.headline',
-                    'agora'
-                ),
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
-            );
-            $this->redirect('list', 'Thread', 'agora', array('forum' => $thread->getForum()));
-        }
+        $this->authenticationService->assertEditPostAuthorization($thread);
         $this->view->assign('thread', $thread);
     }
 
@@ -237,23 +179,12 @@ class ThreadController extends ActionController
      */
     public function updateAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
     {
-        if (!$thread->isWritableForUser($this->getUser())) {
-            $this->addFlashMessage(
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_thread.flashMessages.editDenied.text',
-                    'agora'
-                ),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_thread.flashMessages.editDenied.headline',
-                    'agora'
-                ),
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
-            );
-            $this->redirect('list', 'Thread', 'agora', array('forum' => $thread->getForum()));
-        }
+        $this->authenticationService->assertEditPostAuthorization($thread);
         $this->addFlashMessage(
-            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_agora_domain_model_thread.flashMessages.updated',
-                'agora'),
+            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
+                'tx_agora_domain_model_thread.flashMessages.updated',
+                'agora'
+            ),
             '',
             \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
         );
@@ -269,26 +200,8 @@ class ThreadController extends ActionController
      */
     public function deleteAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
     {
-        if (!$thread->isWritableForUser($this->getUser())) {
-            $this->addFlashMessage(
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_thread.flashMessages.editDenied.text',
-                    'agora'
-                ),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                    'tx_agora_domain_model_thread.flashMessages.editDenied.headline',
-                    'agora'
-                ),
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
-            );
-            $this->redirect('list', 'Thread', 'agora', array('forum' => $thread->getForum()));
-        }
-        $this->addFlashMessage(
-            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('tx_agora_domain_model_thread.flashMessages.deleted',
-                'agora'),
-            '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
-        );
+        $this->authenticationService->assertDeletePostAuthorization($thread);
+        $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
         $this->threadRepository->remove($thread);
         $this->redirect('list');
     }
@@ -307,4 +220,5 @@ class ThreadController extends ActionController
         $this->view->assign('user', $user);
         $this->view->assign('latestThreads', $latestThreads);
     }
+
 }
