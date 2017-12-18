@@ -26,7 +26,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  *
  * @package AgoraTeam\Agora\Domain\Model
  */
-class Post extends Entity
+class Post extends Entity implements AccessibleInterface
 {
 
     /**
@@ -542,14 +542,38 @@ class Post extends Entity
     }
 
     /**
-     * checks if the post is accessible for the given user
-     *
-     * @param mixed $user
+     * @param User|null $user
+     * @param string $accessType
      * @return bool
      */
-    public function isAccessibleForUser($user)
+    public function checkAccess(User $user = null, $accessType = self::TYPE_READ)
     {
-        return $this->getThread()->isAccessibleForUser($user);
+        switch ($accessType) {
+            case self::TYPE_EDIT_POST:
+            case self::TYPE_DELETE_POST:
+                return $this->checkEditDeletePostAccess($user, $accessType);
+            default:
+                return $this->thread->checkAccess($user, $accessType);
+        }
+    }
+
+    /**
+     * @param User $user
+     * @param $accessType
+     */
+    public function checkEditDeletePostAccess(User $user, $accessType)
+    {
+        if (!is_a($user, User::class)) {
+            return false;
+        } else {
+            $isAuthor = ($user === $this->getCreator());
+            $threadAccess = $this->getThread()->checkAccess($user, $accessType);
+            if ($isAuthor && $threadAccess) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

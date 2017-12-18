@@ -20,11 +20,13 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * ActionController
  */
-class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
+abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
 
     /**
@@ -42,6 +44,12 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
      * @inject
      */
     protected $userRepository;
+
+    /**
+     * @var \AgoraTeam\Agora\Service\Authentication\AuthenticationService
+     * @inject
+     */
+    protected $authenticationService;
 
     /**
      * user
@@ -74,7 +82,6 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         if (!is_array($GLOBALS['TSFE']->fe_user->user)) {
             return null;
         }
-
         return $this->userRepository->findByUid($GLOBALS['TSFE']->fe_user->user['uid']);
     }
 
@@ -135,6 +142,25 @@ class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         return array(
             $this->settings['thread']['defaultThreadEmailAdress']
             => $this->settings['thread']['defaultThreadEmailUserName']
+        );
+    }
+
+    /**
+     * @param $key
+     * @param array $arguments
+     * @param null $titleKey
+     * @param int $severity
+     */
+    protected function addLocalizedFlashmessage(
+        $key,
+        array $arguments = [],
+        $titleKey = null,
+        $severity = FlashMessage::OK
+    ) {
+        $this->addFlashMessage(
+            LocalizationUtility::translate($key, 'agora', $arguments),
+            LocalizationUtility::translate($titleKey, 'agora'),
+            $severity
         );
     }
 }

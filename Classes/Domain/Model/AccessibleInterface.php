@@ -1,6 +1,6 @@
 <?php
 
-namespace AgoraTeam\Agora\ViewHelpers\Forum;
+namespace AgoraTeam\Agora\Domain\Model;
 
 /***************************************************************
  *  Copyright notice
@@ -21,40 +21,25 @@ namespace AgoraTeam\Agora\ViewHelpers\Forum;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use AgoraTeam\Agora\Domain\Model\AccessibleInterface;
-
 /**
- * EditableViewHelper
+ * Interface AccessibleInterface
+ *
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class EditableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+interface AccessibleInterface
 {
 
-    /**
-     * As this ViewHelper renders HTML, the output must not be escaped.
-     *
-     * @var bool
-     */
-    protected $escapeOutput = false;
+    const TYPE_READ = 'read';
+    const TYPE_WRITE = 'write';
+    const TYPE_NEW_TOPIC = 'newTopic';
+    const TYPE_EDIT_POST = 'editPost';
+    const TYPE_NEW_POST = 'newPost';
+    const TYPE_DELETE_POST = 'deletePost';
 
     /**
-     * render
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
-     * @param mixed $user
-     * @return $content the rendered content
+     * @param User|null $user
+     * @param $accessType
+     * @return boolean
      */
-    public function render(\AgoraTeam\Agora\Domain\Model\Forum $forum, $user)
-    {
-        $content = '';
-
-        if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
-            if ($forum->checkAccess($user, AccessibleInterface::TYPE_WRITE)) {
-                $content = $this->renderChildren();
-            }
-        } elseif (!$forum->isWriteProtected()) {
-            $content = $this->renderChildren();
-        }
-
-        return $content;
-    }
+    public function checkAccess(User $user = null, $accessType = self::TYPE_READ);
 }

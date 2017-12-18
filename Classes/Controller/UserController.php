@@ -20,6 +20,8 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\Thread;
 
 /**
  * UserController
@@ -49,8 +51,9 @@ class UserController extends ActionController
             $favoritedPosts = array();
             $i = 0;
 
+            /** @var Post $post */
             foreach ($allFavoritedPosts as $post) {
-                if ($post->isAccessibleForUser($user)) {
+                if ($post->checkAccess($user)) {
                     $favoritedPosts[] = $post;
                     $i++;
                 }
@@ -79,8 +82,9 @@ class UserController extends ActionController
             $observedThreads = array();
             $i = 0;
 
+            /** @var Thread $thread */
             foreach ($allObservedThreads as $thread) {
-                if ($thread->isAccessibleForUser($user)) {
+                if ($thread->checkAccess($user)) {
                     $observedThreads[] = $thread;
                     $i++;
                 }

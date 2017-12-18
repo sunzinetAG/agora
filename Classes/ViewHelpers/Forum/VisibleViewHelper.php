@@ -46,7 +46,7 @@ class VisibleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBase
         $content = '';
 
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
-            if ($forum->isAccessibleForUser($user)) {
+            if ($forum->checkAccess($user)) {
                 $content = $this->renderChildren();
             }
         } elseif (!$forum->isReadProtected()) {
