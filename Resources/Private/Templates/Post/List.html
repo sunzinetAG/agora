@@ -55,6 +55,10 @@
                         {post.creator.signiture}
                     </div>
 
+                    {post.ratingCount}
+                    <f:link.action action="rate" controller="Rating" arguments="{post:post, rateType:'up'}" noCacheHash="1">UP</f:link.action>
+                    <f:link.action action="rate" controller="Rating" arguments="{post:post, rateType:'down'}" noCacheHash="1">DOWN</f:link.action>
+
                     <f:if condition="!{thread.closed}">
                         <a:thread.editable thread="{thread}" user="{user}">
                             <f:link.action class="btn btn-default" action="new"

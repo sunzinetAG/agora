@@ -31,7 +31,7 @@ class Thread extends Entity implements AccessibleInterface
      * title
      *
      * @var string
-     * @validate notEmpty
+     * @validate NotEmpty
      */
     protected $title;
 
