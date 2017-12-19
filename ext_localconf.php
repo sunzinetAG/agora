@@ -49,5 +49,16 @@ if (!defined('TYPO3_MODE')) {
     )
 );
 
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+    'AgoraTeam.' . $_EXTKEY,
+    'Ajax',
+    array(
+        'Rating' => 'rate',
+    ),
+    array(
+        'Rating' => 'rate',
+    )
+);
+
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] =
     AgoraTeam\Agora\Hooks\Tcemain::class;
