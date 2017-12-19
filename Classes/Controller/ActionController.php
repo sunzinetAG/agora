@@ -82,6 +82,7 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
         if (!is_array($GLOBALS['TSFE']->fe_user->user)) {
             return null;
         }
+
         return $this->userRepository->findByUid($GLOBALS['TSFE']->fe_user->user['uid']);
     }
 

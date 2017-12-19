@@ -79,7 +79,6 @@ class RatingController extends ActionController
                 $ratingRes = $this->neutralize($post, $rating);
         }
 
-
         return json_encode($ratingRes);
     }
 

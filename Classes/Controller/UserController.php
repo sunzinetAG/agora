@@ -137,7 +137,6 @@ class UserController extends ActionController
      */
     public function removeObservedThreadAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
     {
-        // @todo Back to refere redirect
         $user = $this->getUser();
         $user->removeObservedThread($thread);
         $this->userRepository->update($user);
@@ -152,7 +151,6 @@ class UserController extends ActionController
      */
     public function addFavoritePostAction(\AgoraTeam\Agora\Domain\Model\Post $post)
     {
-        // @todo Back to refere redirect
         $user = $this->getUser();
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
             $user->addFavoritePost($post);
@@ -169,7 +167,6 @@ class UserController extends ActionController
      */
     public function removeFavoritePostAction(\AgoraTeam\Agora\Domain\Model\Post $post)
     {
-        // @todo Back to refere redirect
         $user = $this->getUser();
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
             $user->removeFavoritePost($post);
