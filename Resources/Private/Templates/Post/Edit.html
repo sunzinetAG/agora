@@ -14,7 +14,7 @@
     <f:form action="update" name="post" object="{post}">
         <f:form.hidden name="originalPost" value="{originalPost}"/>
         <f:form.hidden property="thread" value="{post.thread}"/>
-        <f:render partial="Post/FormFields" arguments="{post:post}"/>
+        <f:render partial="Post/FormFields" arguments="{post:post,isFirstPostInThread:isFirstPostInThread}"/>
         <f:form.submit class="btn btn-primary" value="{f:translate(key:'tx_agora_domain_model_post.save')}"/>
     </f:form>
 </f:section>

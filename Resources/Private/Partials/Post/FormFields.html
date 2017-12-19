@@ -7,6 +7,15 @@
 <br/>
 <br/>
 
+<f:if condition="{isFirstPostInThread}">
+    <label for="tags">
+        <f:translate key="tx_agora_domain_model_thread.tags"/>
+    </label><br/>
+    <f:form.textfield id="tags" name="tags" value="{post.thread.tagList}"/>
+    <br/>
+    <br/>
+</f:if>
+
 <div class="form-group">
     <div class="wmd-panel">
         <div id="wmd-button-bar"></div>

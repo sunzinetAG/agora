@@ -25,13 +25,14 @@ use AgoraTeam\Agora\Domain\Model\Forum;
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Thread;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
+use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Class AuthenticationService
  *
  * @package AgoraTeam\Agora\Service\Authentication
  */
-class AuthenticationService
+class AuthenticationService implements SingletonInterface
 {
 
     /**

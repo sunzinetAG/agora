@@ -1,7 +1,7 @@
 {namespace a=AgoraTeam\Agora\ViewHelpers}
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"
-      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHwelpers">
 <f:layout name="Default"/>
 
 <f:section name="main">
@@ -14,8 +14,16 @@
         <label for="title">
             <f:translate key="tx_agora_domain_model_thread.title"/>
         </label><br/>
-        <f:form.textfield property="title"/>
+        <f:form.textfield id="title" property="title"/>
 
+        <br/>
+        <br/>
+
+
+        <label for="tags">
+            <f:translate key="tx_agora_domain_model_thread.tags"/>
+        </label><br/>
+        <f:form.textfield id="tags" name="tags"/>
         <br/>
         <br/>
 

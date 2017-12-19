@@ -12,6 +12,7 @@ return array(
         'cruser_id' => 'cruser_id',
         'dividers2tabs' => true,
         'versioningWS' => 2,
+        'hideTable' => 1,
         'versioning_followPages' => true,
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',

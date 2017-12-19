@@ -75,6 +75,15 @@ class Thread extends Entity implements AccessibleInterface
     protected $posts = null;
 
     /**
+     * posts
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Tag>
+     * @cascade remove
+     * @lazy
+     */
+    protected $tags = null;
+
+    /**
      * views
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\View>
@@ -173,6 +182,7 @@ class Thread extends Entity implements AccessibleInterface
         $this->usersWithWriteAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->usersWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->observers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->tags = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -404,11 +414,41 @@ class Thread extends Entity implements AccessibleInterface
     public function getLatestPost()
     {
         $latestPost = false;
-        if ($this->threads->count()) {
-            $latestPost = $this->threads->getPosition($this->threads->count());
+        if ($this->posts->count()) {
+            $latestPost = $this->posts->getPosition($this->posts->count());
         }
 
         return $latestPost;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+     */
+    public function getTags(): \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $tags
+     */
+    public function setTags(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTaglist()
+    {
+        $tagArr = $this->tags->toArray();
+        foreach ($tagArr as $tag) {
+            $resultArr[] = $tag->getTitle();
+        }
+        $tagList = implode(', ', $resultArr);
+
+        return $tagList;
     }
 
     /**

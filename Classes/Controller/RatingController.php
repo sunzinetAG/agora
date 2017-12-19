@@ -25,7 +25,7 @@ use AgoraTeam\Agora\Domain\Model\Rating;
 use AgoraTeam\Agora\Domain\Model\User;
 
 /**
- * ThreadController
+ * RatingController
  */
 class RatingController extends ActionController
 {

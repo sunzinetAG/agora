@@ -21,6 +21,7 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Service\MailService;
+use AgoraTeam\Agora\Service\TagService;
 
 /**
  * PostController
@@ -200,7 +201,6 @@ class PostController extends ActionController
                     $creator->getEmail() => $creator->getDisplayName()
                 ),
                 $this->getPostsDefaultSender(),
-
                 \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('email.updateDepotType.subject', 'depot'),
                 'NotificationToPostOwner',
                 array(
@@ -233,7 +233,7 @@ class PostController extends ActionController
         \AgoraTeam\Agora\Domain\Model\Post $post = null
     ) {
         $this->authenticationService->assertEditPostAuthorization($originalPost);
-
+        $isFirstPost = false;
         if ($post === null) {
             $post = $this->postService->copy($originalPost);
         }
@@ -242,7 +242,13 @@ class PostController extends ActionController
         // just by adding the new post to the thread
         $thread = $originalPost->getThread();
         $this->threadRepository->update($thread);
+        $firstPost = $this->postRepository->findByThread($thread)->getFirst();
 
+        if ($firstPost == $originalPost) {
+            $isFirstPost = true;
+        }
+
+        $this->view->assign('isFirstPostInThread', $isFirstPost);
         $this->view->assign('originalPost', $originalPost);
         $this->view->assign('post', $post);
     }
@@ -252,11 +258,13 @@ class PostController extends ActionController
      *
      * @param \AgoraTeam\Agora\Domain\Model\Post $originalPost
      * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param string $tags
      * @return void
      */
     public function updateAction(
         \AgoraTeam\Agora\Domain\Model\Post $originalPost,
-        \AgoraTeam\Agora\Domain\Model\Post $post
+        \AgoraTeam\Agora\Domain\Model\Post $post,
+        string $tags = ''
     ) {
         $this->authenticationService->assertEditPostAuthorization($originalPost);
 
@@ -277,6 +285,14 @@ class PostController extends ActionController
 
         $this->postRepository->update($originalPost);
         $this->postRepository->add($newPost);
+
+        // Update the tags for the thread due to changes on the first post
+        if ($tags) {
+            /** @var TagService $tagService */
+            $tagService = $this->objectManager->get(TagService::class);
+            $tags = $tagService->prepareTags($tags);
+            $post->getThread()->setTags($tags);
+        }
 
         $this->addFlashMessage(
             \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(

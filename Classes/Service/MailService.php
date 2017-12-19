@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Service;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
@@ -27,7 +28,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
  *
  * @package AgoraTeam\Agora\Domain\Service
  */
-class MailService
+class MailService implements SingletonInterface
 {
 
     /**

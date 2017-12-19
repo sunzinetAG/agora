@@ -167,6 +167,9 @@
 			<trans-unit id="tx_agora_domain_model_thread.title">
 				<source>Title</source>
 			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_thread.tags">
+				<source>Tags</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_thread.solved">
 				<source>Solved</source>
 			</trans-unit>
