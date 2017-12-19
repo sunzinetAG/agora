@@ -118,6 +118,11 @@ class Post extends Entity implements AccessibleInterface
     protected $historicalVersions = null;
 
     /**
+     * @var int
+     */
+    protected $ratingCount = 0;
+
+    /**
      * Rootline
      *
      * @var array
@@ -467,6 +472,22 @@ class Post extends Entity implements AccessibleInterface
     public function setHistoricalVersions(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $historicalVersions)
     {
         $this->historicalVersions = $historicalVersions;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRatingCount(): int
+    {
+        return $this->ratingCount;
+    }
+
+    /**
+     * @param int $ratingCount
+     */
+    public function setRatingCount(int $ratingCount)
+    {
+        $this->ratingCount = $ratingCount;
     }
 
     /**

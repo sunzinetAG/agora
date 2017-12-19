@@ -22,65 +22,78 @@ namespace AgoraTeam\Agora\Domain\Model;
  ***************************************************************/
 
 /**
- * Attachment
+ * Class Post
+ *
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class Attachment extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class Rating extends Entity
 {
 
     /**
-     * title
+     * user
+     * may be NULL if post is anonymous
      *
-     * @var string
+     * @var \AgoraTeam\Agora\Domain\Model\User
      */
-    protected $title = '';
+    protected $user = null;
 
     /**
-     * file
+     * posts
      *
-     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     * @var \AgoraTeam\Agora\Domain\Model\Post
      */
-    protected $file = null;
+    protected $post = null;
 
     /**
-     * Returns the title
-     *
-     * @return string $title
+     * @var int
      */
-    public function getTitle()
+    protected $value = 1;
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
     {
-        return $this->title;
+        return $this->user;
     }
 
     /**
-     * Sets the title
-     *
-     * @param string $title
-     * @return void
+     * @param User $user
      */
-    public function setTitle($title)
+    public function setUser(User $user)
     {
-        $this->title = $title;
+        $this->user = $user;
     }
 
     /**
-     * Returns the file
-     *
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference $file
+     * @return Post
      */
-    public function getFile()
+    public function getPost(): Post
     {
-        return $this->file;
+        return $this->post;
     }
 
     /**
-     * Sets the file
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $file
-     * @return void
+     * @param Post $post
      */
-    public function setFile(\TYPO3\CMS\Extbase\Domain\Model\FileReference $file)
+    public function setPost(Post $post)
     {
-        $this->file = $file;
+        $this->post = $post;
     }
 
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param int $value
+     */
+    public function setValue(int $value)
+    {
+        $this->value = $value;
+    }
 }

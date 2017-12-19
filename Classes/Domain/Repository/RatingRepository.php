@@ -1,6 +1,6 @@
 <?php
 
-namespace AgoraTeam\Agora\Domain\Model;
+namespace AgoraTeam\Agora\Domain\Repository;
 
 /***************************************************************
  *  Copyright notice
@@ -20,67 +20,43 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 
 /**
- * Attachment
+ * The repository for the ratings of a post
  */
-class Attachment extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class RatingRepository extends Repository
 {
 
     /**
-     * title
+     * Initializes the repository.
      *
-     * @var string
-     */
-    protected $title = '';
-
-    /**
-     * file
-     *
-     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
-     */
-    protected $file = null;
-
-    /**
-     * Returns the title
-     *
-     * @return string $title
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Sets the title
-     *
-     * @param string $title
      * @return void
      */
-    public function setTitle($title)
+    public function initializeObject()
     {
-        $this->title = $title;
+        /** @var Typo3QuerySettings $querySettings */
+        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        $querySettings->setRespectStoragePage(false);
+        $this->setDefaultQuerySettings($querySettings);
     }
 
     /**
-     * Returns the file
-     *
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference $file
+     * @param $user
+     * @param $post
+     * @return object
      */
-    public function getFile()
+    public function findOneByUserAndPost($user, $post)
     {
-        return $this->file;
-    }
+        $query = $this->createQuery();
+        $query->matching(
+            $query->logicalAnd([
+                $query->equals('user', $user),
+                $query->equals('post', $post)
+            ])
+        );
 
-    /**
-     * Sets the file
-     *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $file
-     * @return void
-     */
-    public function setFile(\TYPO3\CMS\Extbase\Domain\Model\FileReference $file)
-    {
-        $this->file = $file;
+        return $query->execute()->getFirst();
     }
 
 }

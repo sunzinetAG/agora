@@ -10,6 +10,7 @@ if (!defined('TYPO3_MODE')) {
         'Forum' => 'list',
         'Thread' => 'list, delete, edit, update, new, create',
         'Post' => 'list, show, showHistory, delete, edit, update, new, create',
+        'Rating' => 'rate',
         'User' => 'addObservedThread, removeObservedThread, addFavoritePost, removeFavoritePost',
         'Attachment' => 'download'
     ),

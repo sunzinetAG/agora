@@ -31,7 +31,6 @@ class Forum extends Entity implements AccessibleInterface
      * title
      *
      * @var string
-     * @validate notEmpty
      */
     protected $title = '';
 

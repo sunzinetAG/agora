@@ -32,12 +32,12 @@ return array(
     ),
     'interface' => array(
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, topic, text, publishing_date,
-		crdate, replies, quoted_post, creator, historical_versions, forum',
+		crdate, replies, quoted_post, creator, historical_versions, forum, rating_count',
     ),
     'types' => array(
         '1' => array(
             'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, topic, text,
-		publishing_date, crdate, replies, quoted_post, creator, historical_versions, thread, forum,
+		publishing_date, crdate, replies, quoted_post, creator, historical_versions, thread, forum, rating_count,
 		--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, starttime, endtime'
         ),
     ),
@@ -273,6 +273,15 @@ return array(
                     'showPossibleLocalizationRecords' => 1,
                     'showAllLocalizationLink' => 1
                 ),
+            ),
+        ),
+        'rating_count' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_post.rating_count',
+            'config' => array(
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
             ),
         ),
         'thread' => array(
