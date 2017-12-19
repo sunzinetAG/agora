@@ -62,3 +62,11 @@
         <h2>{forum.title}</h2>
     </f:else>
 </f:if>
+
+<f:if condition="{thread.tags}">
+    <ul class="tags">
+        <f:for each="{thread.tags}" as="tag">
+            <li>{tag.title}</li>
+        </f:for>
+    </ul>
+</f:if>

@@ -21,7 +21,9 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Service\MailService;
+use AgoraTeam\Agora\Service\TagService;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * ThreadController
@@ -102,15 +104,24 @@ class ThreadController extends ActionController
      * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
      * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
      * @param string $text
+     * @param string $tags
      * @validate $text notEmpty
      * @return void
      */
     public function createAction(
         \AgoraTeam\Agora\Domain\Model\Forum $forum,
         \AgoraTeam\Agora\Domain\Model\Thread $thread,
-        $text
+        $text,
+        $tags = ''
     ) {
         $this->authenticationService->assertNewThreadAuthorization($forum);
+
+        if ($tags) {
+            /** @var TagService $tagService */
+            $tagService = $this->objectManager->get(TagService::class);
+            $tags = $tagService->prepareTags($tags);
+            $thread->setTags($tags);
+        }
 
         /** @var \AgoraTeam\Agora\Domain\Model\Post $post */
         $post = new \AgoraTeam\Agora\Domain\Model\Post;
@@ -131,6 +142,7 @@ class ThreadController extends ActionController
         $this->forumRepository->update($forum);
 
         $this->addLocalizedFlashmessage('tx_agora_domain_model_forum.flashMessages.created');
+
         if ($this->settings['thread']['notificationsForThreadOwner'] == 1 &&
             is_a($this->getUser(), '\AgoraTeam\Agora\Domain\Model\User')
         ) {
@@ -150,6 +162,7 @@ class ThreadController extends ActionController
                 $this->settings
             );
         }
+
         $this->redirect(
             'list',
             'Thread',

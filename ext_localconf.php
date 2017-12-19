@@ -54,9 +54,11 @@ if (!defined('TYPO3_MODE')) {
     'Ajax',
     array(
         'Rating' => 'rate',
+        'Tag' => 'autocomplete',
     ),
     array(
         'Rating' => 'rate',
+        'Tag' => 'autocomplete',
     )
 );
 

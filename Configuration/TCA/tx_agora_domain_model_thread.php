@@ -26,7 +26,6 @@ return array(
         'searchFields' => 'title,solved,closed,sticky,creator,posts,views,groups_with_read_access,
 							groups_with_write_access,groups_with_modification_access,users_with_read_access,
 							users_with_write_access,users_with_modification_access,',
-        'dynamicConfigFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('agora') . 'Configuration/TCA/Thread.php',
         'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('agora') .
             'Resources/Public/Icons/tx_agora_domain_model_thread.gif'
     ),
@@ -38,6 +37,8 @@ return array(
         '1' => array(
             'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title,
 									solved, closed, sticky, creator, forum,
+									--div--;Tags,
+									 tags,
 									--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
 									starttime, endtime'
         ),
@@ -205,6 +206,25 @@ return array(
                 'maxitems' => 9999,
                 'appearance' => array(
                     'collapseAll' => 0,
+                    'levelLinksPosition' => 'top',
+                    'showSynchronizationLink' => 1,
+                    'showPossibleLocalizationRecords' => 1,
+                    'showAllLocalizationLink' => 1
+                ),
+            ),
+
+        ),
+        'tags' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_thread.tags',
+            'config' => array(
+                'type' => 'select',
+                'foreign_table' => 'tx_agora_domain_model_tag',
+                'MM' => 'tx_agora_tag_thread_mm',
+                'MM_opposite_field' => 'threads',
+                'maxitems' => 20,
+                'appearance' => array(
+                    'collapseAll' => 1,
                     'levelLinksPosition' => 'top',
                     'showSynchronizationLink' => 1,
                     'showPossibleLocalizationRecords' => 1,
