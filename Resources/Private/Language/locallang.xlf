@@ -115,6 +115,12 @@
 			<trans-unit id="tx_agora_domain_model_post.edit">
 				<source>Edit</source>
 			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.delete">
+				<source>Delete</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.confirm_delete">
+				<source>Do you realy want to delete this post?</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.save">
 				<source>Save</source>
 			</trans-unit>

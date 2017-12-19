@@ -55,42 +55,7 @@
                         <hr/>
                         {post.creator.signiture}
                     </div>
-
-                    {post.ratingCount}
-                    <f:link.action action="rate" pageType="1513672176" pluginName="Ajax" controller="Rating" arguments="{post:post, rateType:'up'}" noCacheHash="1">UP</f:link.action>
-                    <f:link.action action="rate" pageType="1513672176" pluginName="Ajax" controller="Rating" arguments="{post:post, rateType:'down'}" noCacheHash="1">DOWN</f:link.action>
-
-                    <f:if condition="!{thread.closed}">
-                        <a:thread.editable thread="{thread}" user="{user}">
-                            <f:link.action class="btn btn-default" action="new"
-                                           arguments="{thread:thread, quotedPost:post}">
-                                <f:translate key="tx_agora_domain_model_post.reply"/>
-                            </f:link.action>
-                        </a:thread.editable>
-                        <a:security.ifIsAuthor object="{post}">
-                            <f:link.action class="btn btn-default" action="edit" arguments="{originalPost:post}">
-                                <f:translate key="tx_agora_domain_model_post.edit"/>
-                            </f:link.action>
-                        </a:security.ifIsAuthor>
-                    </f:if>
-
-                    <f:security.ifAuthenticated>
-                        <f:if condition="{a:postHasFavoriteUser(post:post,user:user)}">
-                            <f:then>
-                                <f:link.action class="btn btn-default" controller="User" action="removeFavoritePost"
-                                               arguments="{post:post}">
-                                    <f:translate key="tx_agora_domain_model_post.removeFavorite"/>
-                                </f:link.action>
-                            </f:then>
-                            <f:else>
-                                <f:link.action class="btn btn-default" controller="User" action="addFavoritePost"
-                                               arguments="{post:post}">
-                                    <f:translate key="tx_agora_domain_model_post.favorite"/>
-                                </f:link.action>
-                            </f:else>
-                        </f:if>
-                    </f:security.ifAuthenticated>
-
+                    <f:render partial="Buttons/Post" section="main" arguments="{post:post, user:user}" />
                 </li>
             </f:for>
         </ul>

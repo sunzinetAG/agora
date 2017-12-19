@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
 
@@ -321,16 +322,30 @@ class PostController extends ActionController
     {
         $this->authenticationService->assertDeletePostAuthorization($post);
 
-        $this->addFlashMessage(
-            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                'tx_agora_domain_model_post.flashMessages.deleted',
-                'agora'
-            ),
-            '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
-        );
-        $this->postRepository->remove($post);
-        $this->redirect('list');
+        // check if post is first post
+        $firstPost = $this->postRepository->findByThread($post->getThread())->getFirst();
+        if ($firstPost == $post) {
+            $forum = $post->getThread()->getForum();
+            $this->threadRepository->remove($post->getThread());
+            $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
+            $this->redirect('list', 'Thread', 'Agora', ['forum' => $forum]);
+        } else {
+            $thread = $post->getThread();
+            $this->postRepository->remove($post);
+            $this->addLocalizedFlashmessage('tx_agora_domain_model_post.flashMessages.deleted');
+            $this->redirect('list', 'Post', 'Agora', ['thread' => $thread]);
+        }
+    }
+
+    /**
+     * @param Post $post
+     */
+    public function confirmDeleteAction(Post $post)
+    {
+        $this->authenticationService->assertDeletePostAuthorization($post);
+
+        $this->view->assign('post', $post);
+        $this->view->assign('user', $this->getUser());
     }
 
     /**
