@@ -70,14 +70,17 @@ class RatingController extends ActionController
 
         switch ($rateType) {
             case self::RATE_TYPE_UP:
-                $rating = $this->rate($user, $post, 1);
+                $ratingRes = $this->rate($user, $post, 1);
                 break;
             case self::RATE_TYPE_DOWN:
-                $rating = $this->rate($user, $post, -1);
+                $ratingRes = $this->rate($user, $post, -1);
                 break;
             default:
-                $this->neutralize($post, $rating);
+                $ratingRes = $this->neutralize($post, $rating);
         }
+
+
+        return json_encode($ratingRes);
     }
 
     /**
@@ -99,7 +102,10 @@ class RatingController extends ActionController
         $this->ratingRepository->add($rating);
         $this->persistenceManager->persistAll();
 
-        return $rating;
+        return [
+            'ratingAmount' => $post->getRatingCount(),
+            'currentUserRating' => $rateType
+        ];
     }
 
     /**
@@ -116,5 +122,10 @@ class RatingController extends ActionController
         $this->ratingRepository->remove($rating);
         $this->postRepository->update($post);
         $this->persistenceManager->persistAll();
+
+        return [
+            'ratingAmount' => $post->getRatingCount(),
+            'currentUserRating' => $prevRatingValue
+        ];
     }
 }
