@@ -446,7 +446,7 @@ class Thread extends Entity implements AccessibleInterface
         foreach ($tagArr as $tag) {
             $resultArr[] = $tag->getTitle();
         }
-        $tagList = implode(', ', $resultArr);
+        $tagList = implode(',', $resultArr);
 
         return $tagList;
     }

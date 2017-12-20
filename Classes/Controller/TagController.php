@@ -37,14 +37,30 @@ class TagController extends ActionController
      * @param string $part
      * @return string
      */
-    public function autocompleteAction($part)
+    public function autocompleteAction($part = '')
     {
         $result = [];
-        $tagObj = $this->tagRepository->findTagLikeTitle($part);
-        foreach ($tagObj as $tag) {
-            $result[] = $tag->getTitle();
+        if ($part) {
+            $tagObj = $this->tagRepository->findTagLikeTitle($part);
+            foreach ($tagObj as $tag) {
+                $result[] = $tag->getTitle();
+            }
         }
 
         return json_encode($result);
+    }
+
+    /**
+     * listAction
+     * @return string
+     */
+    public function listAction()
+    {
+        $tagArr = [];
+        $tagObj = $this->tagRepository->findAll();
+        foreach ($tagObj as $tag) {
+            $tagArr[] = $tag->getTitle();
+        }
+        return json_encode($tagArr);
     }
 }

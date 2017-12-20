@@ -269,30 +269,36 @@ class PostController extends ActionController
     ) {
         $this->authenticationService->assertEditPostAuthorization($originalPost);
 
-        $newPost = $this->postService->copy($originalPost);
-        $newPost->setTopic($post->getTopic());
-        $newPost->setText($post->getText());
-        $newPost->setForum($post->getThread()->getForum());
+        $thread = $originalPost->getThread();
+        // Only process if there are changes within the text
+        if ($originalPost->getText() !== $post->getText()) {
+            $newPost = $this->postService->copy($originalPost);
+            $newPost->setTopic($post->getTopic());
+            $newPost->setText($post->getText());
+            $newPost->setForum($post->getThread()->getForum());
 
-        /* Move all replies to the newPost and update the postReposiory */
-        foreach ($originalPost->getReplies()->toArray() as $reply) {
-            $newPost->addReply($reply);
-            $reply->setQuotedPost($newPost);
-            $this->postRepository->update($reply);
+            /* Move all replies to the newPost and update the postReposiory */
+            foreach ($originalPost->getReplies()->toArray() as $reply) {
+                $newPost->addReply($reply);
+                $reply->setQuotedPost($newPost);
+                $this->postRepository->update($reply);
+            }
+
+            $this->postService->archive($originalPost);
+            $newPost->addHistoricalVersion($originalPost);
+
+            $this->postRepository->update($originalPost);
+            $this->postRepository->add($newPost);
+            $thread = $newPost->getThread();
         }
-
-        $this->postService->archive($originalPost);
-        $newPost->addHistoricalVersion($originalPost);
-
-        $this->postRepository->update($originalPost);
-        $this->postRepository->add($newPost);
 
         // Update the tags for the thread due to changes on the first post
         if ($tags) {
             /** @var TagService $tagService */
             $tagService = $this->objectManager->get(TagService::class);
             $tags = $tagService->prepareTags($tags);
-            $post->getThread()->setTags($tags);
+            $thread->setTags($tags);
+            $this->threadRepository->update($thread);
         }
 
         $this->addFlashMessage(
@@ -308,7 +314,7 @@ class PostController extends ActionController
             'list',
             'Post',
             'agora',
-            array('thread' => $newPost->getThread())
+            array('thread' => $thread)
         );
     }
 

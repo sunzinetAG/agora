@@ -55,4 +55,12 @@ class TagRepository extends Repository
         );
         return $query->execute();
     }
+
+    public function findAll()
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setRespectStoragePage(false);
+        return $query->execute();
+    }
+
 }
