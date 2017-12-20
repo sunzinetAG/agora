@@ -130,6 +130,9 @@ module.tx_agora {
                 1 = autocomplete
                 2 = list
             }
+            Rating {
+                1 = rate
+            }
         }
     }
 }
