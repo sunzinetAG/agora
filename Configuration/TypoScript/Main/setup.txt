@@ -123,5 +123,13 @@ module.tx_agora {
         vendorName = AgoraTeam
         extensionName = Agora
         pluginName = Ajax
+        controller = Rating
+        action = rate
+        switchableControllerActions {
+            Tag {
+                1 = autocomplete
+                2 = list
+            }
+        }
     }
 }
