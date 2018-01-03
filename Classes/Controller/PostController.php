@@ -309,20 +309,23 @@ class PostController extends ActionController
             $this->threadRepository->remove($post->getThread());
             $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
             $arguments = ['forum' => $forum];
+            $this->redirect(
+                'list',
+                'Thread',
+                'Agora',
+                ['forum' => $forum]
+            );
         } else {
             $thread = $post->getThread();
             $this->postRepository->remove($post);
             $this->addLocalizedFlashmessage('tx_agora_domain_model_post.flashMessages.deleted');
-            $arguments = ['thread' => $thread];
+            $this->redirect(
+                'list',
+                'Post',
+                'Agora',
+                ['thread' => $thread]
+            );
         }
-
-        $this->signalSlotDispatcher->dispatch(
-            __CLASS__,
-            'postDeleted',
-            ['post' => $post]
-        );
-
-        $this->redirect('list', 'Post', 'Agora', $arguments);
     }
 
     /**
