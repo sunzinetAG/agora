@@ -62,5 +62,46 @@ if (!defined('TYPO3_MODE')) {
     )
 );
 
+// Add hook for Access-Writing
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] =
     AgoraTeam\Agora\Hooks\Tcemain::class;
+
+
+// Add signal slots
+$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+    \TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class
+);
+$signalSlotDispatcher->connect(
+    'AgoraTeam\Agora\Controller\PostController',
+    'postCreated',
+    'AgoraTeam\Agora\Service\Action\ActionListener',
+    'onPostCreated'
+);
+$signalSlotDispatcher->connect(
+    'AgoraTeam\Agora\Controller\PostController',
+    'postUpdated',
+    'AgoraTeam\Agora\Service\Action\ActionListener',
+    'onPostUpdated'
+);
+$signalSlotDispatcher->connect(
+    'AgoraTeam\Agora\Controller\PostController',
+    'postDeleted',
+    'AgoraTeam\Agora\Service\Action\ActionListener',
+    'onPostDeleted'
+);
+$signalSlotDispatcher->connect(
+    'AgoraTeam\Agora\Controller\ThreadController',
+    'threadCreated',
+    'AgoraTeam\Agora\Service\Action\ActionListener',
+    'onThreadCreated'
+);
+
+
+// Add CommandController
+if (isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']) == false) {
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'] = array();
+}
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
+    'AgoraTeam\\Agora\\Command\\NotificationCommandController';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
+    'AgoraTeam\\Agora\\Command\\ActionConverterCommandController';

@@ -1,10 +1,10 @@
 <?php
 
-namespace AgoraTeam\Agora\Controller;
+namespace AgoraTeam\Agora\Domain\Repository;
 
 /***************************************************************
  *  Copyright notice
- *  (c) 2015 Philipp Thiele <philipp.thiele@phth.de>
+ *  (c) 2017 Philipp Thiele <philipp.thiele@phth.de>
  *           Björn Christopher Bresser <bjoern.bresser@gmail.com>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,34 +22,12 @@ namespace AgoraTeam\Agora\Controller;
  ***************************************************************/
 
 /**
- * Class ForumController
+ * Class TaskRepository
  *
- * @package AgoraTeam\Agora\Controller
+ * @package AgoraTeam\Agora\Domain\Repository
  */
-class ForumController extends ActionController
+class ActionRepository extends Repository
 {
 
-    /**
-     * ForumRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
-     * @inject
-     */
-    protected $forumRepository = null;
 
-    /**
-     * Action list
-     *
-     * @return void
-     */
-    public function listAction()
-    {
-        $forums = $this->forumRepository->findVisibleRootForums();
-        $this->view->assignMultiple(
-            array(
-                'forums' => $forums,
-                'user' => $this->authenticationService->getUser()
-            )
-        );
-    }
 }

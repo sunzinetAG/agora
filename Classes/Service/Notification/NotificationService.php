@@ -1,11 +1,11 @@
 <?php
 
-namespace AgoraTeam\Agora\Controller;
+namespace AgoraTeam\Agora\Service\Notification;
 
 /***************************************************************
  *  Copyright notice
  *  (c) 2015 Philipp Thiele <philipp.thiele@phth.de>
- *           Björn Christopher Bresser <bjoern.bresser@gmail.com>
+ *           BjÃ¶rn Christopher Bresser <bjoern.bresser@gmail.com>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -20,36 +20,27 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\NotifiableInterface;
+use AgoraTeam\Agora\Domain\Model\Thread;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
- * Class ForumController
+ * Class NotificationService
  *
- * @package AgoraTeam\Agora\Controller
+ * @package AgoraTeam\Agora\Service
  */
-class ForumController extends ActionController
+class NotificationService implements SingletonInterface
 {
 
-    /**
-     * ForumRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
-     * @inject
-     */
-    protected $forumRepository = null;
+    const OTHER = 0;
 
-    /**
-     * Action list
-     *
-     * @return void
-     */
-    public function listAction()
-    {
-        $forums = $this->forumRepository->findVisibleRootForums();
-        $this->view->assignMultiple(
-            array(
-                'forums' => $forums,
-                'user' => $this->authenticationService->getUser()
-            )
-        );
-    }
+    const NEW_THREAD = 1;
+
+    const NEW_POST = 2;
+
+    const UPDATE_POST = 3;
+
+    const DELETE_POST = 4;
+
 }

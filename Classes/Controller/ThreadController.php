@@ -130,38 +130,27 @@ class ThreadController extends ActionController
         $now = new \DateTime();
         $post->setPublishingDate($now);
 
-        if (is_a($this->getUser(), '\AgoraTeam\Agora\Domain\Model\User')) {
-            $post->setCreator($this->getUser());
-        }
-        $thread->addPost($post);
-        if (is_a($this->getUser(), '\AgoraTeam\Agora\Domain\Model\User')) {
-            $thread->setCreator($this->getUser());
+        if (is_a($this->authenticationService->getUser(), '\AgoraTeam\Agora\Domain\Model\User')) {
+            $post->setCreator($this->authenticationService->getUser());
         }
 
+        $thread->setForum($forum);
+        $thread->addPost($post);
+        if (is_a($this->authenticationService->getUser(), '\AgoraTeam\Agora\Domain\Model\User')) {
+            $thread->setCreator($this->authenticationService->getUser());
+        }
         $forum->addThread($thread);
         $this->forumRepository->update($forum);
 
         $this->addLocalizedFlashmessage('tx_agora_domain_model_forum.flashMessages.created');
 
-        if ($this->settings['thread']['notificationsForThreadOwner'] == 1 &&
-            is_a($this->getUser(), '\AgoraTeam\Agora\Domain\Model\User')
-        ) {
-            $user = $this->getUser();
-            MailService::sendMail(
-                array(
-                    $user->getEmail() => $user->getDisplayName()
-                ),
-                $this->getThreadDefaultSender(),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('email.updateDepotType.subject', 'depot'),
-                'NotificationToThreadOwner',
-                array(
-                    'user' => $user,
-                    'thread' => $thread
-                ),
-                '',
-                $this->settings
-            );
-        }
+        /* Force the thread to persist for the dispatcher */
+        $this->persistenceManager->persistAll();
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'threadCreated',
+            ['thread' => $thread]
+        );
 
         $this->redirect(
             'list',
@@ -172,61 +161,13 @@ class ThreadController extends ActionController
     }
 
     /**
-     * action edit
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
-     * @ignorevalidation $thread
-     * @return void
-     */
-    public function editAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
-    {
-        $this->authenticationService->assertEditPostAuthorization($thread);
-        $this->view->assign('thread', $thread);
-    }
-
-    /**
-     * action update
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
-     * @return void
-     */
-    public function updateAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
-    {
-        $this->authenticationService->assertEditPostAuthorization($thread);
-        $this->addFlashMessage(
-            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                'tx_agora_domain_model_thread.flashMessages.updated',
-                'agora'
-            ),
-            '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
-        );
-        $this->threadRepository->update($thread);
-        $this->redirect('list');
-    }
-
-    /**
-     * action delete
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
-     * @return void
-     */
-    public function deleteAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
-    {
-        $this->authenticationService->assertDeletePostAuthorization($thread);
-        $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
-        $this->threadRepository->remove($thread);
-        $this->redirect('list');
-    }
-
-    /**
      * action listLatest
      *
      * @return void
      */
     public function listLatestAction()
     {
-        $user = $this->getUser();
+        $user = $this->authenticationService->getUser();
         $limit = $this->settings['thread']['numberOfItemsInLatestView'];
         $latestThreads = $this->threadRepository->findLatestThreadsForUser($limit);
 
