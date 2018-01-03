@@ -193,6 +193,17 @@
 			<trans-unit id="tx_agora_domain_model_view.user">
 				<source>User</source>
 			</trans-unit>
+
+
+			<trans-unit id="tx_agora_domain_model_task.sent">
+				<source>Sent</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_task.post">
+				<source>Post</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_task.thread">
+				<source>Thread</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

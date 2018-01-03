@@ -52,7 +52,6 @@ plugin.tx_agora {
             numberOfItemsPerPage = 10
             dateFormat = m-d-y h:i
             numberOfItemsInObservedThreadsWidget = 5
-            notificationsForThreadOwner = 0
             defaultThreadEmailAdress = email_adress@example.de
             defaultThreadEmailUserName = ThreadAdmin
         }
@@ -62,13 +61,22 @@ plugin.tx_agora {
             numberOfItemsPerPage = 10
             dateFormat = m-d-y h:i
             defaultCreatorName = Anonymous
-            notificationsForPostOwner = 0
             defaultPostEmailAdress = email_aress@example.de
             defaultPostEmailUserName = PostAdmin
             cropLatestsPosts = 100
         }
 
+        # Notifications only work with actions and a scheduler
+        notifications {
+            enable = 0
+            notifyPostOwner = 1
+            notifyThreadOwner = 1
+        }
+
         email {
+            defaultEmailAdress = email_aress@example.de
+            defaultEmailUserName = PostAdmin
+            notificationSubject = Notificaiton Subject
             templateRootPath = {$plugin.tx_agora.email.templateRootPath}
             partialRootPath = {$plugin.tx_agora.email.partialRootPath}
             layoutRootPath = {$plugin.tx_agora.email.layoutRootPath}

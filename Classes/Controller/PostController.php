@@ -77,7 +77,7 @@ class PostController extends ActionController
         $firstPost = $this->postRepository->findByThread($thread)->getFirst();
 
         // Check if current user observes thread
-        $user = $this->getUser();
+        $user = $this->authenticationService->getUser();
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User') && $user->getObservedThreads() !== null) {
             $observedThread = $user->getObservedThreads()->offsetExists($thread);
         }
@@ -102,7 +102,7 @@ class PostController extends ActionController
     {
         $this->authenticationService->assertReadAuthorization($post);
 
-        $user = $this->getUser();
+        $user = $this->authenticationService->getUser();
         $this->view->assign('post', $post);
         $this->view->assign('user', $user);
     }
@@ -152,7 +152,7 @@ class PostController extends ActionController
         $this->authenticationService->assertNewPostAuthorization($newPost->getThread());
 
         $newPost->setForum($newPost->getThread()->getForum());
-        $user = $this->getUser();
+        $user = $this->authenticationService->getUser();
         $newPost->setCreator($user);
         $now = new \DateTime();
         $newPost->setPublishingDate($now);
@@ -172,46 +172,14 @@ class PostController extends ActionController
             '',
             \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
         );
-        $sender = $this->getThreadDefaultSender();
 
-        // Send mails to the observing users of the thread
-        foreach ($newPost->getThread()->getObservers() as $regularUser) {
-            MailService::sendMail(
-                array(
-                    $regularUser->getEmail() => $regularUser->getDisplayName()
-                ),
-                $sender,
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('email.updateDepotType.subject', 'depot'),
-                'NotificationToRegularUser',
-                array(
-                    'user' => $regularUser,
-                    'thread' => $newPost->getThread()
-                ),
-                '',
-                $this->settings
-            );
-        }
-
-        // Send mails to the threadowner
-        if (($this->settings['post']['notificationsForPostOwner'] == 1) &&
-            is_object($newPost->getThread()->getCreator())
-        ) {
-            $creator = $newPost->getThread()->getCreator();
-            MailService::sendMail(
-                array(
-                    $creator->getEmail() => $creator->getDisplayName()
-                ),
-                $this->getPostsDefaultSender(),
-                \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('email.updateDepotType.subject', 'depot'),
-                'NotificationToPostOwner',
-                array(
-                    'user' => $user,
-                    'post' => $newPost
-                ),
-                '',
-                $this->settings
-            );
-        }
+        /* Force the post to persist for the dispatcher */
+        $this->persistenceManager->persistAll();
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'postCreated',
+            ['post' => $newPost]
+        );
 
         $this->redirect(
             'list',
@@ -310,6 +278,12 @@ class PostController extends ActionController
             \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
         );
 
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'postUpdated',
+            ['post' => $newPost]
+        );
+
         $this->redirect(
             'list',
             'Post',
@@ -334,13 +308,21 @@ class PostController extends ActionController
             $forum = $post->getThread()->getForum();
             $this->threadRepository->remove($post->getThread());
             $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
-            $this->redirect('list', 'Thread', 'Agora', ['forum' => $forum]);
+            $arguments = ['forum' => $forum];
         } else {
             $thread = $post->getThread();
             $this->postRepository->remove($post);
             $this->addLocalizedFlashmessage('tx_agora_domain_model_post.flashMessages.deleted');
-            $this->redirect('list', 'Post', 'Agora', ['thread' => $thread]);
+            $arguments = ['thread' => $thread];
         }
+
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'postDeleted',
+            ['post' => $post]
+        );
+
+        $this->redirect('list', 'Post', 'Agora', $arguments);
     }
 
     /**
@@ -351,7 +333,7 @@ class PostController extends ActionController
         $this->authenticationService->assertDeletePostAuthorization($post);
 
         $this->view->assign('post', $post);
-        $this->view->assign('user', $this->getUser());
+        $this->view->assign('user', $this->authenticationService->getUser());
     }
 
     /**

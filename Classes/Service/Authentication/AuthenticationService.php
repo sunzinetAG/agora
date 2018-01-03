@@ -80,7 +80,7 @@ class AuthenticationService implements SingletonInterface
         }
     }
 
-   /**
+    /**
      * @param Post $post
      */
     public function assertEditPostAuthorization(Post $post)
@@ -90,7 +90,8 @@ class AuthenticationService implements SingletonInterface
             throw new PageNotFoundException('NOPE ' . __FUNCTION__);
         }
     }
-   /**
+
+    /**
      * @param Post $post
      */
     public function assertDeletePostAuthorization(Post $post)
@@ -109,6 +110,25 @@ class AuthenticationService implements SingletonInterface
         if (!is_a($this->user, '\AgoraTeam\Agora\Domain\Model\User')) {
             $this->user = $this->userRepository->findByUid($GLOBALS['TSFE']->fe_user->user['uid']);
         }
+
         return $this->user;
+    }
+
+    /**
+     * Get Usergroups from current user
+     *
+     * @return array
+     */
+    public function getCurrentUsergroupUids()
+    {
+        $currentUser = $this->getUser();
+        $usergroupUids = array();
+        if ($currentUser !== null) {
+            foreach ($currentUser->getUsergroup() as $usergroup) {
+                $usergroupUids[] = $usergroup->getUid();
+            }
+        }
+
+        return $usergroupUids;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace AgoraTeam\Agora\Controller;
+namespace AgoraTeam\Agora\Domain\Model;
 
 /***************************************************************
  *  Copyright notice
@@ -22,34 +22,12 @@ namespace AgoraTeam\Agora\Controller;
  ***************************************************************/
 
 /**
- * Class ForumController
+ * Interface AccessibleInterface
  *
- * @package AgoraTeam\Agora\Controller
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class ForumController extends ActionController
+interface NotifiableInterface
 {
 
-    /**
-     * ForumRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
-     * @inject
-     */
-    protected $forumRepository = null;
 
-    /**
-     * Action list
-     *
-     * @return void
-     */
-    public function listAction()
-    {
-        $forums = $this->forumRepository->findVisibleRootForums();
-        $this->view->assignMultiple(
-            array(
-                'forums' => $forums,
-                'user' => $this->authenticationService->getUser()
-            )
-        );
-    }
 }

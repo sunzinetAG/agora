@@ -26,7 +26,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  *
  * @package AgoraTeam\Agora\Domain\Model
  */
-class Post extends Entity implements AccessibleInterface
+class Post extends Entity implements AccessibleInterface, NotifiableInterface
 {
 
     /**

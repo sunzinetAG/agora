@@ -24,7 +24,7 @@ namespace AgoraTeam\Agora\Domain\Model;
 /**
  * Thread
  */
-class Thread extends Entity implements AccessibleInterface
+class Thread extends Entity implements AccessibleInterface, NotifiableInterface
 {
 
     /**
