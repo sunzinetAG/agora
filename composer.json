@@ -50,7 +50,7 @@
     }
   },
   "replace": {
-    "agorateam/agora": "self.version",
+    "agorateam/agora": "self.version"
   },
   "config": {
     "vendor-dir": ".Build/vendor",
