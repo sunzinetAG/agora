@@ -127,6 +127,7 @@ class ThreadController extends ActionController
         $post = new \AgoraTeam\Agora\Domain\Model\Post;
         $post->setTopic($thread->getTitle());
         $post->setText($text);
+        $post->setForum($forum);
         $now = new \DateTime();
         $post->setPublishingDate($now);
 
@@ -167,7 +168,6 @@ class ThreadController extends ActionController
      */
     public function listLatestAction()
     {
-        die;
         $user = $this->authenticationService->getUser();
         $limit = $this->settings['thread']['numberOfItemsInLatestView'];
         $latestThreads = $this->threadRepository->findLatestThreadsForUser($limit);
