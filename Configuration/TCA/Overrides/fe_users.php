@@ -21,10 +21,10 @@ $tmpAgoraColumns = array(
         'config' => array(
             'type' => 'inline',
             'foreign_table' => 'tx_agora_domain_model_post',
-            'foreign_field' => 'user',
+            'foreign_field' => 'creator',
             'maxitems' => 9999,
             'appearance' => array(
-                'collapseAll' => 0,
+                'collapseAll' => 1,
                 'levelLinksPosition' => 'top',
                 'showSynchronizationLink' => 1,
                 'showPossibleLocalizationRecords' => 1,
@@ -59,23 +59,7 @@ $tmpAgoraColumns = array(
             'renderMode' => 'checkbox',
         ),
     ),
-    'spam_posts' => array(
-        'exclude' => 1,
-        'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_user.spam_posts',
-        'config' => array(
-            'type' => 'inline',
-            'foreign_table' => 'tx_agora_domain_model_post',
-            'foreign_field' => 'user2',
-            'maxitems' => 9999,
-            'appearance' => array(
-                'collapseAll' => 0,
-                'levelLinksPosition' => 'top',
-                'showSynchronizationLink' => 1,
-                'showPossibleLocalizationRecords' => 1,
-                'showAllLocalizationLink' => 1
-            ),
-        ),
-    ),
+
     'view' => array(
         'config' => array(
             'type' => 'passthrough',
@@ -85,5 +69,5 @@ $tmpAgoraColumns = array(
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('fe_users', $tmpAgoraColumns, 1);
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     'fe_users',
-    '--div--;Agora,signiture,posts,favorite_posts,observed_threads,spam_posts'
+    '--div--;Agora,signiture'
 );
