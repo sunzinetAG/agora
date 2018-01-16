@@ -794,5 +794,4 @@ class Forum extends Entity implements AccessibleInterface
                 return $this->isAccessibleForUser($user);
         }
     }
-
 }
