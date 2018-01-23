@@ -242,6 +242,7 @@ class PostController extends ActionController
         // Only process if there are changes within the text
         if ($originalPost->getText() !== $post->getText()) {
             $newPost = $this->postService->copy($originalPost);
+
             $newPost->setTopic($post->getTopic());
             $newPost->setText($post->getText());
             $newPost->setForum($post->getThread()->getForum());

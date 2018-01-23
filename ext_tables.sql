@@ -238,7 +238,6 @@ CREATE TABLE tx_agora_domain_model_tag (
 CREATE TABLE fe_users (
 	view             INT(11) UNSIGNED DEFAULT 0 NOT NULL,
 	signiture        TEXT                       NOT NULL,
-	posts            INT(11) UNSIGNED DEFAULT 0 NOT NULL,
 	observed_threads INT(11) UNSIGNED DEFAULT 0 NOT NULL,
 	favorite_posts   INT(11) UNSIGNED DEFAULT 0 NOT NULL,
 	tx_extbase_type  VARCHAR(255) DEFAULT ''    NOT NULL

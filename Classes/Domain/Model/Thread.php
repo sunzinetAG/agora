@@ -316,7 +316,6 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
      * @param \AgoraTeam\Agora\Domain\Model\Post $post
      * @return void
      */
-
     public function addPost(\AgoraTeam\Agora\Domain\Model\Post $post)
     {
         $this->posts->attach($post);
@@ -413,7 +412,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes a
      *
-     * @param $viewToRemove The to be removed
+     * @param $viewToRemove to be removed
      * @return void
      */
     public function removeView($viewToRemove)

@@ -15,24 +15,6 @@ $tmpAgoraColumns = array(
             'eval' => 'trim'
         )
     ),
-    'posts' => array(
-        'exclude' => 1,
-        'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_user.posts',
-        'config' => array(
-            'type' => 'inline',
-            'foreign_table' => 'tx_agora_domain_model_post',
-            'foreign_field' => 'creator',
-            'maxitems' => 9999,
-            'appearance' => array(
-                'collapseAll' => 1,
-                'levelLinksPosition' => 'top',
-                'showSynchronizationLink' => 1,
-                'showPossibleLocalizationRecords' => 1,
-                'showAllLocalizationLink' => 1
-            ),
-        ),
-
-    ),
     'favorite_posts' => array(
         'exclude' => 1,
         'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_user.favorite_posts',

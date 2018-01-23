@@ -36,13 +36,6 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $signiture = '';
 
     /**
-     * posts
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post>
-     */
-    protected $posts = null;
-
-    /**
      * favoritePosts
      *
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post>
@@ -111,7 +104,6 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected function initStorageObjects()
     {
-        $this->posts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->favoritePosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->observedThreads = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->spamPosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
@@ -139,48 +131,6 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->signiture = $signiture;
     }
 
-    /**
-     * Adds a Post
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
-     * @return void
-     */
-    public function addPost(\AgoraTeam\Agora\Domain\Model\Post $post)
-    {
-        $this->posts->attach($post);
-    }
-
-    /**
-     * Removes a Post
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $postToRemove The Post to be removed
-     * @return void
-     */
-    public function removePost(\AgoraTeam\Agora\Domain\Model\Post $postToRemove)
-    {
-        $this->posts->detach($postToRemove);
-    }
-
-    /**
-     * Returns the posts
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $posts
-     */
-    public function getPosts()
-    {
-        return $this->posts;
-    }
-
-    /**
-     * Sets the posts
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $posts
-     * @return void
-     */
-    public function setPosts(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $posts)
-    {
-        $this->posts = $posts;
-    }
 
     /**
      * Adds a Thread
