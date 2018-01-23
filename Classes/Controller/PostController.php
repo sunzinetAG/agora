@@ -81,6 +81,7 @@ class PostController extends ActionController
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User') && $user->getObservedThreads() !== null) {
             $observedThread = $user->getObservedThreads()->offsetExists($thread);
         }
+
         $this->view->assignMultiple(
             array(
                 'thread' => $thread,

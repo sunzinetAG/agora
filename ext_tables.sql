@@ -68,7 +68,7 @@ CREATE TABLE tx_agora_domain_model_post (
 	quoted_post         INT(11) UNSIGNED DEFAULT 0    NOT NULL,
 	historical_versions INT(11) UNSIGNED DEFAULT 0    NOT NULL,
 	original_post       INT(11) UNSIGNED DEFAULT 0    NOT NULL,
-	rating_count        INT(11) DEFAULT 0             NOT NULL,
+	ratings			        INT(11) UNSIGNED DEFAULT 0    NOT NULL,
 	voting              INT(11) UNSIGNED DEFAULT 0    NOT NULL,
 	attachments         INT(11) UNSIGNED DEFAULT 0    NOT NULL,
 	creator             INT(11) UNSIGNED                       DEFAULT 0,
