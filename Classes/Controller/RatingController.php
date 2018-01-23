@@ -70,22 +70,26 @@ class RatingController extends ActionController
 
         switch ($rateType) {
             case self::RATE_TYPE_UP:
-                $ratingRes = $this->rate($user, $post, 1);
+                $this->rate($user, $post, 1);
                 break;
             case self::RATE_TYPE_DOWN:
-                $ratingRes = $this->rate($user, $post, -1);
+                $this->rate($user, $post, -1);
                 break;
             default:
-                $ratingRes = $this->neutralize($post, $rating);
+                $this->neutralize($post, $rating);
         }
-
-        return json_encode($ratingRes);
+        $this->view->assignMultiple([
+            'user' => $this->authenticationService->getUser(),
+            'post' => $post,
+            'rateType' => $rateType
+        ]);
     }
 
     /**
      * @param User $user
      * @param Post $post
      * @param int $rateType
+     * @return boolean
      */
     protected function rate($user, $post, $rateType)
     {
@@ -94,37 +98,23 @@ class RatingController extends ActionController
         $rating->setPost($post);
         $rating->setValue($rateType);
 
-        $postRatingCounter = $post->getRatingCount() + (int)$rateType;
-        $post->setRatingCount($postRatingCounter);
+        $post->addRating($rating);
 
         $this->postRepository->update($post);
         $this->ratingRepository->add($rating);
         $this->persistenceManager->persistAll();
-
-        return [
-            'ratingAmount' => $post->getRatingCount(),
-            'currentUserRating' => $rateType
-        ];
     }
 
     /**
      * @param Post $post
-     * @param Rating $post
-     * @param integer $prevRating
+     * @param Rating $rating
+     * @return boolean
      */
     protected function neutralize($post, $rating)
     {
-        $prevRatingValue = $rating->getValue();
-        $postRatingCounter = $post->getRatingCount() - (int)$prevRatingValue;
-        $post->setRatingCount($postRatingCounter);
-
+        $post->removeRating($rating);
         $this->ratingRepository->remove($rating);
         $this->postRepository->update($post);
         $this->persistenceManager->persistAll();
-
-        return [
-            'ratingAmount' => $post->getRatingCount(),
-            'currentUserRating' => $prevRatingValue
-        ];
     }
 }

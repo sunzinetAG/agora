@@ -413,7 +413,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes a
      *
-     * @param $viewToRemove The  to be removed
+     * @param $viewToRemove The to be removed
      * @return void
      */
     public function removeView($viewToRemove)
