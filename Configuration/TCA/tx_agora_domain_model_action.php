@@ -20,7 +20,6 @@ return [
         'languageField' => 'sys_language_uid',
         'transOrigPointerField' => 'l10n_parent',
         'transOrigDiffSourceField' => 'l10n_diffsource',
-        'delete' => 'deleted',
         'enablecolumns' => array(
             'disabled' => 'hidden',
             'starttime' => 'starttime',
@@ -84,7 +83,14 @@ return [
                 'max' => 255,
             )
         ),
-
+        'crdate' => array(
+            'label' => 'crdate',
+            'config' => array(
+                'type' => 'input',
+                'size' => 30,
+                'max' => 255,
+            )
+        ),
         'hidden' => array(
             'exclude' => 1,
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
@@ -182,11 +188,39 @@ return [
                 'size' => 1
             ),
         ),
+        'owner' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_action.owner',
+            'config' => array(
+                'type' => 'select',
+                'renderType' => 'selectSingleBox',
+                'foreign_table' => 'fe_users',
+                'size' => 1
+            ),
+        ),
+        'page' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_action.page',
+            'config' => array(
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ),
+        ),
+        'count' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_action.count',
+            'config' => array(
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ),
+        ),
         'title' => array(
             'exclude' => 1,
             'label' => $lll . 'tx_agora_domain_model_action.title',
             'config' => array(
-                'type' => 'select',
+                'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim'
             ),
@@ -195,7 +229,7 @@ return [
             'exclude' => 1,
             'label' => $lll . 'tx_agora_domain_model_action.link',
             'config' => array(
-                'type' => 'select',
+                'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim'
             ),

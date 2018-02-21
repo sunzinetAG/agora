@@ -246,6 +246,7 @@ class PostController extends ActionController
             $newPost->setTopic($post->getTopic());
             $newPost->setText($post->getText());
             $newPost->setForum($post->getThread()->getForum());
+            $newPost->setOriginalPost($originalPost);
 
             /* Move all replies to the newPost and update the postReposiory */
             foreach ($originalPost->getReplies()->toArray() as $reply) {
@@ -311,6 +312,11 @@ class PostController extends ActionController
             $this->threadRepository->remove($post->getThread());
             $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
             $arguments = ['forum' => $forum];
+            $this->signalSlotDispatcher->dispatch(
+                __CLASS__,
+                'threadDeleted',
+                ['thread' => $post->getThread()]
+            );
             $this->redirect(
                 'list',
                 'Thread',
@@ -321,6 +327,11 @@ class PostController extends ActionController
             $thread = $post->getThread();
             $this->postRepository->remove($post);
             $this->addLocalizedFlashmessage('tx_agora_domain_model_post.flashMessages.deleted');
+            $this->signalSlotDispatcher->dispatch(
+                __CLASS__,
+                'postDeleted',
+                ['post' => $post]
+            );
             $this->redirect(
                 'list',
                 'Post',

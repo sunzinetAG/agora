@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+
 /**
  * Class TaskRepository
  *
@@ -28,6 +30,17 @@ namespace AgoraTeam\Agora\Domain\Repository;
  */
 class ActionRepository extends Repository
 {
-
+    /**
+     * Initializes the repository.
+     *
+     * @return void
+     */
+    public function initializeObject()
+    {
+        /** @var Typo3QuerySettings $querySettings */
+        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        $querySettings->setRespectStoragePage(false);
+        $this->setDefaultQuerySettings($querySettings);
+    }
 
 }

@@ -20,6 +20,8 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * The repository for Users
@@ -44,5 +46,19 @@ class UserRepository extends Repository
         $object = $query->matching($query->logicalAnd($and))->execute()->getFirst();
 
         return $object;
+    }
+
+    /**
+     * @param string $storage
+     * @param int $amount
+     * @return QueryResultInterface
+     */
+    public function findLimitedByStorage($storage, $amount)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setStoragePageIds(explode(',', $storage));
+        $query->setLimit($amount);
+
+        return $query->execute();
     }
 }
