@@ -124,6 +124,15 @@ return [
                 ),
             ),
         ),
+        'crdate' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_notification.crdate',
+            'config' => array(
+                'type' => 'none',
+                'format' => 'date',
+                'eval' => 'date'
+            )
+        ),
         'tstamp' => array(
             'exclude' => 1,
             'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_notification.tstamp',
@@ -162,6 +171,15 @@ return [
                 'size' => 1
             ),
         ),
+        'page' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_notification.page',
+            'config' => array(
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ),
+        ),
         'post' => array(
             'exclude' => 1,
             'label' => $lll . 'tx_agora_domain_model_notification.post',
@@ -175,6 +193,16 @@ return [
         'user' => array(
             'exclude' => 1,
             'label' => $lll . 'tx_agora_domain_model_notification.user',
+            'config' => array(
+                'type' => 'select',
+                'renderType' => 'selectSingleBox',
+                'foreign_table' => 'fe_users',
+                'size' => 1
+            ),
+        ),
+        'owner' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_notification.owner',
             'config' => array(
                 'type' => 'select',
                 'renderType' => 'selectSingleBox',

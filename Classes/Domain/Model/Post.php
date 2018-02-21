@@ -97,7 +97,6 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
      * may be NULL if post is anonymous
      *
      * @var \AgoraTeam\Agora\Domain\Model\User
-     * @lazy
      */
     protected $creator = null;
 

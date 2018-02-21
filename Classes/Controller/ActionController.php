@@ -21,7 +21,13 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\HttpUtility;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use TYPO3\CMS\Extbase\Mvc\ResponseInterface;
+use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * ActionController
@@ -52,28 +58,6 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
     protected $authenticationService;
 
     /**
-     * @return array
-     */
-    protected function getPostsDefaultSender()
-    {
-        return array(
-            $this->settings['post']['defaultPostEmailAdress']
-            => $this->settings['post']['defaultPostEmailUserName']
-        );
-    }
-
-    /**
-     * @return array
-     */
-    protected function getThreadDefaultSender()
-    {
-        return array(
-            $this->settings['thread']['defaultThreadEmailAdress']
-            => $this->settings['thread']['defaultThreadEmailUserName']
-        );
-    }
-
-    /**
      * @param $key
      * @param array $arguments
      * @param null $titleKey
@@ -91,4 +75,60 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
             $severity
         );
     }
+
+    /**
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @throws \Exception
+     */
+    public function processRequest(RequestInterface $request, ResponseInterface $response)
+    {
+        try {
+            parent::processRequest($request, $response);
+        } catch (\Exception $exception) {
+            $this->handleKnownExceptionsElseThrowAgain($exception);
+        }
+    }
+
+    /**
+     * @param \Exception $exception
+     * @throws \Exception
+     */
+    private function handleKnownExceptionsElseThrowAgain(\Exception $exception)
+    {
+        if ($exception instanceof TargetNotFoundException
+            && isset($this->settings['errorHandling'])
+        ) {
+            $this->handleTargetNotFoundException($this->settings['errorHandling']);
+        } else {
+            throw $exception;
+        }
+    }
+
+    /**
+     * @param $condiguration
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    protected function handleTargetNotFoundException($configuration)
+    {
+        switch ($configuration['handling']) {
+            case 'pageNotFoundHandler':
+                $GLOBALS['TSFE']->pageNotFoundAndExit('Target not found');
+                break;
+            case 'standaloneTemplate':
+                $statusCode = constant(HttpUtility::class . '::HTTP_STATUS_' . $configuration['statuscode']);
+                HttpUtility::setResponseCode($statusCode);
+                $standaloneTemplate = GeneralUtility::makeInstance(StandaloneView::class);
+                $standaloneTemplate->setTemplatePathAndFilename(
+                    GeneralUtility::getFileAbsFileName($configuration['templatePath'])
+                );
+                $html = $standaloneTemplate->render();
+                $this->response->appendContent($html);
+                break;
+            default:
+                // Do nothing, it might be handled in the view
+        }
+    }
 }
+

@@ -260,12 +260,15 @@ CREATE TABLE tx_agora_domain_model_notification (
 	type             INT(11) UNSIGNED                         DEFAULT '0',
 	post             INT(11) UNSIGNED                         DEFAULT '0',
 	thread           INT(11) UNSIGNED                         DEFAULT '0',
+	owner            INT(11) UNSIGNED                         DEFAULT '0',
 	user             INT(11) UNSIGNED                         DEFAULT '0',
 	title            VARCHAR(255) DEFAULT ''         NOT NULL,
 	description      TEXT                            NOT NULL,
 	data             TEXT                            NOT NULL,
 	link             VARCHAR(255) DEFAULT ''         NOT NULL,
 	sent             INT(11) UNSIGNED                         DEFAULT '0',
+	count             INT(11) UNSIGNED                        DEFAULT '0',
+	page             INT(11) UNSIGNED                         DEFAULT '0',
 
 	tstamp           INT(11) UNSIGNED DEFAULT '0'    NOT NULL,
 	crdate           INT(11) UNSIGNED DEFAULT '0'    NOT NULL,
@@ -303,6 +306,7 @@ CREATE TABLE tx_agora_domain_model_action (
 	uid              INT(11)                         NOT NULL AUTO_INCREMENT,
 	pid              INT(11) DEFAULT '0'             NOT NULL,
 
+	page             INT(11) UNSIGNED                         DEFAULT '0',
 	type             INT(11) UNSIGNED                         DEFAULT '0',
 	post             INT(11) UNSIGNED                         DEFAULT '0',
 	thread           INT(11) UNSIGNED                         DEFAULT '0',

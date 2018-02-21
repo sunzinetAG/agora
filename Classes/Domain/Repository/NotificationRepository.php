@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\User;
 
 /**
  * Class TaskRepository
@@ -29,5 +30,21 @@ namespace AgoraTeam\Agora\Domain\Repository;
 class NotificationRepository extends Repository
 {
 
+    /**
+     * @param User|int $owner
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function findByOwner($owner)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setRespectStoragePage(false);
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('owner', $owner),
+                $query->equals('sent', 0)
+            )
+        );
+        return $query->execute();
+    }
 
 }

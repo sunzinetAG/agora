@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Service;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -41,7 +42,6 @@ class MailService implements SingletonInterface
      * @param string $templateName template name (UpperCamelCase)
      * @param array $variables variables to be passed to the Fluid view
      * @param array $replyTo reply to forthe email in the format array('reply@domain.tld' => 'Reply To Name')
-     * @param array $settings
      * @return boolean TRUE on success, otherwise false
      */
     public static function sendMail(
@@ -50,8 +50,7 @@ class MailService implements SingletonInterface
         $subject,
         $templateName,
         array $variables = array(),
-        $replyTo = array(),
-        $settings = array()
+        $replyTo = array()
     ) {
         $extensionName = 'tx_agora';
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
@@ -64,32 +63,31 @@ class MailService implements SingletonInterface
         /** @var StandaloneView $emailView */
         $emailView = $objectManager->get(StandaloneView::class);
         $extbaseFrameworkConfiguration = $configurationManager->getConfiguration(
-            \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+            \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS
         );
-
         $emailView->getRequest()->setControllerExtensionName($extensionName);
         $emailView->setFormat('html');
 
         //@todo Change to variable paths!
         $layoutRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(
-            $extbaseFrameworkConfiguration['settings']['email']['layoutRootPath']
+            $extbaseFrameworkConfiguration['email']['layoutRootPath']
         );
         $partialRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(
-            $extbaseFrameworkConfiguration['settings']['email']['partialRootPath']
+            $extbaseFrameworkConfiguration['email']['partialRootPath']
         );
         $templateRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(
-            $extbaseFrameworkConfiguration['settings']['email']['templateRootPath']
+            $extbaseFrameworkConfiguration['email']['templateRootPath']
         );
         $templatePathAndFilename = $templateRootPath . $templateName . '.html';
-
         $emailView->setPartialRootPaths([$partialRootPath]);
         $emailView->setLayoutRootPaths([$layoutRootPath]);
         $emailView->setTemplatePathAndFilename($templatePathAndFilename);
         $emailView->assign('subject', $subject);
-        $emailView->assign('settings', $settings);
+        $emailView->assign('settings', $extbaseFrameworkConfiguration);
         $emailView->assignMultiple($variables);
         $emailBody = $emailView->render();
 
+        /** @var MailMessage $message */
         $message = $objectManager->get('TYPO3\\CMS\\Core\\Mail\\MailMessage');
         $message->setTo($recipient)
             ->setFrom($sender)

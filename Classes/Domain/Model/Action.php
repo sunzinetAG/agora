@@ -55,24 +55,34 @@ class Action extends Entity
     protected $data = '';
 
     /**
-     * @var \TYPO3\CMS\Extbase\Domain\Model\FrontendUser $user
+     * @var int
      */
-    protected $user = null;
+    protected $user = 0;
 
     /**
-     * @var \AgoraTeam\Agora\Domain\Model\Post $post
+     * @var int
      */
-    protected $post = null;
+    protected $post = 0;
 
     /**
-     * @var \AgoraTeam\Agora\Domain\Model\thread $thread
+     * @var int
      */
-    protected $thread = null;
+    protected $thread = 0;
 
     /**
-     * @var \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @var int
      */
-    protected $forum = null;
+    protected $forum = 0;
+
+    /**
+     * @var string
+     */
+    protected $crdate;
+
+    /**
+     * @var int
+     */
+    protected $page = 0;
 
     /**
      * @return int
@@ -155,66 +165,114 @@ class Action extends Entity
     }
 
     /**
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
+     * @return int
      */
-    public function getUser(): \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
+    public function getUser(): int
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
+     * @param int $user
      */
-    public function setUser(User $user)
+    public function setUser(int $user)
     {
         $this->user = $user;
     }
 
     /**
-     * @return Post
+     * @return int
      */
-    public function getPost(): Post
+    public function getPost(): int
     {
         return $this->post;
     }
 
     /**
-     * @param Post $post
+     * @param int $post
      */
-    public function setPost(Post $post)
+    public function setPost(int $post)
     {
         $this->post = $post;
     }
 
     /**
-     * @return thread
+     * @return int
      */
-    public function getThread(): thread
+    public function getThread(): int
     {
         return $this->thread;
     }
 
     /**
-     * @param thread $thread
+     * @param int $thread
      */
-    public function setThread(thread $thread)
+    public function setThread(int $thread)
     {
         $this->thread = $thread;
     }
 
     /**
-     * @return Forum
+     * @return int
      */
-    public function getForum(): Forum
+    public function getForum(): int
     {
         return $this->forum;
     }
 
     /**
-     * @param Forum $forum
+     * @param int $forum
      */
-    public function setForum(Forum $forum)
+    public function setForum(int $forum)
     {
         $this->forum = $forum;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCrdate(): string
+    {
+        return $this->crdate;
+    }
+
+    /**
+     * @param string $crdate
+     */
+    public function setCrdate(string $crdate)
+    {
+        $this->crdate = $crdate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage(): int
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param int $page
+     */
+    public function setPage(int $page)
+    {
+        $this->page = $page;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getTstamp(): \DateTime
+    {
+        return $this->tstamp;
+    }
+
+    /**
+     * @param \DateTime $tstamp
+     */
+    public function setTstamp(\DateTime $tstamp)
+    {
+        $this->tstamp = $tstamp;
     }
 }

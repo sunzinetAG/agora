@@ -81,6 +81,16 @@ plugin.tx_agora {
             partialRootPath = {$plugin.tx_agora.email.partialRootPath}
             layoutRootPath = {$plugin.tx_agora.email.layoutRootPath}
         }
+
+        errorHandling {
+            # Possible: standaloneTemplate, pageNotFoundHandler
+            handling = standaloneTemplate
+            templatePath = EXT:agora/Resources/Private/Templates/ErrorHandling/TargetNotFound.html
+            statuscode = 404
+            redirectTo =
+        }
+
+
     }
 }
 
@@ -99,6 +109,7 @@ page {
 }
 
 # Module configuration
+module.tx_agora < plugin.tx_agora
 module.tx_agora {
     persistence {
         storagePid = {$module.tx_agora.persistence.storagePid}
