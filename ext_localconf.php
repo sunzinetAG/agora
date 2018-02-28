@@ -102,6 +102,13 @@ $signalSlotDispatcher->connect(
     'onThreadCreated'
 );
 
+$signalSlotDispatcher->connect(
+    'AgoraTeam\Agora\Controller\RatingController',
+    'rateConfirmed',
+    'AgoraTeam\Agora\Service\Action\ActionListener',
+    'onConfirmedRating'
+);
+
 
 // Add CommandController
 if (isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers']) == false) {

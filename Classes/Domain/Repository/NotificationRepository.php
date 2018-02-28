@@ -30,6 +30,11 @@ use AgoraTeam\Agora\Domain\Model\User;
 class NotificationRepository extends Repository
 {
 
+    // Order by BE sorting
+    protected $defaultOrderings = array(
+        'tstamp' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+    );
+
     /**
      * @param User|int $owner
      * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface

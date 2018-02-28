@@ -316,6 +316,7 @@ CREATE TABLE tx_agora_domain_model_action (
 	data             TEXT                            NOT NULL,
 	link             VARCHAR(255) DEFAULT ''         NOT NULL,
 	sent             INT(11) UNSIGNED                         DEFAULT '0',
+	hash             VARCHAR(255) DEFAULT ''         NOT NULL,
 
 	tstamp           INT(11) UNSIGNED DEFAULT '0'    NOT NULL,
 	crdate           INT(11) UNSIGNED DEFAULT '0'    NOT NULL,

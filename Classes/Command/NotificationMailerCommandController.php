@@ -32,6 +32,20 @@ class NotificationMailerCommandController extends CommandController
 {
 
     /**
+     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+     */
+    protected $signalSlotDispatcher;
+
+    /**
+     * @param \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher
+     */
+    public function injectSignalSlotDispatcher(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher)
+    {
+        $this->signalSlotDispatcher = $signalSlotDispatcher;
+    }
+
+
+    /**
      * userRepository
      *
      * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
@@ -76,8 +90,15 @@ class NotificationMailerCommandController extends CommandController
         foreach ($users as $user) {
             $mailSent = false;
             if ($user->getEmail()) {
-                $groupedNotifications = $this->notificationService->getGroupedNotificationsByUser($user);
-                if (!empty($groupedNotifications)) {
+                $userNotifications = $this->notificationService->getNotificationsByUser($user);
+
+                $this->signalSlotDispatcher->dispatch(
+                    __CLASS__,
+                    'afterGettingUserNotifications',
+                    [$user, &$userNotifications]
+                );
+                if (!empty($userNotifications)) {
+                    $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
                     $mailSent = $this->mailService->sendMail(
                         [$user->getEmail() => $user->getLastName()],
                         [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
@@ -88,9 +109,9 @@ class NotificationMailerCommandController extends CommandController
                 }
             }
             // Even if the users email is not set, dump the notifications
-            if ($mailSent || !$user->getEmail()) {
-                $this->notificationService->markUserNotificationsAsSent($user);
-            }
+//            if ($mailSent || !$user->getEmail()) {
+//                $this->notificationService->markUserNotificationsAsSent($user);
+//            }
         }
 
         return true;

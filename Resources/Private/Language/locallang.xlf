@@ -434,7 +434,7 @@
 			</trans-unit>
 
 			<trans-unit id="tx_agora.notification.2.Single">
-				<source>Antwort auf Ihren Beitrag</source>
+				<source>Neue Antwort auf Ihren Beitrag</source>
 			</trans-unit>
 			<trans-unit id="tx_agora.notification.3.Single">
 				<source>Aktualisierung Ihres Beitrags</source>
@@ -443,16 +443,34 @@
 				<source>von</source>
 			</trans-unit>
 			<trans-unit id="tx_agora.notification.7.Single">
-				<source>Antwort auf einen vorhandenen Beitrag</source>
+				<source>Neue Antwort auf einen vorhandenen Beitrag</source>
 			</trans-unit>
 			<trans-unit id="tx_agora.notification.2.Multi">
-				<source>%s Antworten auf Ihren Beitrag</source>
+				<source>%s neue Antworten auf Ihren Beitrag</source>
 			</trans-unit>
 			<trans-unit id="tx_agora.notification.3.Multi">
 				<source>%s Aktualisierungen Ihres Beitrags</source>
 			</trans-unit>
 			<trans-unit id="tx_agora.notification.7.Multi">
-				<source>%s Antworten auf einen vorhandenen Beitrag</source>
+				<source>%s neue Antworten auf einen vorhandenen Beitrag</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.9.Single">
+				<source>Neue positive Bewertung Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.9.Multi">
+				<source>%s neue positive Bewertungen Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.8.Single">
+				<source>Neue positive Bewertung Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.8.Multi">
+				<source>%s neue positive Bewertungen Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.7.Single">
+				<source>Neue positive Bewertung Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.7.Multi">
+				<source>%s neue positive Bewertungen Ihres Beitrags</source>
 			</trans-unit>
 
 		</body>

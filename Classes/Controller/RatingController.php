@@ -78,6 +78,13 @@ class RatingController extends ActionController
             default:
                 $this->neutralize($post, $rating);
         }
+
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'rateConfirmed',
+            ['post' => $post, 'rateType' => $rateType]
+        );
+
         $this->view->assignMultiple([
             'user' => $this->authenticationService->getUser(),
             'post' => $post,

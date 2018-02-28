@@ -29,13 +29,18 @@ class FromUserViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHe
      * Render the supplied unix timestamp in a localized human-readable string.
      *
      * @param int $user The user Id
-     * @param string $amount Amount of users
+     * @param array $amount notifications
      * @return string Formated text
      */
-    public function render($user, $amount = 0)
+    public function render($user, $amount = [])
     {
+        $counter = count($amount) - 1;
         $string = '';
-        $amount = $amount - 1;
+        foreach ($amount as $v) {
+            if ($v->getUser() == $user) {
+                $counter = $counter - 1;
+            }
+        }
 
         $username = $this->getUserByUid($user);
         if (!$username) {
@@ -45,11 +50,11 @@ class FromUserViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHe
         if ($amount == 1) {
             $translation = LocalizationUtility::translate('tx_agora.oneAdditionalPerson', 'Agora');
             $string = $username . ' ' . $translation;
-        } elseif ($amount >= 2) {
+        } elseif ($counter >= 2) {
             $translation = LocalizationUtility::translate(
                 'tx_agora.multiAdditionalPerson',
                 'Agora',
-                [0 => $amount]
+                [0 => $counter]
             );
             $string = $username . ' ' . $translation;
         } else {

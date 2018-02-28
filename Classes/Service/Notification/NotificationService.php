@@ -34,20 +34,16 @@ class NotificationService implements SingletonInterface
 {
 
     const OTHER = 0;
-
     const NEW_THREAD = 1;
-
     const NEW_POST = 2;
-
     const UPDATE_POST = 3;
-
     const DELETE_POST = 4;
-
     const DELETE_THREAD = 5;
-
     const USER_DEFINED = 6;
-
     const NEW_QUOTED_POST = 7;
+    const NEW_RATING = 8;
+    const POSITIVE_RATING = 9;
+    const NEGATIVE_RATING = 10;
 
     /**
      * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
@@ -138,6 +134,7 @@ class NotificationService implements SingletonInterface
             $groupedNotifications[$type][] = $notification;
         }
         ksort($groupedNotifications);
+
         return $groupedNotifications;
     }
 
@@ -145,32 +142,90 @@ class NotificationService implements SingletonInterface
      * @param $user
      * @return array
      */
-    public function getGroupedNotificationsByUser($user)
+    public function getNotificationsByUser($user)
     {
-        $groupedNotifications = [];
+        $notifications = [];
         $checkUser = true;
 
         $this->signalSlotDispatcher->dispatch(
             __CLASS__,
             'beforeGettingUserNotifications',
-            [$user, &$checkUser]
+            [$user, &$notifications]
         );
 
         if ($checkUser) {
             $userNotifications = $this->notificationRepository->findByOwner($user)->toArray();
             if ($userNotifications) {
-                $notifiations = $this->assambleNotifications($userNotifications);
-                $groupedNotifications = $this->groupNotificationsByType($notifiations);
+                $userNotifications = $this->revokeRatingNotifications($userNotifications);
+                $notifications = $this->assambleNotifications($userNotifications);
             }
         }
 
         $this->signalSlotDispatcher->dispatch(
             __CLASS__,
-            'afterGroupingUserNotifications',
-            [$user, &$groupedNotifications]
+            'afterGettingUserNotifications',
+            [$user, &$notifications]
         );
 
-        return $groupedNotifications;
+        return $notifications;
+    }
+
+    /**
+     * We need to revoke rating notifications due to duplications of user or missclicks
+     * @param array $userNotifications
+     * @return mixed
+     */
+    public function revokeRatingNotifications($userNotifications)
+    {
+        $revokedNotifications = [];
+        $notiToRevoke = [];
+        $tmpNotifications = $userNotifications;
+
+        foreach ($userNotifications as $key => $userNotification) {
+            // Only check the rating stuff
+            if ($userNotification->getType() == $this::NEW_RATING ||
+                $userNotification->getType() == $this::POSITIVE_RATING ||
+                $userNotification->getType() == $this::NEGATIVE_RATING
+            ) {
+                foreach ($tmpNotifications as $k => $v) {
+                    if ($userNotification->getUser() == $v->getUser() &&
+                        $userNotification->getOwner() == $v->getOwner() &&
+                        $userNotification->getUid() != $v->getUid() &&
+                        $userNotification->getPost() == $v->getPost()
+                    ) {
+                        if (!array_key_exists($k, $notiToRevoke)) {
+                            $notiToRevoke[$key][$key] = $tmpNotifications[$key];
+                            $notiToRevoke[$key][$k] = $tmpNotifications[$k];
+                            $alreadyFound[$v] = $v;
+                            unset($tmpNotifications[$k]);
+                            unset($userNotifications[$key]);
+                        }
+                    }
+                }
+            } else {
+                $revokedNotifications[] = $userNotification;
+                unset($tmpNotifications[$key]);
+
+            }
+        }
+
+        $revokedNotifications = array_unique(array_merge($revokedNotifications, $tmpNotifications));
+
+        // Now we need to check the duplications for the latest actions
+        foreach ($notiToRevoke as $key => $value) {
+            $current = current($value);
+            foreach ($value as $k => $v) {
+                if ($current->getTstamp() < $v->getTstamp()) {
+                    $current = $v;
+                } elseif ($current->getTstamp() == $v->getTstamp()) {
+                    if ($current->getUid() < $v->getUid()) {
+                        $current = $v;
+                    }
+                }
+            }
+            $revokedNotifications[] = $current;
+        }
+        return array_unique($revokedNotifications);
     }
 
     /**
@@ -195,15 +250,14 @@ class NotificationService implements SingletonInterface
         }
     }
 
-
     /**
      * @param int $page
      * @param string $type
      * @param string $title
      * @param $owner
      * @param string $description
-     * @param Post $post
-     * @param Thread $thread
+     * @param int $post
+     * @param int $thread
      * @param string $link
      * @param array $data
      */
@@ -213,8 +267,8 @@ class NotificationService implements SingletonInterface
         string $title,
         $owner,
         string $description = '',
-        Post $post = null,
-        Thread $thread = null,
+        int $post = 0,
+        int $thread = 0,
         string $link = '',
         array $data = []
     ) {
@@ -232,7 +286,7 @@ class NotificationService implements SingletonInterface
         $notification->setPost($post);
         $notification->setThread($thread);
         $notification->setLink($link);
-        $notification->setData($data);
+        $notification->setData(json_encode($data));
 
         $this->notificationRepository->add($notification);
     }
@@ -244,5 +298,4 @@ class NotificationService implements SingletonInterface
     {
         return (int)$GLOBALS['TSFE']->fe_user->user['uid'];
     }
-
 }

@@ -85,6 +85,11 @@ class Action extends Entity
     protected $page = 0;
 
     /**
+     * @var string
+     */
+    protected $hash = '';
+
+    /**
      * @return int
      */
     public function getType(): int
@@ -274,5 +279,25 @@ class Action extends Entity
     public function setTstamp(\DateTime $tstamp)
     {
         $this->tstamp = $tstamp;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash(): string
+    {
+        return $this->hash;
+    }
+
+    /**
+     * @param string $hash
+     */
+    public function setHash(string $hash = '')
+    {
+        if ($hash == '') {
+            $objVars = get_object_vars($this);
+            $hash = md5(serialize($objVars));
+        }
+        $this->hash = $hash;
     }
 }

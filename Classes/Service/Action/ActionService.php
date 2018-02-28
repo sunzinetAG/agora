@@ -20,11 +20,10 @@ namespace AgoraTeam\Agora\Service\Action;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Controller\RatingController;
 use AgoraTeam\Agora\Domain\Model\AccessibleInterface;
 use AgoraTeam\Agora\Domain\Model\Action;
 use AgoraTeam\Agora\Domain\Model\NotifiableInterface;
-use AgoraTeam\Agora\Domain\Model\Post;
-use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Service\Notification\NotificationService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -73,12 +72,14 @@ class ActionService implements SingletonInterface
     /**
      * @param NotifiableInterface $notificationObject
      * @param $type
+     * @param string $additionalValue
      * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      * @return void
      */
     public function process(
         NotifiableInterface $notificationObject,
-        $type = 0
+        $type = 0,
+        $additionalValue = ''
     ) {
         $action = null;
         if ($this->settings['notifications']['enable'] != 1) {
@@ -101,12 +102,46 @@ class ActionService implements SingletonInterface
             case NotificationService::OTHER:
                 $action = $this->addOtherAction($notificationObject);
                 break;
+            case NotificationService::NEW_RATING:
+                $action = $this->addNewRatingAction($notificationObject, $type, $additionalValue);
+                break;
             default:
                 break;
         }
         if (!is_null($action)) {
-            $this->actionRepository->add($action);
+            $action->setHash();
+            $persistedAction = $this->actionRepository->findOneByHash($action->getHash());
+            if (is_null($persistedAction)) {
+                $this->actionRepository->add($action);
+            } else {
+                $persistedAction->setTstamp(new \DateTime());
+                $this->actionRepository->update($persistedAction);
+            }
         }
+    }
+
+    /**
+     * @param $post
+     * @param $type
+     * @param $ratingValue
+     */
+    private function addNewRatingAction($post, $type, $ratingValue)
+    {
+        if ($ratingValue == RatingController::RATE_TYPE_UP) {
+            $type = NotificationService::POSITIVE_RATING;
+        } elseif ($ratingValue == RatingController::RATE_TYPE_DOWN) {
+            $type = NotificationService::NEGATIVE_RATING;
+        }
+
+        $action = new Action();
+        $action->setType($type);
+        $action->setTitle($post->getThread()->getTitle());
+        $action->setThread($post->getThread()->getUid());
+        $action->setUser($GLOBALS['TSFE']->fe_user->user['uid']);
+        $action->setPage($GLOBALS['TSFE']->id);
+        $action->setPost($post->getUid());
+
+        return $action;
     }
 
     /**
@@ -165,5 +200,4 @@ class ActionService implements SingletonInterface
 
         return $action;
     }
-
 }
