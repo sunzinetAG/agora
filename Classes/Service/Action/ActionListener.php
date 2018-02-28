@@ -96,6 +96,17 @@ class ActionListener implements SingletonInterface
     }
 
     /**
+     * Setup an action if a new thread got created
+     * @param Post $post
+     * @param string $rating
+     * @return void
+     */
+    public function onConfirmedRating(Post $post, string $rating)
+    {
+        $this->actionService->process($post, NotificationService::NEW_RATING, $rating);
+    }
+
+    /**
      * Add another action to the actionlist which is not related to agora
      *
      * @param $title

@@ -188,16 +188,6 @@ return [
                 'size' => 1
             ),
         ),
-        'owner' => array(
-            'exclude' => 1,
-            'label' => $lll . 'tx_agora_domain_model_action.owner',
-            'config' => array(
-                'type' => 'select',
-                'renderType' => 'selectSingleBox',
-                'foreign_table' => 'fe_users',
-                'size' => 1
-            ),
-        ),
         'page' => array(
             'exclude' => 1,
             'label' => $lll . 'tx_agora_domain_model_action.page',
@@ -219,6 +209,15 @@ return [
         'title' => array(
             'exclude' => 1,
             'label' => $lll . 'tx_agora_domain_model_action.title',
+            'config' => array(
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
+            ),
+        ),
+        'hash' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_action.hash',
             'config' => array(
                 'type' => 'input',
                 'size' => 30,

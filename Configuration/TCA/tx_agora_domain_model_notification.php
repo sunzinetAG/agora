@@ -235,5 +235,12 @@ return [
                 'type' => 'text',
             ),
         ),
+        'data' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_notification.data',
+            'config' => array(
+                'type' => 'text',
+            ),
+        ),
     ),
 ];

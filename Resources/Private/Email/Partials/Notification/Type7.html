@@ -29,7 +29,7 @@
                 </f:else>
             </f:if>
         </a:be.link>
-        <a:format.fromUser user="{notification.user}" amount="{notification.notifications -> f:count()}"/>
+        <a:format.fromUser user="{notification.user}" amount="{notification.notifications}"/>
         -
         <a:format.relativeDate timestamp="{notification.crdate}"
                                wrap="{f:translate(key:'tx_agora.relativeDate.wrap', extensionName: 'Agora')}"/>

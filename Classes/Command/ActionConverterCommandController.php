@@ -145,6 +145,7 @@ class ActionConverterCommandController extends CommandController
             $user = $notificationAction->getUser();
             $post = $notificationAction->getPost();
             $thread = $notificationAction->getThread();
+            $data = $notificationAction->getData();
 
             if (array_key_exists($key, $alreadyChecked)) {
                 continue;
@@ -159,6 +160,7 @@ class ActionConverterCommandController extends CommandController
                     $user == $v->getUser() &&
                     $post == $v->getPost() &&
                     $thread == $v->getThread() &&
+                    $data == $v->getData() &&
                     $k != $key
                 ) {
                     $trimmedNotifications[$key] = $notificationAction;
@@ -200,76 +202,95 @@ class ActionConverterCommandController extends CommandController
             $observerNotifications = [];
 
             $thread = $this->threadRepository->findByUid($action->getThread());
-            // If there is now thread we dont need to create a notification for it
-            if ($thread) {
-                $post = $this->postRepository->findByUid($action->getPost());
-
-                switch ($action->getType()) {
-                    case NotificationService::NEW_THREAD:
-                        // Handle other actions by yourself ;)
-                        $this->signalSlotDispatcher->dispatch(
-                            __CLASS__,
-                            'notificationOnNewThread',
-                            ['action' => $action]
-                        );
-                        break;
-                    case NotificationService::NEW_POST:
-                        $notifications[] = $this->getThreadOwnerNotification($action, $thread);
-                        if ($quotedPost = $this->getQuotedPostOwnerNotification($action, $post)) {
-                            $notifications[] = $quotedPost;
-                        }
-                        $observerNotifications = $this->getObserverNotification($action, $thread, $post);
-                        break;
-                    case NotificationService::NEW_QUOTED_POST:
-                        $notifications[] = $this->getThreadOwnerNotification($action, $thread);
-                        if ($quotedPost = $this->getQuotedPostOwnerNotification($action, $post)) {
-                            $notifications[] = $quotedPost;
-                        }
-                        $observerNotifications = $this->getObserverNotification($action, $thread, $post);
-                        break;
-                    case NotificationService::UPDATE_POST:
-                        $notifications[] = $this->getThreadOwnerNotification($action, $thread);
-                        if ($quotedPost = $this->getQuotedPostOwnerNotification($action, $post)) {
-                            $notifications[] = $quotedPost;
-                        }
-                        $observerNotifications = $this->getObserverNotification($action, $thread, $post);
-                        break;
-                    case NotificationService::DELETE_POST:
-                        // Handle other actions by yourself ;)
-                        $this->signalSlotDispatcher->dispatch(
-                            __CLASS__,
-                            'notificationOnPostDelete',
-                            ['action' => $action]
-                        );
-                        break;
-                    case NotificationService::DELETE_THREAD:
-                        // Handle other actions by yourself ;)
-                        $this->signalSlotDispatcher->dispatch(
-                            __CLASS__,
-                            'notificationOnThreadDelete',
-                            ['action' => $action]
-                        );
-                        break;
-                    case NotificationService::USER_DEFINED:
-                        // @todo Need to be implemented
-                        break;
-                    default:
-                        // Handle other actions by yourself ;)
-                        $this->signalSlotDispatcher->dispatch(
-                            __CLASS__,
-                            'notificationFromOtherActions',
-                            ['action' => $action]
-                        );
-                }
-                if ($observerNotifications) {
-                    foreach ($observerNotifications as $observerNotification) {
-                        $notifications[] = $observerNotification;
+            $post = $this->postRepository->findByUid($action->getPost());
+            switch ($action->getType()) {
+                case NotificationService::NEW_THREAD:
+                    // Handle other actions by yourself ;)
+                    $this->signalSlotDispatcher->dispatch(
+                        __CLASS__,
+                        'notificationOnNewThread',
+                        ['action' => $action]
+                    );
+                    break;
+                case NotificationService::NEW_POST:
+                    $notifications[] = $this->getThreadOwnerNotification($action, $thread);
+                    if ($quotedPost = $this->getQuotedPostOwnerNotification($action, $post)) {
+                        $notifications[] = $quotedPost;
                     }
+                    $observerNotifications = $this->getObserverNotification($action, $thread, $post);
+                    break;
+                case NotificationService::NEW_QUOTED_POST:
+                    $notifications[] = $this->getThreadOwnerNotification($action, $thread);
+                    if ($quotedPost = $this->getQuotedPostOwnerNotification($action, $post)) {
+                        $notifications[] = $quotedPost;
+                    }
+                    $observerNotifications = $this->getObserverNotification($action, $thread, $post);
+                    break;
+                case NotificationService::UPDATE_POST:
+                    $notifications[] = $this->getThreadOwnerNotification($action, $thread);
+                    if ($quotedPost = $this->getQuotedPostOwnerNotification($action, $post)) {
+                        $notifications[] = $quotedPost;
+                    }
+                    $observerNotifications = $this->getObserverNotification($action, $thread, $post);
+                    break;
+                case NotificationService::DELETE_POST:
+                    $this->signalSlotDispatcher->dispatch(
+                        __CLASS__,
+                        'notificationOnPostDelete',
+                        ['action' => $action, 'notifications' => &$notifications]
+                    );
+                    break;
+                case NotificationService::DELETE_THREAD:
+                    $this->signalSlotDispatcher->dispatch(
+                        __CLASS__,
+                        'notificationOnThreadDelete',
+                        ['action' => $action, 'notifications' => &$notifications]
+                    );
+                    break;
+                case NotificationService::NEW_RATING:
+                case NotificationService::POSITIVE_RATING:
+                case NotificationService::NEGATIVE_RATING:
+                    $notifications[] = $this->getPostOwnerNotification($action, $post);
+                    break;
+                case NotificationService::USER_DEFINED:
+                    // @todo Need to be implemented
+                    break;
+                default:
+                    // Handle other actions by yourself ;)
+                    $this->signalSlotDispatcher->dispatch(
+                        __CLASS__,
+                        'notificationFromOtherActions',
+                        ['action' => $action, 'notifications' => &$notifications]
+                    );
+            }
+            if ($observerNotifications) {
+                foreach ($observerNotifications as $observerNotification) {
+                    $notifications[] = $observerNotification;
                 }
             }
         }
 
         return $notifications;
+    }
+
+    /**
+     * @param Action $action
+     * @param Post $post
+     * @return Notification
+     */
+    private function getPostOwnerNotification($action, $post)
+    {
+        $notification = new Notification();
+        $notification->setType($action->getType());
+        $notification->setUser($action->getUser());
+        $notification->setOwner($post->getCreator()->getUid());
+        $notification->setThread($action->getThread());
+        $notification->setPost($action->getPost());
+        $notification->setPage($action->getPage());
+        $notification->setTitle($action->getTitle());
+        $notification->setTstamp($action->getTstamp());
+
+        return $notification;
     }
 
     /**
@@ -287,6 +308,7 @@ class ActionConverterCommandController extends CommandController
         $notification->setPost($action->getPost());
         $notification->setPage($action->getPage());
         $notification->setTitle($action->getTitle());
+        $notification->setTstamp($action->getTstamp());
 
         return $notification;
     }
@@ -309,6 +331,7 @@ class ActionConverterCommandController extends CommandController
                 $notification->setThread($post->getThread()->getUid());
                 $notification->setPost($post->getUid());
                 $notification->setPage($action->getPage());
+                $notification->setTstamp($action->getTstamp());
             }
         }
 
@@ -336,6 +359,8 @@ class ActionConverterCommandController extends CommandController
                 $notification->setOwner($observer->getUid());
                 $notification->setThread($thread->getUid());
                 $notification->setPage($action->getPage());
+                $notification->setTstamp($action->getTstamp());
+
                 if ($post) {
                     $notification->setPost($post->getUid());
                 }
