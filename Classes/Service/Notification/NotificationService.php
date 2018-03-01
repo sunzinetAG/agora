@@ -92,7 +92,7 @@ class NotificationService implements SingletonInterface
             // First put the notification in his own assamble part
             $assambledNotifi[$key]['notifications'][] = $notification;
             $assambledNotifi[$key]['count'] = 1;
-            $assambledNotifi[$key]['crdate'] = $notification->getCrdate();
+            $assambledNotifi[$key]['crdate'] = $notification->getTstamp();
             $assambledNotifi[$key]['user'] = $notification->getUser();
             $assambledNotifi[$key]['type'] = $notification->getType();
 
@@ -172,6 +172,7 @@ class NotificationService implements SingletonInterface
 
     /**
      * We need to revoke rating notifications due to duplications of user or missclicks
+     *
      * @param array $userNotifications
      * @return mixed
      */
@@ -205,10 +206,8 @@ class NotificationService implements SingletonInterface
             } else {
                 $revokedNotifications[] = $userNotification;
                 unset($tmpNotifications[$key]);
-
             }
         }
-
         $revokedNotifications = array_unique(array_merge($revokedNotifications, $tmpNotifications));
 
         // Now we need to check the duplications for the latest actions
@@ -225,7 +224,12 @@ class NotificationService implements SingletonInterface
             }
             $revokedNotifications[] = $current;
         }
-        return array_unique($revokedNotifications);
+
+        // Due to line 212 we killed the right ordering, we need to restore it
+        $notifications = array_unique($revokedNotifications);
+        $notifications = $this->quickSort($notifications);
+
+        return $notifications;
     }
 
     /**
@@ -235,6 +239,7 @@ class NotificationService implements SingletonInterface
     public function flattenGroupedNotifications($groupedNotifications)
     {
         $flattenedNotifications = call_user_func_array('array_merge', $groupedNotifications);
+
         return $flattenedNotifications;
     }
 
@@ -289,6 +294,28 @@ class NotificationService implements SingletonInterface
         $notification->setData(json_encode($data));
 
         $this->notificationRepository->add($notification);
+    }
+
+    /**
+     * @param $notifications
+     * @return array
+     */
+    private function quickSort($notifications)
+    {
+        $loe = $gt = [];
+        if (count($notifications) < 2) {
+            return $notifications;
+        }
+        $pivotKey = key($notifications);
+        $pivot = array_shift($notifications);
+        foreach ($notifications as $notification) {
+            if ($notification->getTstamp() <= $pivot->getTstamp()) {
+                $gt[] = $notification;
+            } elseif ($notification->getTstamp() > $pivot->getTstamp()) {
+                $loe[] = $notification;
+            }
+        }
+        return array_merge($this->quickSort($loe), [$pivotKey => $pivot], $this->quickSort($gt));
     }
 
     /**
