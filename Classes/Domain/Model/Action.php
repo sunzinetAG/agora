@@ -60,6 +60,11 @@ class Action extends Entity
     protected $user = 0;
 
     /**
+     * @var string
+     */
+    protected $groups = '';
+
+    /**
      * @var int
      */
     protected $post = 0;
@@ -287,6 +292,22 @@ class Action extends Entity
     public function getHash(): string
     {
         return $this->hash;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroups(): string
+    {
+        return $this->groups;
+    }
+
+    /**
+     * @param string $groups
+     */
+    public function setGroups(string $groups)
+    {
+        $this->groups = $groups;
     }
 
     /**

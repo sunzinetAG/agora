@@ -78,6 +78,14 @@ class ActionConverterCommandController extends CommandController
     protected $postRepository = null;
 
     /**
+     * UserRepository
+     *
+     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
+     * @inject
+     */
+    protected $userRepository = null;
+
+    /**
      * The settings.
      *
      * @var array
@@ -253,7 +261,12 @@ class ActionConverterCommandController extends CommandController
                     $notifications[] = $this->getPostOwnerNotification($action, $post);
                     break;
                 case NotificationService::USER_DEFINED:
-                    // @todo Need to be implemented
+                    // This could not only return one single notification!!
+                    $userDefinedNotifications = $this->getUserDefinedNotifications($action);
+                    $notifications = array_merge(
+                        array_values($notifications),
+                        array_values($userDefinedNotifications)
+                    );
                     break;
                 default:
                     // Handle other actions by yourself ;)
@@ -269,7 +282,49 @@ class ActionConverterCommandController extends CommandController
                 }
             }
         }
+        return $notifications;
+    }
 
+    /**
+     * @param Action $action
+     * @return mixed
+     */
+    private function getUserDefinedNotifications($action)
+    {
+        $notifications = [];
+        $title = $action->getTitle();
+        $description = $action->getDescription();
+        $link = $action->getLink();
+        $type = $action->getType();
+        $tstamp = $action->getTstamp();
+
+        if ($action->getUser()) {
+            $notification = new Notification();
+            $notification->setType($type);
+            $notification->setOwner($action->getUser());
+            $notification->setTitle($title);
+            $notification->setDescription($description);
+            $notification->setLink($link);
+            $notification->setTstamp($tstamp);
+            $notification->setCrdate($tstamp);
+
+            $notifications[] = $notification;
+        } else {
+            // We need to get all users by the set groups
+            $users = $this->userRepository->findByUsergroups($action->getGroups());
+            foreach ($users as $user) {
+                $notification = new Notification();
+                $notification->setType($type);
+                $notification->setOwner($user->getUid());
+                $notification->setTitle($title);
+                $notification->setDescription($description);
+                $notification->setLink($link);
+                $notification->setTstamp($tstamp);
+                $notification->setCrdate($tstamp);
+
+                $notifications[] = $notification;
+            }
+        }
         return $notifications;
     }
 

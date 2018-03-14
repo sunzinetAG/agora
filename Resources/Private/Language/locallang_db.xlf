@@ -205,11 +205,38 @@
 				<source>Thread</source>
 			</trans-unit>
 
+
 			<trans-unit id="tx_agora_domain_model_tag">
 				<source>Tag</source>
 			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_tag.title">
 				<source>Title</source>
+			</trans-unit>
+
+
+			<trans-unit id="tx_agora_domain_model_action">
+				<source>Action</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_action.type">
+				<source>Type</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_action.user">
+				<source>User</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_action.page">
+				<source>Page</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_action.title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_action.link">
+				<source>Link</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_action.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_action.group">
+				<source>Group</source>
 			</trans-unit>
 		</body>
 	</file>
