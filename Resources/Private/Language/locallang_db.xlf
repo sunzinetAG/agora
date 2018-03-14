@@ -204,6 +204,13 @@
 			<trans-unit id="tx_agora_domain_model_task.thread">
 				<source>Thread</source>
 			</trans-unit>
+
+			<trans-unit id="tx_agora_domain_model_tag">
+				<source>Tag</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_tag.title">
+				<source>Title</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
