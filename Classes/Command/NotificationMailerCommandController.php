@@ -109,9 +109,9 @@ class NotificationMailerCommandController extends CommandController
                 }
             }
             // Even if the users email is not set, dump the notifications
-//            if ($mailSent || !$user->getEmail()) {
-//                $this->notificationService->markUserNotificationsAsSent($user);
-//            }
+            if ($mailSent || !$user->getEmail()) {
+                $this->notificationService->markUserNotificationsAsSent($user);
+            }
         }
 
         return true;
