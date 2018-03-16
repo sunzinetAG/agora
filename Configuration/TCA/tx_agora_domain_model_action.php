@@ -8,13 +8,12 @@ $lll = 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:';
 return [
     'ctrl' => array(
         'title' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_action',
-        'label' => 'crdate',
+        'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
         'dividers2tabs' => true,
         'versioningWS' => 2,
-        'hideTable' => true,
         'versioning_followPages' => true,
 
         'languageField' => 'sys_language_uid',
@@ -30,12 +29,13 @@ return [
             'Resources/Public/Icons/tx_agora_domain_model_action.gif'
     ),
     'interface' => array(
-        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, type, data, sent',
+        'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, description',
     ),
     'types' => array(
         '1' => array(
-            'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, type, data,
-		sent, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'
+            'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1,
+             type, title, description, link, user, groups, 
+             --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'
         ),
     ),
     'palettes' => array(
@@ -145,6 +145,8 @@ return [
             'config' => array(
                 'type' => 'input',
                 'size' => 5,
+                'readOnly' => true,
+                'default' => \AgoraTeam\Agora\Service\Notification\NotificationService::USER_DEFINED,
                 'eval' => 'trim'
             ),
         ),
@@ -183,9 +185,24 @@ return [
             'label' => $lll . 'tx_agora_domain_model_action.user',
             'config' => array(
                 'type' => 'select',
-                'renderType' => 'selectSingleBox',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    ['', '0'],
+                ],
                 'foreign_table' => 'fe_users',
                 'size' => 1
+            ),
+        ),
+        'groups' => array(
+            'exclude' => 1,
+            'label' => $lll . 'tx_agora_domain_model_action.user',
+            'config' => array(
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'exclusiveKeys' => '-1,-2',
+                'foreign_table' => 'fe_groups',
+                'foreign_table_where' => 'ORDER BY fe_groups.title',
+                'size' => 5
             ),
         ),
         'page' => array(
@@ -212,7 +229,7 @@ return [
             'config' => array(
                 'type' => 'input',
                 'size' => 30,
-                'eval' => 'trim'
+                'eval' => 'trim, required'
             ),
         ),
         'hash' => array(
@@ -238,6 +255,7 @@ return [
             'label' => $lll . 'tx_agora_domain_model_action.description',
             'config' => array(
                 'type' => 'text',
+                'eval' => 'required'
             ),
         ),
         'data' => array(

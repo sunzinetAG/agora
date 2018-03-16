@@ -311,6 +311,7 @@ CREATE TABLE tx_agora_domain_model_action (
 	post             INT(11) UNSIGNED                         DEFAULT '0',
 	thread           INT(11) UNSIGNED                         DEFAULT '0',
 	user             INT(11) UNSIGNED                         DEFAULT '0',
+	groups           VARCHAR(255) DEFAULT ''         NOT NULL,
 	title            VARCHAR(255) DEFAULT ''         NOT NULL,
 	description      TEXT                            NOT NULL,
 	data             TEXT                            NOT NULL,

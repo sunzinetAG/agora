@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
@@ -46,6 +47,25 @@ class UserRepository extends Repository
         $object = $query->matching($query->logicalAnd($and))->execute()->getFirst();
 
         return $object;
+    }
+
+    /**
+     * @param string $groups
+     * @return array|QueryResultInterface
+     */
+    public function findByUsergroups(string $groups)
+    {
+        $usergroups = GeneralUtility::trimExplode(',', $groups);
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setIgnoreEnableFields(true);
+        $query->getQuerySettings()->setRespectSysLanguage(false);
+        $query->getQuerySettings()->setRespectStoragePage(false);
+
+        $query->matching(
+            $query->in('groups.uid', $usergroups)
+        );
+
+        return $query->execute();
     }
 
     /**
