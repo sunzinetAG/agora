@@ -69,4 +69,21 @@ class ThreadRepository extends Repository
 
         return $result;
     }
+
+    /**
+     * @param $uid
+     */
+    public function findThreadByUid($uid)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setIgnoreEnableFields(true);
+        $query->getQuerySettings()->setIncludeDeleted(true);
+        $result = $query
+            ->matching(
+                $query->equals('uid', $uid)
+            )
+            ->execute()->getFirst();
+
+        return $result;
+    }
 }

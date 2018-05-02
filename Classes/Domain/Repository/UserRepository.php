@@ -73,6 +73,20 @@ class UserRepository extends Repository
      * @param int $amount
      * @return QueryResultInterface
      */
+    public function findByStorage($storage)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setStoragePageIds(explode(',', $storage));
+        $query->getQuerySettings()->setIgnoreEnableFields(false);
+
+        return $query->execute();
+    }
+
+    /**
+     * @param string $storage
+     * @param int $amount
+     * @return QueryResultInterface
+     */
     public function findLimitedByStorage($storage, $amount)
     {
         $query = $this->createQuery();

@@ -311,7 +311,6 @@ class Forum extends Entity implements AccessibleInterface
             $threads = $this->threads->toArray();
             $latestThread = $threads[$this->threads->count() - 1];
         }
-
         return $latestThread;
     }
 

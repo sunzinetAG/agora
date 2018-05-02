@@ -44,7 +44,6 @@ class NotificationMailerCommandController extends CommandController
         $this->signalSlotDispatcher = $signalSlotDispatcher;
     }
 
-
     /**
      * userRepository
      *
@@ -86,32 +85,36 @@ class NotificationMailerCommandController extends CommandController
                 1518774162
             );
         }
-        $users = $this->userRepository->findLimitedByStorage($userStorage, $amounfOfUsersPerRun);
-        foreach ($users as $user) {
-            $mailSent = false;
-            if ($user->getEmail()) {
-                $userNotifications = $this->notificationService->getNotificationsByUser($user);
+        $users = $this->userRepository->findByStorage($userStorage)->toArray();
+        $userPools = array_chunk($users, $amounfOfUsersPerRun);
 
-                $this->signalSlotDispatcher->dispatch(
-                    __CLASS__,
-                    'afterGettingUserNotifications',
-                    [$user, &$userNotifications]
-                );
-                if (!empty($userNotifications)) {
-                    $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
-                    $mailSent = $this->mailService->sendMail(
-                        [$user->getEmail() => $user->getLastName()],
-                        [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
-                        $settings['email']['notificationSubject'],
-                        'Notification',
-                        ['groupedNotifications' => $groupedNotifications, 'user' => $user]
+        foreach ($userPools as $pool) {
+            foreach ($pool as $user) {
+                $mailSent = false;
+                if ($user->getEmail()) {
+                    $userNotifications = $this->notificationService->getNotificationsByUser($user);
+                    $this->signalSlotDispatcher->dispatch(
+                        __CLASS__,
+                        'afterGettingUserNotifications',
+                        [$user, &$userNotifications]
                     );
+                    if (!empty($userNotifications)) {
+                        $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
+                        $mailSent = $this->mailService->sendMail(
+                            [$user->getEmail() => $user->getLastName()],
+                            [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
+                            $settings['email']['notificationSubject'],
+                            'Notification',
+                            ['groupedNotifications' => $groupedNotifications, 'user' => $user]
+                        );
+                    }
+                }
+                // Even if the users email is not set, dump the notifications
+                if ($mailSent || !$user->getEmail()) {
+                    $this->notificationService->markUserNotificationsAsSent($user);
                 }
             }
-            // Even if the users email is not set, dump the notifications
-            if ($mailSent || !$user->getEmail()) {
-                $this->notificationService->markUserNotificationsAsSent($user);
-            }
+            sleep(10);
         }
 
         return true;
