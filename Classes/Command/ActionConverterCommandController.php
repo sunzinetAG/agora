@@ -209,8 +209,9 @@ class ActionConverterCommandController extends CommandController
             $quotedPost = null;
             $observerNotifications = [];
 
-            $thread = $this->threadRepository->findByUid($action->getThread());
-            $post = $this->postRepository->findByUid($action->getPost());
+            $thread = $this->threadRepository->findThreadByUid($action->getThread());
+            $post = $this->postRepository->findPostByUid($action->getPost());
+
             switch ($action->getType()) {
                 case NotificationService::NEW_THREAD:
                     // Handle other actions by yourself ;)
