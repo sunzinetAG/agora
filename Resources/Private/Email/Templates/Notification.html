@@ -1,0 +1,27 @@
+Hello {user.username},
+
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type0" arguments="{notifications: groupedNotifications.0}"/>
+</f:if>
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type1" arguments="{notifications: groupedNotifications.1}"/>
+</f:if>
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type2" arguments="{notifications: groupedNotifications.2}"/>
+</f:if>
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type7" arguments="{notifications: groupedNotifications.7}"/>
+</f:if>
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type3" arguments="{notifications: groupedNotifications.3}"/>
+</f:if>
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type4" arguments="{notifications: groupedNotifications.4}"/>
+</f:if>
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type5" arguments="{notifications: groupedNotifications.5}"/>
+</f:if>
+<f:if condition="groupedNotifications.0">
+    <f:render partial="Notification/Type6" arguments="{notifications: groupedNotifications.6}"/>
+</f:if>
+

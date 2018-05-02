@@ -394,6 +394,85 @@
 				<source>by</source>
 			</trans-unit>
 
+
+			<trans-unit id="tx_agora.from">
+				<source>von </source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.wrap">
+				<source>vor %s</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.wrapAbsolute">
+				<source>am %s</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.fewSeconds">
+				<source>wenigen Sekunden</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.minute">
+				<source>Minute</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.hour">
+				<source>Stunde</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.day">
+				<source>Tag</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.week">
+				<source>Woche</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.pluralSuffix">
+				<source>n</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.relativeDate.pluralSuffixForDay">
+				<source>en</source>
+			</trans-unit>
+
+			<trans-unit id="tx_agora.oneAdditionalPerson">
+				<source>und 1 weitere Person</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.multiAdditionalPerson">
+				<source>und %s weiteren Personen</source>
+			</trans-unit>
+
+			<trans-unit id="tx_agora.notification.2.Single">
+				<source>Neue Antwort auf Ihren Beitrag</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.3.Single">
+				<source>Aktualisierung Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.4.Single">
+				<source>von</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.7.Single">
+				<source>Neue Antwort auf einen vorhandenen Beitrag</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.2.Multi">
+				<source>%s neue Antworten auf Ihren Beitrag</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.3.Multi">
+				<source>%s Aktualisierungen Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.7.Multi">
+				<source>%s neue Antworten auf einen vorhandenen Beitrag</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.9.Single">
+				<source>Neue positive Bewertung Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.9.Multi">
+				<source>%s neue positive Bewertungen Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.8.Single">
+				<source>Neue positive Bewertung Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.8.Multi">
+				<source>%s neue positive Bewertungen Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.7.Single">
+				<source>Neue positive Bewertung Ihres Beitrags</source>
+			</trans-unit>
+			<trans-unit id="tx_agora.notification.7.Multi">
+				<source>%s neue positive Bewertungen Ihres Beitrags</source>
+			</trans-unit>
+
 		</body>
 	</file>
 </xliff>

@@ -127,6 +127,7 @@ class ThreadController extends ActionController
         $post = new \AgoraTeam\Agora\Domain\Model\Post;
         $post->setTopic($thread->getTitle());
         $post->setText($text);
+        $post->setForum($forum);
         $now = new \DateTime();
         $post->setPublishingDate($now);
 
@@ -142,7 +143,7 @@ class ThreadController extends ActionController
         $forum->addThread($thread);
         $this->forumRepository->update($forum);
 
-        $this->addLocalizedFlashmessage('tx_agora_domain_model_forum.flashMessages.created');
+        $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.created');
 
         /* Force the thread to persist for the dispatcher */
         $this->persistenceManager->persistAll();
@@ -154,9 +155,9 @@ class ThreadController extends ActionController
 
         $this->redirect(
             'list',
-            'Thread',
+            'Post',
             'Agora',
-            array('forum' => $forum)
+            array('thread' => $thread)
         );
     }
 

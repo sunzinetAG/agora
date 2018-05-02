@@ -48,7 +48,11 @@ class ActionListener implements SingletonInterface
      */
     public function onPostCreated(Post $post)
     {
-        $this->actionService->process($post, NotificationService::NEW_POST);
+        if ($post->getQuotedPost()) {
+            $this->actionService->process($post, NotificationService::NEW_QUOTED_POST);
+        } else {
+            $this->actionService->process($post, NotificationService::NEW_POST);
+        }
     }
 
     /**
@@ -58,7 +62,7 @@ class ActionListener implements SingletonInterface
      */
     public function onPostUpdated(Post $post)
     {
-        $this->actionService->process($post, NotificationService::NEW_POST);
+        $this->actionService->process($post, NotificationService::UPDATE_POST);
     }
 
     /**
@@ -72,6 +76,16 @@ class ActionListener implements SingletonInterface
     }
 
     /**
+     * Setup an action if a post got deleted
+     * @param $thread
+     * @return void
+     */
+    public function onThreadDeleted(Thread $thread)
+    {
+        $this->actionService->process($thread, NotificationService::DELETE_THREAD);
+    }
+
+    /**
      * Setup an action if a new thread got created
      * @param Thread $thread
      * @return void
@@ -79,6 +93,17 @@ class ActionListener implements SingletonInterface
     public function onThreadCreated(Thread $thread)
     {
         $this->actionService->process($thread, NotificationService::NEW_THREAD);
+    }
+
+    /**
+     * Setup an action if a new thread got created
+     * @param Post $post
+     * @param string $rating
+     * @return void
+     */
+    public function onConfirmedRating(Post $post, string $rating)
+    {
+        $this->actionService->process($post, NotificationService::NEW_RATING, $rating);
     }
 
     /**

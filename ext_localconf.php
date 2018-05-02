@@ -90,10 +90,23 @@ $signalSlotDispatcher->connect(
     'onPostDeleted'
 );
 $signalSlotDispatcher->connect(
+    'AgoraTeam\Agora\Controller\PostController',
+    'threadDeleted',
+    'AgoraTeam\Agora\Service\Action\ActionListener',
+    'onThreadDeleted'
+);
+$signalSlotDispatcher->connect(
     'AgoraTeam\Agora\Controller\ThreadController',
     'threadCreated',
     'AgoraTeam\Agora\Service\Action\ActionListener',
     'onThreadCreated'
+);
+
+$signalSlotDispatcher->connect(
+    'AgoraTeam\Agora\Controller\RatingController',
+    'rateConfirmed',
+    'AgoraTeam\Agora\Service\Action\ActionListener',
+    'onConfirmedRating'
 );
 
 
@@ -102,6 +115,6 @@ if (isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControlle
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'] = array();
 }
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
-    'AgoraTeam\\Agora\\Command\\NotificationCommandController';
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
     'AgoraTeam\\Agora\\Command\\ActionConverterCommandController';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] =
+    'AgoraTeam\\Agora\\Command\\NotificationMailerCommandController';

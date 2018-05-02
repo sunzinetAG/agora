@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Service\Authentication\AuthenticationService;
 
 /**
  * Class Post
@@ -96,7 +97,6 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
      * may be NULL if post is anonymous
      *
      * @var \AgoraTeam\Agora\Domain\Model\User
-     * @lazy
      */
     protected $creator = null;
 
@@ -118,9 +118,9 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     protected $historicalVersions = null;
 
     /**
-     * @var int
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Rating>
      */
-    protected $ratingCount = 0;
+    protected $ratings = null;
 
     /**
      * Rootline
@@ -163,6 +163,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     protected function initStorageObjects()
     {
         $this->replies = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->ratings = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->attachments = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->historicalVersions = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
@@ -475,19 +476,72 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * @return int
+     * Adds a rating
+     *
+     * @param \AgoraTeam\Agora\Domain\Model\Rating $rating
+     * @return void
      */
-    public function getRatingCount(): int
+    public function addRating(\AgoraTeam\Agora\Domain\Model\Rating $rating)
     {
-        return $this->ratingCount;
+        $this->ratings->attach($rating);
     }
 
     /**
-     * @param int $ratingCount
+     * Removes a rating
+     *
+     * @param \AgoraTeam\Agora\Domain\Model\Rating $replyToRemove The Reply to be removed
+     * @return void
      */
-    public function setRatingCount(int $ratingCount)
+    public function removeRating(\AgoraTeam\Agora\Domain\Model\Rating $ratingToRemove)
     {
-        $this->ratingCount = $ratingCount;
+        $this->ratings->detach($ratingToRemove);
+    }
+
+    /**
+     * Returns the ratings
+     *
+     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $replies
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRatingcount()
+    {
+        return count($this->ratings);
+    }
+
+    /**
+     * @param User|null $user
+     * @return bool
+     */
+    public function hasUserRating(User $user = null)
+    {
+        $result = false;
+        if ($user) {
+            foreach ($this->ratings as $rating) {
+                if ($rating->getUser()->getUid() == $user->getUid()) {
+                    $result = true;
+                    continue;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Sets the replies
+     *
+     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $replies
+     * @return void
+     */
+    public function setRatings(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $ratings)
+    {
+        $this->ratings = $ratings;
     }
 
     /**

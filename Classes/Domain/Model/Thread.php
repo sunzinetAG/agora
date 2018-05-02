@@ -22,7 +22,9 @@ namespace AgoraTeam\Agora\Domain\Model;
  ***************************************************************/
 
 /**
- * Thread
+ * Class Thread
+ *
+ * @package AgoraTeam\Agora\Domain\Model
  */
 class Thread extends Entity implements AccessibleInterface, NotifiableInterface
 {
@@ -61,7 +63,6 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
      * may be NULL if post is anonymous
      *
      * @var \AgoraTeam\Agora\Domain\Model\User
-     * @lazy
      */
     protected $creator = null;
 
@@ -91,54 +92,6 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
      * @lazy
      */
     protected $views = null;
-
-    /**
-     * groupsWithReadAccess
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
-     * @lazy
-     */
-    protected $groupsWithReadAccess = null;
-
-    /**
-     * groupWithWriteAccess
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
-     * @lazy
-     */
-    protected $groupWithWriteAccess = null;
-
-    /**
-     * groupsWithModificationAccess
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
-     * @lazy
-     */
-    protected $groupsWithModificationAccess = null;
-
-    /**
-     * usersWithReadAccess
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
-     * @lazy
-     */
-    protected $usersWithReadAccess = null;
-
-    /**
-     * usersWithWriteAccess
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
-     * @lazy
-     */
-    protected $usersWithWriteAccess = null;
-
-    /**
-     * usersWithModificationAccess
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
-     * @lazy
-     */
-    protected $usersWithModificationAccess = null;
 
     /**
      * forum
@@ -175,12 +128,6 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
         $this->posts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->views = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->user = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->groupsWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->groupWithWriteAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->groupsWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->usersWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->usersWithWriteAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->usersWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->observers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->tags = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
@@ -368,7 +315,6 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
      * @param \AgoraTeam\Agora\Domain\Model\Post $post
      * @return void
      */
-
     public function addPost(\AgoraTeam\Agora\Domain\Model\Post $post)
     {
         $this->posts->attach($post);
@@ -465,7 +411,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes a
      *
-     * @param $viewToRemove The  to be removed
+     * @param $viewToRemove to be removed
      * @return void
      */
     public function removeView($viewToRemove)
@@ -492,268 +438,6 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     public function setViews(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $views)
     {
         $this->views = $views;
-    }
-
-    /**
-     * Adds a Group
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccess
-     * @return void
-     */
-    public function addGroupsWithReadAccess(\AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccess)
-    {
-        $this->groupsWithReadAccess->attach($groupsWithReadAccess);
-    }
-
-    /**
-     * Removes a Group
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccessToRemove The Group to be removed
-     * @return void
-     */
-    public function removeGroupsWithReadAccess(\AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccessToRemove)
-    {
-        $this->groupsWithReadAccess->detach($groupsWithReadAccessToRemove);
-    }
-
-    /**
-     * Returns the groupsWithReadAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithReadAccess
-     */
-    public function getGroupsWithReadAccess()
-    {
-        return $this->groupsWithReadAccess;
-    }
-
-    /**
-     * Sets the groupsWithReadAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithReadAccess
-     * @return void
-     */
-    public function setGroupsWithReadAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $groupsWithReadAccess)
-    {
-        $this->groupsWithReadAccess = $groupsWithReadAccess;
-    }
-
-    /**
-     * Adds a Group
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccess
-     * @return void
-     */
-    public function addGroupWithWriteAccess(\AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccess)
-    {
-        $this->groupWithWriteAccess->attach($groupWithWriteAccess);
-    }
-
-    /**
-     * Removes a Group
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccessToRemove The Group to be removed
-     * @return void
-     */
-    public function removeGroupWithWriteAccess(\AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccessToRemove)
-    {
-        $this->groupWithWriteAccess->detach($groupWithWriteAccessToRemove);
-    }
-
-    /**
-     * Returns the groupWithWriteAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupWithWriteAccess
-     */
-    public function getGroupWithWriteAccess()
-    {
-        return $this->groupWithWriteAccess;
-    }
-
-    /**
-     * Sets the groupWithWriteAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupWithWriteAccess
-     * @return void
-     */
-    public function setGroupWithWriteAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $groupWithWriteAccess)
-    {
-        $this->groupWithWriteAccess = $groupWithWriteAccess;
-    }
-
-    /**
-     * Adds a Group
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupsWithModificationAccess
-     * @return void
-     */
-    public function addGroupsWithModificationAcces(\AgoraTeam\Agora\Domain\Model\Group $groupsWithModificationAccess)
-    {
-        $this->groupsWithModificationAccess->attach($groupsWithModificationAccess);
-    }
-
-    /**
-     * Removes a Group
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupsWithModificationAccessToRemove The Group to be removed
-     * @return void
-     */
-    public function removeGroupsWithModificationAccess(
-        \AgoraTeam\Agora\Domain\Model\Group $groupsWithModificationAccessToRemove
-    ) {
-        $this->groupsWithModificationAccess->detach($groupsWithModificationAccessToRemove);
-    }
-
-    /**
-     * Returns the groupsWithModificationAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithModificationAccess
-     */
-    public function getGroupsWithModificationAccess()
-    {
-        return $this->groupsWithModificationAccess;
-    }
-
-    /**
-     * Sets the groupsWithModificationAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithModificationAccess
-     * @return void
-     */
-    public function setGroupsWithModificationAccess(
-        \TYPO3\CMS\Extbase\Persistence\ObjectStorage $groupsWithModificationAccess
-    ) {
-        $this->groupsWithModificationAccess = $groupsWithModificationAccess;
-    }
-
-    /**
-     * Adds a User
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\User $usersWithReadAccess
-     * @return void
-     */
-    public function addUsersWithReadAccess(\AgoraTeam\Agora\Domain\Model\User $usersWithReadAccess)
-    {
-        $this->usersWithReadAccess->attach($usersWithReadAccess);
-    }
-
-    /**
-     * Removes a User
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\User $usersWithReadAccessToRemove The User to be removed
-     * @return void
-     */
-    public function removeUsersWithReadAccess(\AgoraTeam\Agora\Domain\Model\User $usersWithReadAccessToRemove)
-    {
-        $this->usersWithReadAccess->detach($usersWithReadAccessToRemove);
-    }
-
-    /**
-     * Returns the usersWithReadAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithReadAccess
-     */
-    public function getUsersWithReadAccess()
-    {
-        return $this->usersWithReadAccess;
-    }
-
-    /**
-     * Sets the usersWithReadAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithReadAccess
-     * @return void
-     */
-    public function setUsersWithReadAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $usersWithReadAccess)
-    {
-        $this->usersWithReadAccess = $usersWithReadAccess;
-    }
-
-    /**
-     * Adds a User
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\User $usersWithWriteAccess
-     * @return void
-     */
-    public function addUsersWithWriteAccess(\AgoraTeam\Agora\Domain\Model\User $usersWithWriteAccess)
-    {
-        $this->usersWithWriteAccess->attach($usersWithWriteAccess);
-    }
-
-    /**
-     * Removes a User
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\User $usersWithWriteAccessToRemove The User to be removed
-     * @return void
-     */
-    public function removeUsersWithWriteAccess(\AgoraTeam\Agora\Domain\Model\User $usersWithWriteAccessToRemove)
-    {
-        $this->usersWithWriteAccess->detach($usersWithWriteAccessToRemove);
-    }
-
-    /**
-     * Returns the usersWithWriteAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithWriteAccess
-     */
-    public function getUsersWithWriteAccess()
-    {
-        return $this->usersWithWriteAccess;
-    }
-
-    /**
-     * Sets the usersWithWriteAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithWriteAccess
-     * @return void
-     */
-    public function setUsersWithWriteAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $usersWithWriteAccess)
-    {
-        $this->usersWithWriteAccess = $usersWithWriteAccess;
-    }
-
-    /**
-     * Adds a User
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\User $usersWithModificationAccess
-     * @return void
-     */
-    public function addUsersWithModificationAccess(\AgoraTeam\Agora\Domain\Model\User $usersWithModificationAccess)
-    {
-        $this->usersWithModificationAccess->attach($usersWithModificationAccess);
-    }
-
-    /**
-     * Removes a User
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\User $usersWithModificationAccessToRemove The User to be removed
-     * @return void
-     */
-    public function removeUsersWithModificationAccess(
-        \AgoraTeam\Agora\Domain\Model\User $usersWithModificationAccessToRemove
-    ) {
-        $this->usersWithModificationAccess->detach($usersWithModificationAccessToRemove);
-    }
-
-    /**
-     * Returns the usersWithModificationAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithModificationAccess
-     */
-    public function getUsersWithModificationAccess()
-    {
-        return $this->usersWithModificationAccess;
-    }
-
-    /**
-     * Sets the usersWithModificationAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithModificationAccess
-     * @return void
-     */
-    public function setUsersWithModificationAccess(
-        \TYPO3\CMS\Extbase\Persistence\ObjectStorage $usersWithModificationAccess
-    ) {
-        $this->usersWithModificationAccess = $usersWithModificationAccess;
     }
 
     /**

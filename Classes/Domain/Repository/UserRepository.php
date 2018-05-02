@@ -20,6 +20,9 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * The repository for Users
@@ -44,5 +47,52 @@ class UserRepository extends Repository
         $object = $query->matching($query->logicalAnd($and))->execute()->getFirst();
 
         return $object;
+    }
+
+    /**
+     * @param string $groups
+     * @return array|QueryResultInterface
+     */
+    public function findByUsergroups(string $groups)
+    {
+        $usergroups = GeneralUtility::trimExplode(',', $groups);
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setIgnoreEnableFields(true);
+        $query->getQuerySettings()->setRespectSysLanguage(false);
+        $query->getQuerySettings()->setRespectStoragePage(false);
+
+        $query->matching(
+            $query->in('groups.uid', $usergroups)
+        );
+
+        return $query->execute();
+    }
+
+    /**
+     * @param string $storage
+     * @param int $amount
+     * @return QueryResultInterface
+     */
+    public function findByStorage($storage)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setStoragePageIds(explode(',', $storage));
+        $query->getQuerySettings()->setIgnoreEnableFields(false);
+
+        return $query->execute();
+    }
+
+    /**
+     * @param string $storage
+     * @param int $amount
+     * @return QueryResultInterface
+     */
+    public function findLimitedByStorage($storage, $amount)
+    {
+        $query = $this->createQuery();
+        $query->getQuerySettings()->setStoragePageIds(explode(',', $storage));
+        $query->setLimit($amount);
+
+        return $query->execute();
     }
 }

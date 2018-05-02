@@ -1,0 +1,38 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<div class="type2-notifications">
+
+    <h2>
+        <f:translate key="tx_agora.notification.3.headline"
+                     extensionName="Agora">[tx_agora.notification.3.headline]
+        </f:translate>
+    </h2>
+    <f:for each="{notifications}" as="notification">
+        <a:be.link action="list" controller="Post" extensionName="Agora" pluginName="Forum"
+                   arguments="{thread: notification.notifications.0.thread}"
+                   absolute="1" pageUid="{notification.notifications.0.page}">
+            <f:if condition="{notification.notifications.0.title}">
+                <h3>{notification.notifications.0.title}</h3>
+            </f:if>
+            <f:if condition="{notification.notifications -> f:count()} > 1">
+                <f:then>
+                    <f:translate key="tx_agora.notification.3.Multi"
+                                 arguments="{0:'{notification.notifications -> f:count()}'}"
+                                 extensionName="Agora">[Multi-Notification]
+                    </f:translate>
+                </f:then>
+                <f:else>
+                    <f:translate key="tx_agora.notification.3.Single" extensionName="Agora">[Single-Notification]
+                    </f:translate>
+                </f:else>
+            </f:if>
+        </a:be.link>
+        <a:format.fromUser user="{notification.user}" amount="{notification.notifications}"/>
+        -
+        <a:format.relativeDate timestamp="{notification.crdate}"
+                               wrap="{f:translate(key:'tx_agora.relativeDate.wrap', extensionName: 'Agora')}"/>
+    </f:for>
+</div>
+<hr/>

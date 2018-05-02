@@ -26,7 +26,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  *
  * @package AgoraTeam\Agora\Domain\Model
  */
-class Rating extends Entity
+class Rating extends Entity implements NotifiableInterface
 {
 
     /**
