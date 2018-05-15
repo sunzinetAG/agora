@@ -360,10 +360,10 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     public function getLatestPost()
     {
         $latestPost = false;
-        if ($this->posts->count()) {
-            $latestPost = $this->posts->getPosition($this->posts->count());
+        $posts = $this->getPosts()->toArray();
+        if ($posts) {
+            $latestPost = end($posts);
         }
-
         return $latestPost;
     }
 
