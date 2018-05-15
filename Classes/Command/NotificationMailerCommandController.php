@@ -85,8 +85,7 @@ class NotificationMailerCommandController extends CommandController
                 1518774162
             );
         }
-//        $users = $this->userRepository->findByStorage($userStorage)->toArray();
-        $users[] = $this->userRepository->findByUid(1);
+        $users = $this->userRepository->findByStorage($userStorage)->toArray();
         $userPools = array_chunk($users, $amounfOfUsersPerRun);
 
         foreach ($userPools as $pool) {
