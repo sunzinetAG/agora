@@ -519,14 +519,16 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
      * @param User|null $user
      * @return bool
      */
-    public function hasUserRating(User $user = null)
+    public function hasUserRating($user = null)
     {
         $result = false;
         if ($user) {
             foreach ($this->ratings as $rating) {
-                if ($rating->getUser()->getUid() == $user->getUid()) {
-                    $result = true;
-                    continue;
+                if (!is_null($rating->getUser())) {
+                    if ($rating->getUser()->getUid() == $user->getUid()) {
+                        $result = true;
+                        continue;
+                    }
                 }
             }
         }

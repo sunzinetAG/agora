@@ -52,7 +52,7 @@ class Rating extends Entity implements NotifiableInterface
     /**
      * @return User
      */
-    public function getUser(): User
+    public function getUser()
     {
         return $this->user;
     }
@@ -60,7 +60,7 @@ class Rating extends Entity implements NotifiableInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser($user)
     {
         $this->user = $user;
     }
@@ -68,7 +68,7 @@ class Rating extends Entity implements NotifiableInterface
     /**
      * @return Post
      */
-    public function getPost(): Post
+    public function getPost()
     {
         return $this->post;
     }
@@ -76,7 +76,7 @@ class Rating extends Entity implements NotifiableInterface
     /**
      * @param Post $post
      */
-    public function setPost(Post $post)
+    public function setPost($post)
     {
         $this->post = $post;
     }
