@@ -169,11 +169,13 @@ class ThreadController extends ActionController
     public function listLatestAction()
     {
         $user = $this->authenticationService->getUser();
-        $limit = $this->settings['thread']['numberOfItemsInLatestView'];
+        $limit = intval($this->settings['limit']);
+        if ($limit === 0) {
+            $limit = $this->settings['thread']['numberOfItemsInLatestView'];
+        }
         $latestThreads = $this->threadRepository->findLatestThreadsForUser($limit);
 
         $this->view->assign('user', $user);
         $this->view->assign('latestThreads', $latestThreads);
     }
-
 }
