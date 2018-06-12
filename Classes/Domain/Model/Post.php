@@ -643,7 +643,8 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
         if (!is_a($user, User::class)) {
             return false;
         } else {
-            $isAuthor = ($user === $this->getCreator());
+            $authorUid = ($this->getCreator() ? $this->getCreator()->getUid() : null);
+            $isAuthor = ($user->getUid() === $authorUid);
             $threadAccess = $this->getThread()->checkAccess($user, $accessType);
             if ($isAuthor && $threadAccess) {
                 return true;
