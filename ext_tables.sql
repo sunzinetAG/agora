@@ -684,3 +684,14 @@ CREATE TABLE tx_agora_domain_model_view (
 
 );
 
+#
+# A lookup table to determine whether a user has already read a certain thread.
+#
+CREATE TABLE tx_agora_readthreads (
+	uid_feuser int(11) DEFAULT '0' NOT NULL,
+	uid_thread int(11) DEFAULT '0' NOT NULL,
+	timestamp int(11) unsigned DEFAULT '0' NOT NULL,
+
+	KEY uid_feuser (uid_feuser),
+	KEY uid_thread (uid_thread)
+);

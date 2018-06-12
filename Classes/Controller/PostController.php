@@ -39,6 +39,14 @@ class PostController extends ActionController
     protected $postService;
 
     /**
+     * threadService
+     *
+     * @var \AgoraTeam\Agora\Service\ThreadService
+     * @inject
+     */
+    protected $threadService;
+
+    /**
      * postRepository
      *
      * @var \AgoraTeam\Agora\Domain\Repository\PostRepository
@@ -73,6 +81,7 @@ class PostController extends ActionController
     {
         $this->authenticationService->assertReadAuthorization($thread);
 
+
         $posts = $this->postRepository->findByThreadOnFirstLevel($thread);
         $firstPost = $this->postRepository->findByThread($thread)->getFirst();
 
@@ -81,6 +90,8 @@ class PostController extends ActionController
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User') && $user->getObservedThreads() !== null) {
             $observedThread = $user->getObservedThreads()->offsetExists($thread);
         }
+
+        $this->threadService->markAsRead($thread, $user);
 
         $this->view->assignMultiple(
             array(
