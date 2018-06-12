@@ -55,6 +55,25 @@
 						</TCEforms>
 					</settings.listView>
 
+					<settings.limit>
+						<TCEforms>
+							<label>Limit</label>
+							<displayCond>
+								<OR>
+									<numIndex index="0">FIELD:switchableControllerActions:=:Thread->listLatest
+									</numIndex>
+									<numIndex index="1">FIELD:switchableControllerActions:=:Post->listLatest
+									</numIndex>
+								</OR>
+							</displayCond>
+							<config>
+								<type>input</type>
+								<eval>trim</eval>
+								<size>5</size>
+							</config>
+						</TCEforms>
+					</settings.limit>
+
 				</el>
 			</ROOT>
 		</sDEF>

@@ -213,8 +213,9 @@ class PostController extends ActionController
         $thread = $originalPost->getThread();
         $this->threadRepository->update($thread);
         $firstPost = $this->postRepository->findByThread($thread)->getFirst();
+        $firstPostUid = ($firstPost ? $firstPost->getUid() : null);
 
-        if ($firstPost == $originalPost) {
+        if ($firstPostUid === $originalPost->getUid()) {
             $isFirstPost = true;
         }
 
@@ -307,7 +308,8 @@ class PostController extends ActionController
 
         // check if post is first post
         $firstPost = $this->postRepository->findByThread($post->getThread())->getFirst();
-        if ($firstPost == $post) {
+        $firstPostUid = ($firstPost ? $firstPost->getUid() : null);
+        if ($firstPostUid === $post->getUid()) {
             $forum = $post->getThread()->getForum();
             $this->threadRepository->remove($post->getThread());
             $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
@@ -359,7 +361,10 @@ class PostController extends ActionController
      */
     public function listLatestAction()
     {
-        $limit = $this->settings['thread']['numberOfItemsInLatestView'];
+        $limit = intval($this->settings['limit']);
+        if ($limit === 0) {
+            $limit = $this->settings['post']['numberOfItemsInLatestView'];
+        }
         $latestPosts = $this->postRepository->findLatestPostsForUser($limit);
         $this->view->assign('latestPosts', $latestPosts);
     }
