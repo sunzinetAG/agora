@@ -21,6 +21,9 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Model\User;
+use Doctrine\DBAL\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TaskRepository
@@ -49,7 +52,32 @@ class NotificationRepository extends Repository
                 $query->equals('sent', 0)
             )
         );
+
         return $query->execute();
     }
 
+    /**
+     * @param $limit
+     * @return array
+     */
+    public function findUserListFromNotifcationsByLimit($limit)
+    {
+        // We need to use the queryBuilder because we want to group the notifications by users
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            'tx_agora_domain_model_notification'
+        );
+
+        $statement = $queryBuilder
+            ->select('owner')
+            ->from('tx_agora_domain_model_notification')
+            ->where(
+                $queryBuilder->expr()->eq('sent', 0)
+            )
+            ->groupBy('owner')
+            ->setMaxResults($limit)
+            ->execute()->fetchAll();
+
+        return $statement;
+    }
 }

@@ -53,6 +53,14 @@ class NotificationMailerCommandController extends CommandController
     protected $userRepository = null;
 
     /**
+     * userRepository
+     *
+     * @var \AgoraTeam\Agora\Domain\Repository\NotificationRepository
+     * @inject
+     */
+    protected $notificationRepository = null;
+
+    /**
      * @var \AgoraTeam\Agora\Service\MailService
      * @inject
      */
@@ -68,10 +76,18 @@ class NotificationMailerCommandController extends CommandController
      * Assamble the commands and send them by mail
      *
      * @param string $userStorage StoragePid of the user datasets
+     * @param string $start Earliest time to execute the sheduler task (Format hh:mm pm)
+     * @param integer $duration Period for the execution of the sheduler task in hours
      * @param integer $amounfOfUsersPerRun Amout of users to notificate per run
      */
-    public function notificationCommand($userStorage, $amounfOfUsersPerRun = 50)
+    public function notificationCommand($userStorage, $start, $duration, $amounfOfUsersPerRun = 50)
     {
+//        if (!$this->checkExecutionTime($start, $duration)) {
+//            return true;
+//        }
+        $date1 = time();
+
+
         $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'
         );
@@ -86,38 +102,51 @@ class NotificationMailerCommandController extends CommandController
             );
         }
 
-        $users = $this->userRepository->findByStorage($userStorage)->toArray();
-        $userPools = array_chunk($users, $amounfOfUsersPerRun);
+        $usersIds = $this->notificationRepository->findUserListFromNotifcationsByLimit($amounfOfUsersPerRun);
+        foreach ($usersIds as $key => $val) {
+            $user = $this->userRepository->findByUid($val);
+            if ($user->getEmail()) {
+                $userNotifications = $this->notificationService->getNotificationsByUser($user);
+                $this->signalSlotDispatcher->dispatch(
+                    __CLASS__,
+                    'afterGettingUserNotifications',
+                    [$user, &$userNotifications]
+                );
+                if (!empty($userNotifications)) {
+                    $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
 
-        foreach ($userPools as $pool) {
-            foreach ($pool as $user) {
-                $mailSent = false;
-                if ($user->getEmail()) {
-                    $userNotifications = $this->notificationService->getNotificationsByUser($user);
-                    $this->signalSlotDispatcher->dispatch(
-                        __CLASS__,
-                        'afterGettingUserNotifications',
-                        [$user, &$userNotifications]
+                    $mailSent = $this->mailService->sendMail(
+                        [$user->getEmail() => $user->getLastName()],
+                        [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
+                        $settings['email']['notificationSubject'],
+                        'Notification',
+                        ['groupedNotifications' => $groupedNotifications, 'user' => $user]
                     );
-                    if (!empty($userNotifications)) {
-                        $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
-                        $mailSent = $this->mailService->sendMail(
-                            [$user->getEmail() => $user->getLastName()],
-                            [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
-                            $settings['email']['notificationSubject'],
-                            'Notification',
-                            ['groupedNotifications' => $groupedNotifications, 'user' => $user]
-                        );
-                    }
-                }
-                // Even if the users email is not set, dump the notifications
-                if ($mailSent || !$user->getEmail()) {
-                    $this->notificationService->markUserNotificationsAsSent($user);
                 }
             }
-            sleep(10);
+            // Even if the users email is not set, dump the notifications
+            $this->notificationService->markUserNotificationsAsSent($user);
         }
-
+        $date2 = time();
+        $mins = ($date2 - $date1) / 60;
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($mins,__FILE__ . " " . __LINE__);
         return true;
+    }
+
+    /**
+     * @param $start
+     * @param $duration
+     * @return bool
+     */
+    public function checkExecutionTime($start, $duration)
+    {
+        $startTimestamp = strtotime($start);
+        $endTimestamp = strtotime("+ $duration hours", $startTimestamp);
+
+        if (time() > $startTimestamp && time() < $endTimestamp) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
