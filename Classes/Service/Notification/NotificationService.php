@@ -252,6 +252,7 @@ class NotificationService implements SingletonInterface
         foreach ($notifications as $notification) {
             $notification->setSent(1);
             $this->notificationRepository->update($notification);
+            $this->notificationRepository->remove($notification);
         }
     }
 
