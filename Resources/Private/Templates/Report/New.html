@@ -1,0 +1,23 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+<f:layout name="Default"/>
+
+<f:section name="main">
+
+    <f:render partial="FormErrors" arguments="{object:report}"/>
+
+    <f:form action="report" enctype="multipart/form-data" name="report" object="{report}">
+        <f:form.hidden property="post" value="{post}"/>
+
+        <f:form.textarea
+                property="text"
+                cols="40"
+                rows="15"/>
+
+        <f:form.submit value="Create new"/>
+    </f:form>
+
+</f:section>
+</html>

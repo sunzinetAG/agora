@@ -74,12 +74,20 @@ plugin.tx_agora {
         }
 
         email {
-            defaultEmailAdress = email_aress@example.de
+            defaultEmailAdress = email_adress@example.de
             defaultEmailUserName = PostAdmin
             notificationSubject = Notificaiton Subject
+
             templateRootPath = {$plugin.tx_agora.email.templateRootPath}
             partialRootPath = {$plugin.tx_agora.email.partialRootPath}
             layoutRootPath = {$plugin.tx_agora.email.layoutRootPath}
+        }
+
+        report {
+            sendMails = 1
+            defaultEmailAdress = email_adress@example.de
+            defaultEmailUserName = PostAdmin
+            notificationSubject = A new report in your forum
         }
 
         errorHandling {

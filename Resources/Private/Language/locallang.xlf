@@ -118,8 +118,14 @@
 			<trans-unit id="tx_agora_domain_model_post.delete">
 				<source>Delete</source>
 			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.report">
+				<source>Report</source>
+			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.confirm_delete">
 				<source>Do you realy want to delete this post?</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_domain_model_post.confirm_report">
+				<source>Do you realy want to report this post?</source>
 			</trans-unit>
 			<trans-unit id="tx_agora_domain_model_post.save">
 				<source>Save</source>
@@ -471,6 +477,11 @@
 			</trans-unit>
 			<trans-unit id="tx_agora.notification.7.Multi">
 				<source>%s neue positive Bewertungen Ihres Beitrags</source>
+			</trans-unit>
+
+
+			<trans-unit id="tx_agora_domain_model_mod_report.flashMessages.reported">
+				<source>Thank you for your report. An administrator will be informed about it.</source>
 			</trans-unit>
 
 		</body>
