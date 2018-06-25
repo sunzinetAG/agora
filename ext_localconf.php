@@ -12,7 +12,8 @@ if (!defined('TYPO3_MODE')) {
         'Post' => 'list, show, showHistory, delete, confirmDelete, edit, update, new, create',
         'Rating' => 'rate',
         'User' => 'addObservedThread, removeObservedThread, addFavoritePost, removeFavoritePost',
-        'Attachment' => 'download'
+        'Attachment' => 'download',
+        'Report' => 'new, report, confirm'
     ),
     array(
         'Forum' => 'list',
@@ -20,6 +21,7 @@ if (!defined('TYPO3_MODE')) {
         'Post' => 'list, show, showHistory, delete, confirmDelete, edit, update, new, create',
         'User' => 'addObservedThread, removeObservedThread, addFavoritePost, removeFavoritePost',
         'Attachment' => 'download',
+        'Report' => 'new, report, confirm'
     )
 );
 

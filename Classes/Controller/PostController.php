@@ -21,6 +21,7 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\User;
 use AgoraTeam\Agora\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
 
@@ -45,6 +46,14 @@ class PostController extends ActionController
      * @inject
      */
     protected $threadService;
+
+    /**
+     * threadService
+     *
+     * @var \AgoraTeam\Agora\Service\MailService
+     * @inject
+     */
+    protected $mailService;
 
     /**
      * postRepository
@@ -80,7 +89,6 @@ class PostController extends ActionController
     public function listAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
     {
         $this->authenticationService->assertReadAuthorization($thread);
-
 
         $posts = $this->postRepository->findByThreadOnFirstLevel($thread);
         $firstPost = $this->postRepository->findByThread($thread)->getFirst();

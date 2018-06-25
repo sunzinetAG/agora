@@ -8,6 +8,7 @@
     <f:render section="reply" arguments="{_all}" />
     <f:render section="moderate" arguments="{_all}" />
     <f:render section="favorize" arguments="{_all}" />
+    <f:render section="report" arguments="{_all}" />
     <f:render section="rating" arguments="{_all}" />
 </f:section>
 
@@ -25,7 +26,6 @@
                    arguments="{post:post, rateType:'down'}" noCacheHash="1">DOWN
     </f:link.action>
 </f:section>
-
 
 <!--
  #
@@ -62,6 +62,19 @@
         </a:security.ifIsAuthor>
     </a:thread.editable>
 </f:section>
+
+
+<!--
+ #
+ # REPORT BUTTON
+ #--------------------------------------
+-->
+<f:section name="report">
+    <f:link.action class="btn btn-danger" controller="Report" action="new" arguments="{post:post}">
+        <f:translate key="tx_agora_domain_model_post.report"/>
+    </f:link.action>
+</f:section>
+
 
 <!--
  #

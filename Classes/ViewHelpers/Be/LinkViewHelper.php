@@ -72,7 +72,6 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
                 $argumentPrefix .= '_' . GeneralUtility::camelCaseToLowerCaseUnderscored($pluginName);
             }
         }
-
         if ($argumentPrefix) {
             if ($action) {
                 $key = $argumentPrefix . '[action]';
@@ -94,7 +93,6 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
         }
 
         $uri = $cObj->typoLink_URL($linkConf);
-
         $this->tag->addAttribute('href', $uri, false);
         $this->tag->setContent($this->renderChildren());
         $this->tag->forceClosingTag(true);
