@@ -353,6 +353,15 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
+     * @return \AgoraTeam\Agora\Domain\Model\Post $post
+     */
+    public function getFirstPost()
+    {
+        $post = $this->getPosts()->current();
+        return $post;
+    }
+
+    /**
      * Returns the latest post
      *
      * @return \boolean|\AgoraTeam\Agora\Domain\Model\Post $latestPost
