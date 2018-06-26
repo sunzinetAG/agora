@@ -40,10 +40,10 @@ class ParsedownViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBa
      */
     public function render()
     {
-        $text = $this->renderChildren();
+        $text = htmlspecialchars_decode($this->renderChildren());
+        /** @var \Parsedown $parsedown */
         $parsedown = $this->objectManager->get('Parsedown');
         $text = $parsedown->text($text);
-
         return $text;
     }
 }
