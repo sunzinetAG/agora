@@ -3,12 +3,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"
       xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
       data-namespace-typo3-fluid="true">
+    
+    <h2 class="root-title mb-4">Search forum</h2>
       
 	<f:render partial="Search/AdvancedSearchBox" arguments="{_all}" />
  
  	<div class="container-fluid">
 	 	<div class="row forum-results">
-		 	<h3 class="mb-4">Results:</h3>
+	 		
+	 		<f:if condition="{search.sword} != ''">
+				<f:then>
+					<h3 class="mb-4 sub-title">Results for searced word <b>"{search.sword}"</b></h3>
+				</f:then>
+				<f:else>
+					<h3 class="mb-4 sub-title">Results</b></h3>
+				</f:else>
+			</f:if>
+	 		
 			<f:if condition="{results -> f:count()} > 0">
 				<f:then>
 					 <f:widget.paginate objects="{results}" as="paginatedResults" configuration="{itemsPerPage: '{settings.search.itemsPerPage}', insertAbove: 0, insertBelow: 1, addQueryStringMethod: 'GET'}">

@@ -18,8 +18,8 @@
 				<f:if condition="{settings.search.advanced}">
 					<f:then>
 						<div class="advanced-search-box">
-							<div class="show-advanced-option col-xs-12 mb-2">
-								<a href="#">Erweiterte Suche <span style="dispay:none" class="hide">schliesen</span></a>
+							<div class="show-advanced-option col-xs-12 mb-1">
+								<a href="#" class="show-filters">Erweiterte Suche <span class="inner-label">schliesen</span></a>
 							</div>	
 			 				<div class="advanced-search-fields col-xs-12 mb-2">
 			 					<div class="row">
@@ -30,7 +30,7 @@
  						 				</div>
 						 				<div class="search-radius-wrap mb-2">
 						 					<label for="search-radius">Suchradius eingrenzen:</label>
-											<f:form.select property="radius" options="{0: 'Beiträge - Posts', 1: 'Themen - topics', 2: 'Überschriften - headlines'}" id="search-radius" prependOptionLabel='Bitte wählen' prependOptionValue=''/>	
+											<f:form.select property="radius" options="{0: 'Beiträge', 1: 'Themen', 2: 'Überschriften'}" id="search-radius" prependOptionLabel='Bitte wählen' prependOptionValue=''/>	
 						 				</div>		
 						 			</div>
 						 			<div class="col-md-6 col-sm-6 col-xs-12"> 
@@ -42,11 +42,11 @@
  						 					<div class="row mb-2">
 							 					<div class="form-group radio radio">
 								 					<f:form.radio property="orderDirection" value="asc" id="search-order-0" checked="{search.orderDirection} == 'asc'"/>
-								 					<label for="search-order-0">Aufsteigend (Ascending)</label>
+								 					<label for="search-order-0">Aufsteigend</label>
 							 					</div>
 							 					<div class="form-group radio radio">
 								 					<f:form.radio property="orderDirection" value="desc" id="search-order-1" checked="{search.orderDirection} == 'desc' || {search.orderDirection} == ''"/>
-								 					<label for="search-order-1">Absteigend (Descending)</label>
+								 					<label for="search-order-1">Absteigend</label>
 							 					</div>
 						 					</div>
  						 					<div class="row text-right">

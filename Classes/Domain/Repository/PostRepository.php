@@ -268,7 +268,7 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
     		}
     	}
  
-    	if (!is_null($threadWithSearchedWord)) {
+    	if (!is_null($threadWithSearchedWord) && count($threadWithSearchedWord) > 0) {
     		$constraints[] = $query->in('thread.uid', $threadWithSearchedWord);
     	}
     	
