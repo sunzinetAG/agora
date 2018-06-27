@@ -52,6 +52,9 @@ class ReportController extends ActionController
      */
     public function reportAction(Report $report)
     {
+        // For some reason the mailservice changes the TSFE id...
+        $pageUid = $GLOBALS['TSFE']->id;
+
         $this->authenticationService->assertReadAuthorization($report->getPost());
         $report->setReporter($this->authenticationService->getUser());
         $this->reportRepository->add($report);
@@ -70,7 +73,8 @@ class ReportController extends ActionController
             'list',
             'Post',
             'Agora',
-            ['thread' => $report->getPost()->getThread()]
+            ['thread' => $report->getPost()->getThread()],
+            $pageUid
         );
     }
 
