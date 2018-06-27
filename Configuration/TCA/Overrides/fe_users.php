@@ -41,6 +41,18 @@ $tmpAgoraColumns = array(
             'renderMode' => 'checkbox',
         ),
     ),
+    'read_threads' => array(
+        'exclude' => 1,
+        'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_thread.user',
+        'config' => array(
+            'type' => 'group',
+            'internal_type' => 'db',
+            'foreign_table' => 'tx_agora_domain_model_thread',
+            'allowed' => 'tx_agora_domain_model_thread',
+            'MM' => 'tx_agora_domain_model_user_readthread',
+            'multiple' => true
+        ),
+    ),
 
     'view' => array(
         'config' => array(

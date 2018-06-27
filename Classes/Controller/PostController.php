@@ -21,9 +21,13 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Model\User;
 use AgoraTeam\Agora\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
+use Doctrine\DBAL\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * PostController
@@ -38,14 +42,6 @@ class PostController extends ActionController
      * @inject
      */
     protected $postService;
-
-    /**
-     * threadService
-     *
-     * @var \AgoraTeam\Agora\Service\ThreadService
-     * @inject
-     */
-    protected $threadService;
 
     /**
      * threadService
@@ -89,17 +85,22 @@ class PostController extends ActionController
     public function listAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
     {
         $this->authenticationService->assertReadAuthorization($thread);
+        /** @var User $user */
+        $user = $this->authenticationService->getUser();
+        $this->increaseThreadView($thread);
 
         $posts = $this->postRepository->findByThreadOnFirstLevel($thread);
         $firstPost = $this->postRepository->findByThread($thread)->getFirst();
 
-        // Check if current user observes thread
-        $user = $this->authenticationService->getUser();
-        if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User') && $user->getObservedThreads() !== null) {
-            $observedThread = $user->getObservedThreads()->offsetExists($thread);
+        if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
+            if (!$thread->hasBeenReadByFrontendUser($user)) {
+                $user->addReadThread($thread);
+                $this->userRepository->update($user);
+            }
+            if ($user->getObservedThreads() !== null) {
+                $observedThread = $user->getObservedThreads()->offsetExists($thread);
+            }
         }
-
-        $this->threadService->markAsRead($thread, $user);
 
         $this->view->assignMultiple(
             array(
@@ -163,7 +164,6 @@ class PostController extends ActionController
     /**
      * action create
      *
-     * @todo send info mails for subscribed users
      * @param \AgoraTeam\Agora\Domain\Model\Post $newPost
      * @return void
      */
@@ -182,6 +182,7 @@ class PostController extends ActionController
         // just by adding the new post to the thread
         $thread = $newPost->getThread();
         $thread->addPost($newPost);
+
         $this->threadRepository->update($thread);
 
         $this->addFlashMessage(
@@ -360,6 +361,32 @@ class PostController extends ActionController
                 ['thread' => $thread]
             );
         }
+    }
+
+    /**
+     * @param Thread $thread
+     */
+    protected function increaseThreadView(Thread $thread)
+    {
+        if ($this->settings['thread']['views']['delay'] != 0) {
+            $delay = $this->settings['thread']['views']['delay']['time'];
+
+            $tsfe = $this->getTypoScriptFrontendController();
+            $sessionData = $tsfe->fe_user->getKey('ses', 'tx_agora_views');
+            if (is_null($sessionData)) {
+                $sessionData = [];
+            } else {
+                $sessionData = json_decode($sessionData, true);
+            }
+            if (array_key_exists($thread->getUid(), $sessionData)) {
+                if (time() - $delay < $sessionData[$thread->getUid()]) {
+                    return false;
+                }
+            }
+            $sessionData[$thread->getUid()] = time();
+            $tsfe->fe_user->setKey('ses', 'tx_agora_views', json_encode($sessionData));
+        }
+        $this->threadRepository->increaseViews($thread->getUid(), $thread->getViews());
     }
 
     /**
