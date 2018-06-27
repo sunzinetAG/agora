@@ -28,7 +28,8 @@ namespace AgoraTeam\Agora\ViewHelpers;
  */
 
 class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
-{
+{	
+	
     /**
      * Find and wrap sword
      *
@@ -40,14 +41,13 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     public function render($sword, $data, $maxCharacters)
     {	
     	
-    	// Check for the cmlcase of the search word.
      	$swordCount = substr_count(strtolower($data), strtolower($sword));
     	$swordLength = strlen($sword);
     	$textLength = strlen($data);
     	$searchedWordIsInRange = true;
     	
     	if ($maxCharacters > 0 && $swordCount > 0) {
-    		// get position of the first sword letter 
+    		// get position of the first sword letter in a string
     		$getFirstPosOfSwordInData = stripos(strtolower($data), strtolower($sword));
 
     		// if the position of the 'sword' is higher than zero trim, calculate how much characters it is 
@@ -67,29 +67,21 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     		// If the whole string is in the range, limit to maxcharacters
     		// and if is not, we should get the rid of the unwanted characters
     		// and keep the result of the sword and other text in the range
-    		if ($searchedWordIsInRange === true) {
+    		if ($searchedWordIsInRange === true && $textLength > $maxCharacters) {
     			$data = substr($data, 0, $maxCharacters-3);
-    		} else {
+    			$data .= '...';
+    		} else if ($searchedWordIsInRange === false && $textLength > $maxCharacters) {
     			// check we have more that it needs $removeCharsFromStartCount
-				 $removeCharsFromStartCount = $posOfSwordLastChar - $maxCharacters-3;
-    			 $trimCharMoreThenSwordLastLetter = substr($data, 0, $posOfSwordLastChar);
+				 $removeCharsFromStartCount = $posOfSwordLastChar - $maxCharacters-6;
+				 $trimCharMoreThenSwordLastLetter = substr($data, 0, $posOfSwordLastChar);
     			 $countTrimmedSword = strlen($trimCharMoreThenSwordLastLetter);
     			 $data = substr($trimCharMoreThenSwordLastLetter, $removeCharsFromStartCount, $countTrimmedSword);
+    			 $data = "..." . $data . "...";
     		}
-    		 
-    		// wrap sword with marker
-    		$data = str_replace($sword, "###SWORD_WITH_WRAP###", $data);
-    		$swordWraped = "<span class='searched-sword'>". $sword ."</span>";
-    		$data = str_replace("###SWORD_WITH_WRAP###", $swordWraped, $data);
-    		
-    	} else if ($maxCharacters > 0 && $swordCount == 0) {
-     		$data = substr($data, 0, $maxCharacters -3);
-     	} else if ($maxCharacters == 0 || $swordCount == 0 ){
-    		
-    		$data = str_replace($sword, "###SWORD_WITH_WRAP###", $data);
-    		$swordWraped = "<span class='searched-sword'>". $sword ."</span>";
-    		$data = str_replace("###SWORD_WITH_WRAP###", $swordWraped, $data);
-    	}
+    	} else if ($maxCharacters > 0 && $swordCount == 0 && $textLength > $maxCharacters) {
+     		$data = substr($data, 0, $maxCharacters-3);
+     		$data .= '...'; 
+     	}
     	
  		return $data;
     }

@@ -17,7 +17,7 @@
  								<f:if condition="{result.text}">
 									<f:then>
  										<strong class="result-title h3 mb-1 d-block">
-											<f:format.raw>{a:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{a:searchSword(sword: search.sword, data: result.thread.title, maxCharacters: 0)}</f:format.raw>
+											<f:format.raw>{a:searchSword(sword: search.sword, data: result.thread.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{a:searchSword(sword: search.sword, data: result.thread.title, maxCharacters: 0)}</f:format.raw>
 										</strong>
  										<p><f:format.raw>{a:searchSword(sword: search.sword, data: result.text, maxCharacters: 190)} </f:format.raw></p>
  										<div class="read-more-button-wrap">

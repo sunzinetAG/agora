@@ -89,7 +89,6 @@ class SearchController extends ActionController
 				
 				return $demand;
 	}
-	
  
  	/**
  	 * Action initializeList
@@ -102,7 +101,6 @@ class SearchController extends ActionController
  		$propertyMappingConfiguration = $this->arguments['search']->getPropertyMappingConfiguration();
  		$propertyMappingConfiguration->allowProperties('themes');
  	}
- 	
  
     /**
      * Action list
@@ -128,11 +126,7 @@ class SearchController extends ActionController
       			}
       			$demand->setSearch($search);
  
-      			/** If themes are not included from the search filter, 
-      			 *  As themes set openUserforums 
-      			 */
-      			
-      			// Need to validate if the theme is added manualy
+      			// If themes are not included from the search filter, as themes set openUserforums 
       			if (empty($search->getThemes())) {
       				$search->setThemes($openUserForums);
       			}

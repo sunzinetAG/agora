@@ -4,41 +4,7 @@
       xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
       xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
       xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
- 
- 	<style>
- 		.agora-search-box .jcf-select {
- 			 width: 100%;
- 		} 
- 		.show-advanced-option a:before {
- 			content: "+";
- 			margin-right: 5px;
- 		}
- 		#search-radius + .jcf-list-box,
- 		#search-themes + .jcf-list-box {
-		    margin-left: 0px;
-		    border: 1px solid #159588;
-		    overflow: hidden;
-		    border-radius: 4px;
-		    width: 100%;
-		}
-		#search-radius + .jcf-list-box .jcf-option,
- 		#search-themes + .jcf-list-box .jcf-option {
-		    height: auto !important;
-		}
-		#search-themes +.jcf-list-box .jcf-list .jcf-optgroup-caption {
-		    font-size: 1.4em;
-		    line-height: initial;
-		    border-top: 1px solid #159588;
-		    padding-top: 10px;
-		}
-		#search-themes + .jcf-list-box .jcf-list-content > ul > li:first-child > .jcf-optgroup > .jcf-optgroup-caption {
-		    border-top: 0;
-		}
-		span.searched-sword {
-		    color: #fd9727!important;
-		}
- 	</style>
- 
+       	
  	<div class="container-fluid agora-search-box mb-2">
 		<div class="row agora-search-box">
 			<f:form object="{search}" objectName="search" pageUid="{settings.forum.resultsPageSearch}" class="agora-searh-form">
