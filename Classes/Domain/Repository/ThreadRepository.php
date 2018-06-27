@@ -193,8 +193,8 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
     	/* @var $searchObject \AgoraTeam\Agora\Domain\Model\Dto\Search */
     	$searchObject = $demand->getSearch();
     	$searchSubject = $searchObject->getSword();
-    	
     	$searchForums = $searchObject->getThemes();
+    	
     	if (!empty($searchForums)) {
     		$constraints[] = $query->in('forum', $searchForums);
     	}

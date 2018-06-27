@@ -1,4 +1,4 @@
-{namespace aq=AgoraTeam\Agora\ViewHelpers}
+{namespace a=AgoraTeam\Agora\ViewHelpers}
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"
       xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
@@ -17,19 +17,23 @@
  								<f:if condition="{result.text}">
 									<f:then>
  										<strong class="result-title h3 mb-1 d-block">
-											<f:format.raw>{aq:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{aq:searchSword(sword: search.sword, data: result.thread.title, maxCharacters: 0)}</f:format.raw>
+											<f:format.raw>{a:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{a:searchSword(sword: search.sword, data: result.thread.title, maxCharacters: 0)}</f:format.raw>
 										</strong>
- 										<p><f:format.raw>{aq:searchSword(sword: search.sword, data: result.text, maxCharacters: 190)} </f:format.raw></p>
+ 										<p><f:format.raw>{a:searchSword(sword: search.sword, data: result.text, maxCharacters: 190)} </f:format.raw></p>
  										<div class="read-more-button-wrap">
- 											<span class="btn btn-primary"> > Read the post</span>
+ 											<f:link.action pageUid="{settings.forum.listPid}" class="btn btn-primary mb-3" action="list" controller="Post" arguments="{thread:result.thread.uid}">
+										        <span class="btn-inner">Read the post</span>
+										    </f:link.action>
  										</div>	
 									</f:then>
 									<f:else>
  										<strong class="result-title h3 mb-1 d-block">
-											<f:format.raw>{aq:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{aq:searchSword(sword: search.sword, data: result.title, maxCharacters: 0)}</f:format.raw>
+											<f:format.raw>{a:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{a:searchSword(sword: search.sword, data: result.title, maxCharacters: 0)}</f:format.raw>
 										</strong>
 										<div class="read-more-button-wrap">
-											<span class="btn btn-primary"> > Go to the forum</span>
+    										<f:link.action pageUid="{settings.forum.listPid}" class="btn btn-primary mb-3" action="list" controller="Thread" arguments="{forum:result.forum}">
+										        <span class="btn-inner">Go to headline overview</span>
+										    </f:link.action>
 										</div>
  									</f:else>
 								</f:if>

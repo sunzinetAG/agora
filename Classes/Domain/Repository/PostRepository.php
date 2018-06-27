@@ -212,9 +212,8 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
     	$searchObject = $demand->getSearch();
     	$searchSubject = $searchObject->getSword();
     	$searchForums = $searchObject->getThemes();
-    	
-
     	$searchRadius = $searchObject->getRadius();
+    	
     	if ($searchRadius == 1) {
     		$threadWithSearchedWord = $this->threadRepository->findDemanded($demand);
     	}

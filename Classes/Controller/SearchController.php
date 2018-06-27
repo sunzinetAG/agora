@@ -30,9 +30,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfiguration;
  */
 class SearchController extends ActionController
 {
-	
-	const SIGNAL_FORUM_SEARCHFORM_ACTION = 'listAction';
-	
+
     /**
      * forumRepository
      *

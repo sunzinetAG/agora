@@ -40,9 +40,8 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     public function render($sword, $data, $maxCharacters)
     {	
     	
-    	// Check for the cml case of the search word.
-    	
-    	$swordCount = substr_count(strtolower($data), strtolower($sword));
+    	// Check for the cmlcase of the search word.
+     	$swordCount = substr_count(strtolower($data), strtolower($sword));
     	$swordLength = strlen($sword);
     	$textLength = strlen($data);
     	$searchedWordIsInRange = true;
@@ -84,10 +83,8 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     		$data = str_replace("###SWORD_WITH_WRAP###", $swordWraped, $data);
     		
     	} else if ($maxCharacters > 0 && $swordCount == 0) {
-    		
-    		$data = substr($data, 0, $maxCharacters -3);
-    		
-    	} else if ($maxCharacters == 0 || $swordCount == 0 ){
+     		$data = substr($data, 0, $maxCharacters -3);
+     	} else if ($maxCharacters == 0 || $swordCount == 0 ){
     		
     		$data = str_replace($sword, "###SWORD_WITH_WRAP###", $data);
     		$swordWraped = "<span class='searched-sword'>". $sword ."</span>";

@@ -29,7 +29,8 @@ plugin.tx_agora {
     
     settings {
     	includeSearch = 1
-    	resultsPageSearch = 
+    	advancedSearch = 1
+    	resultsPageSearch = 203
     }
 }
 

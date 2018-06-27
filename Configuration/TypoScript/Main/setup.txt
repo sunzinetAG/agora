@@ -44,6 +44,7 @@ plugin.tx_agora {
  		search {
  			itemsPerPage = 40 
  			limit = 2000
+ 			advanced = {$plugin.tx_agora.settings.advancedSearch}
  		}	
  		
      	orderBy = crdate
