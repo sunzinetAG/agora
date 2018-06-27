@@ -1,0 +1,49 @@
+{namespace aq=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+      
+	<f:render partial="Search/AdvancedSearchBox" arguments="{_all}" />
+ 
+ 	<div class="container-fluid">
+	 	<div class="row forum-results">
+		 	<h3 class="mb-4">Results:</h3>
+			<f:if condition="{results -> f:count()} > 0">
+				<f:then>
+					 <f:widget.paginate objects="{results}" as="paginatedResults" configuration="{itemsPerPage: '{settings.search.itemsPerPage}', insertAbove: 0, insertBelow: 1, addQueryStringMethod: 'GET'}">
+	  					<f:for each="{paginatedResults}" as="result" iteration="iterator">
+							<div class="result-item mb-4">
+ 								<f:if condition="{result.text}">
+									<f:then>
+ 										<strong class="result-title h3 mb-1 d-block">
+											<f:format.raw>{aq:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{aq:searchSword(sword: search.sword, data: result.thread.title, maxCharacters: 0)}</f:format.raw>
+										</strong>
+ 										<p><f:format.raw>{aq:searchSword(sword: search.sword, data: result.text, maxCharacters: 190)} </f:format.raw></p>
+ 										<div class="read-more-button-wrap">
+ 											<span class="btn btn-primary"> > Read the post</span>
+ 										</div>	
+									</f:then>
+									<f:else>
+ 										<strong class="result-title h3 mb-1 d-block">
+											<f:format.raw>{aq:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{aq:searchSword(sword: search.sword, data: result.title, maxCharacters: 0)}</f:format.raw>
+										</strong>
+										<div class="read-more-button-wrap">
+											<span class="btn btn-primary"> > Go to the forum</span>
+										</div>
+ 									</f:else>
+								</f:if>
+   							</div>
+			 			</f:for>	
+			 		</f:widget.paginate>		
+				</f:then>
+				<f:else>
+					<div class="no-results">
+						<p>For this criteria results not found.</p>
+					</div>
+				</f:else>
+			</f:if>
+		</div>
+	</div>
+ 
+</html>

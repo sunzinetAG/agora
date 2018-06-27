@@ -152,4 +152,23 @@ class ForumRepository extends Repository
 
         return $forums;
     }
+    
+    /**
+     * Function findAccessibleUserForumsAsMatrix
+     * find forums and childrens and generate matrix
+     *
+     * @return array
+     */
+    public function findAccessibleUserForumsAsMatrix()
+    {
+    	$allAccessibleForums = $this->findVisibleRootForums();
+    	$matrix = [];
+    	 
+    	foreach ($allAccessibleForums as $key => $value) {
+    		$matrix[$key]['item'] = $value;
+    		$matrix[$key]['children'] = $this->findAccessibleUserForumsByParent($value->getUid());
+    	}
+    	return $matrix;
+    
+    }
 }

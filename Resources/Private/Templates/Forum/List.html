@@ -9,6 +9,10 @@
     <f:flashMessages/>
 
     <f:render partial="Navigation/Forum"/>
+    
+    <f:if condition="{settings.forum.includeSearch}">
+		<f:render partial="Search/SearchBox" arguments="{_all}" />
+	</f:if>
 
     <f:if condition="{forum}">
         <h2 class="forumTitle">{forum.title}</h2>

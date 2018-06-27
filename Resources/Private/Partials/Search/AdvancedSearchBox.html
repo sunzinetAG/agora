@@ -1,0 +1,101 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+      xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+ 
+ 	<style>
+ 		.agora-search-box .jcf-select {
+ 			 width: 100%;
+ 		} 
+ 		.show-advanced-option a:before {
+ 			content: "+";
+ 			margin-right: 5px;
+ 		}
+ 		#search-radius + .jcf-list-box,
+ 		#search-themes + .jcf-list-box {
+		    margin-left: 0px;
+		    border: 1px solid #159588;
+		    overflow: hidden;
+		    border-radius: 4px;
+		    width: 100%;
+		}
+		#search-radius + .jcf-list-box .jcf-option,
+ 		#search-themes + .jcf-list-box .jcf-option {
+		    height: auto !important;
+		}
+		#search-themes +.jcf-list-box .jcf-list .jcf-optgroup-caption {
+		    font-size: 1.4em;
+		    line-height: initial;
+		    border-top: 1px solid #159588;
+		    padding-top: 10px;
+		}
+		#search-themes + .jcf-list-box .jcf-list-content > ul > li:first-child > .jcf-optgroup > .jcf-optgroup-caption {
+		    border-top: 0;
+		}
+		span.searched-sword {
+		    color: #fd9727!important;
+		}
+ 	</style>
+ 
+ 	<div class="container-fluid agora-search-box mb-2">
+		<div class="row agora-search-box">
+			<f:form object="{search}" objectName="search" pageUid="{settings.forum.resultsPageSearch}" class="agora-searh-form">
+				<div class="col-md-9 col-sm-6 col-xs-12">
+ 					<f:form.textfield id="agora-search" placeholder="Sollstellung" property="sword" type="search" class="search tx-agora-searchbox-sword form-control"/>
+ 				</div>
+ 				<div class="col-md-3 col-sm-6 col-xs-12 text-right">
+					<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i>Forum durchsuchen</button>
+				</div>
+	  
+				<f:if condition="{settings.search.advanced}">
+					<f:then>
+						<div class="advanced-search-box">
+							<div class="show-advanced-option col-xs-12 mb-2">
+								<a href="#">Erweiterte Suche <span style="dispay:none" class="hide">schliesen</span></a>
+							</div>	
+			 				<div class="advanced-search-fields col-xs-12 mb-2">
+			 					<div class="row">
+						 			<div class="col-md-6 col-sm-6 col-xs-12"> 
+						 				<div class="search-themes-wrap mb-3">
+						 					<label for="search-themes">Zu durchsuchende Foren:</label>
+ 						 					<f:render partial="Search/FilterFields/FieldThemes" arguments="{forums:themes, activeForums: search.themes}" />
+ 						 				</div>
+						 				<div class="search-radius-wrap mb-2">
+						 					<label for="search-radius">Suchradius eingrenzen:</label>
+											<f:form.select property="radius" options="{0: 'Beiträge - Posts', 1: 'Themen - topics', 2: 'Überschriften - headlines'}" id="search-radius" prependOptionLabel='Bitte wählen' prependOptionValue=''/>	
+						 				</div>		
+						 			</div>
+						 			<div class="col-md-6 col-sm-6 col-xs-12"> 
+						 				<div class="search-sort-wrap">
+						 					<label for="search-sort">Ergebnisse sortieren nach:</label>
+	 					 					<f:form.select property="orderBy" options="{crdate: 'Erstellungsdatum', tstamp: 'Letzte Änderungen'}" id="search-sort"/>
+	 					 				</div>
+ 						 				<div class="mb-2 search-ordering-wrap radios col-xs-12 radio-holder">
+ 						 					<div class="row mb-2">
+							 					<div class="form-group radio radio">
+								 					<f:form.radio property="orderDirection" value="asc" id="search-order-0" checked="{search.orderDirection} == 'asc'"/>
+								 					<label for="search-order-0">Aufsteigend (Ascending)</label>
+							 					</div>
+							 					<div class="form-group radio radio">
+								 					<f:form.radio property="orderDirection" value="desc" id="search-order-1" checked="{search.orderDirection} == 'desc' || {search.orderDirection} == ''"/>
+								 					<label for="search-order-1">Absteigend (Descending)</label>
+							 					</div>
+						 					</div>
+ 						 					<div class="row text-right">
+						 						<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i>Forum durchsuchen</button>
+						 					</div>
+						 				</div>					 				
+						 			</div>		
+						 		</div>	
+							</div>
+						</div>
+					</f:then>
+				</f:if>
+			</f:form>
+		</div>
+	</div>	
+	
+</html>
+

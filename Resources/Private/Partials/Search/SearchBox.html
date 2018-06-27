@@ -1,0 +1,22 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+      xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+ 
+ 	<div class="container-fluid agora-search-box mb-2 col-xs-12">
+		<div class="row agora-search-box">
+			<f:form object="{search}" action="list" pluginName="Forumsearch" objectName="search" controller="Search" pageUid="{settings.forum.resultsPageSearch}" class="row agora-searh-form">
+				<div class="col-md-8 col-sm-6 col-xs-12">
+ 					<f:form.textfield id="agora-search" placeholder="Sollstellung" property="sword" type="search" class="search tx-agora-searchbox-sword form-control"/>
+ 				</div>
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i>Forum durchsuchen</button>
+				</div>
+			</f:form>
+		</div>
+	</div>	
+	
+</html>
+

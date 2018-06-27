@@ -1,0 +1,21 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+      xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+ 
+      <f:if condition="{forums -> f:count()}">
+		<f:then>
+			<select multiple size="10" name="tx_agora_forumsearch[search][themes][]" id="search-themes">
+				<f:for each="{forums}" as="optgroup" iteration="iterator">
+					<optgroup label="{optgroup.item.title}">
+ 						<f:for each="{optgroup.children}" as="option" iteration="iterator">
+							<option value="{option.uid}" {f:if(condition:'{a:isPartOfArray(dataArray:activeForums,data:option.uid)}', then:'selected')}>{option.title}</option>
+				    	</f:for>
+ 				  	</optgroup>
+				</f:for>		
+			</select>
+		</f:then>
+	</f:if>
+</html> 	
