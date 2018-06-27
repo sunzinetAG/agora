@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
@@ -56,7 +57,6 @@ class ThreadController extends ActionController
     public function listAction(\AgoraTeam\Agora\Domain\Model\Forum $forum)
     {
         $this->authenticationService->assertReadAuthorization($forum);
-
         $threads = $this->threadRepository->findByForum($forum);
 
         $this->view->assignMultiple(

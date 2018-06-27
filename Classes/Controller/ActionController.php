@@ -28,6 +28,7 @@ use TYPO3\CMS\Extbase\Mvc\ResponseInterface;
 use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * ActionController
@@ -130,5 +131,14 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
                 // Do nothing, it might be handled in the view
         }
     }
+
+    /**
+     * @return TypoScriptFrontendController
+     */
+    protected function getTypoScriptFrontendController()
+    {
+        return $GLOBALS['TSFE'];
+    }
+
 }
 

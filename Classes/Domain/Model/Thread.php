@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class Thread
@@ -87,9 +88,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * views
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\View>
-     * @cascade remove
-     * @lazy
+     * @var integer
      */
     protected $views = null;
 
@@ -106,6 +105,13 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
      */
     protected $observers = null;
+
+    /**
+     * readers
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
+     */
+    protected $readers = null;
 
     /**
      * __construct
@@ -126,10 +132,10 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     protected function initStorageObjects()
     {
         $this->posts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->views = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->user = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->observers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->tags = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->readers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
     }
 
     /**
@@ -310,6 +316,36 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasBeenReadByFrontendUser(User $user = null)
+    {
+        return $user ? $this->readers->contains($user) : true;
+    }
+
+    /**
+     * Add a reader
+     *
+     * @param User $user
+     * @return void
+     */
+    public function addReader(User $user)
+    {
+        $this->readers->attach($user);
+    }
+
+    /**
+     * Remove all readers to mark the thread as unread
+     *
+     * @return void
+     */
+    public function removeReaders()
+    {
+        $this->readers = new ObjectStorage();
+    }
+
+    /**
      * Adds a Post
      *
      * @param \AgoraTeam\Agora\Domain\Model\Post $post
@@ -318,6 +354,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     public function addPost(\AgoraTeam\Agora\Domain\Model\Post $post)
     {
         $this->posts->attach($post);
+        $this->removeReaders();
     }
 
     /**
@@ -358,6 +395,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     public function getFirstPost()
     {
         $post = $this->getPosts()->current();
+
         return $post;
     }
 
@@ -373,6 +411,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
         if ($posts) {
             $latestPost = end($posts);
         }
+
         return $latestPost;
     }
 
@@ -407,46 +446,19 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * Adds a
-     *
-     * @param  $view
-     * @return void
+     * @return int
      */
-    public function addView($view)
-    {
-        $this->views->attach($view);
-    }
-
-    /**
-     * Removes a
-     *
-     * @param $viewToRemove to be removed
-     * @return void
-     */
-    public function removeView($viewToRemove)
-    {
-        $this->views->detach($viewToRemove);
-    }
-
-    /**
-     * Returns the views
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\View> $views
-     */
-    public function getViews()
+    public function getViews(): int
     {
         return $this->views;
     }
 
     /**
-     * Sets the views
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\View> $views
-     * @return void
+     * @param int $views
      */
-    public function setViews(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $views)
+    public function increaseViews()
     {
-        $this->views = $views;
+        $this->views = $this->getViews() + 1;
     }
 
     /**

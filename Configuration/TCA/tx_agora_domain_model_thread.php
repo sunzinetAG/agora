@@ -31,12 +31,12 @@ return array(
     ),
     'interface' => array(
         'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, title, solved, closed, sticky,
-									creator, posts, views,observers',
+									creator, posts, views,observers,readers',
     ),
     'types' => array(
         '1' => array(
             'showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title,
-									solved, closed, sticky, creator, forum,
+									solved, closed, sticky, creator, forum, readers,
 									--div--;Tags,
 									 tags,
 									--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
@@ -237,17 +237,9 @@ return array(
             'exclude' => 1,
             'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_thread.views',
             'config' => array(
-                'type' => 'inline',
-                'foreign_table' => 'tx_agora_domain_model_view',
-                'foreign_field' => 'thread',
-                'maxitems' => 9999,
-                'appearance' => array(
-                    'collapseAll' => 0,
-                    'levelLinksPosition' => 'top',
-                    'showSynchronizationLink' => 1,
-                    'showPossibleLocalizationRecords' => 1,
-                    'showAllLocalizationLink' => 1
-                ),
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim'
             ),
         ),
         'forum' => array(
@@ -273,6 +265,20 @@ return array(
                 'minitems' => 0,
                 'maxitems' => 9999,
                 'renderMode' => 'checkbox',
+            ),
+        ),
+        'readers' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_thread.readers',
+            'config' => array(
+                'type' => 'group',
+                'internal_type' => 'db',
+                'foreign_table' => 'fe_users',
+                'allowed' => 'fe_users',
+                'MM' => 'tx_agora_domain_model_user_readthread',
+                'MM_opposite_field' => 'read_threads',
+                'size' => 5,
+                'maxitems' => 9999,
             ),
         ),
     ),

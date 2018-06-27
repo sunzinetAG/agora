@@ -54,6 +54,10 @@ plugin.tx_agora {
             numberOfItemsInObservedThreadsWidget = 5
             defaultThreadEmailAdress = email_adress@example.de
             defaultThreadEmailUserName = ThreadAdmin
+
+            # change for timeout stored in the sessionData
+            views.delay = 1
+            views.delay.time = 3600
         }
 
         post {

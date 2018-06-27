@@ -20,6 +20,8 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
@@ -27,6 +29,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
  */
 class ThreadRepository extends Repository
 {
+
     /**
      * Find threads by forum
      *
@@ -86,4 +89,27 @@ class ThreadRepository extends Repository
 
         return $result;
     }
+
+    /**
+     * We need to do this by the queryBuilder, otherwise
+     * the tstamp would be updated and the sorting would be destroyed
+     *
+     * @param $threadId
+     * @param $views
+     */
+    public function increaseViews($threadId, $views)
+    {
+        // We need to use the queryBuilder because we want to group the notifications by users
+        /** @var \TYPO3\CMS\Core\Database\Query\QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            'tx_agora_domain_model_thread'
+        );
+        $statement = $queryBuilder->update('tx_agora_domain_model_thread')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $threadId)
+            )
+            ->set('views', $views + 1)
+            ->execute();
+    }
+
 }
