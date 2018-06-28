@@ -25,6 +25,7 @@ use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Model\User;
 use AgoraTeam\Agora\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
+use AgoraTeam\Agora\Utility\QuoteUtility;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -34,6 +35,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PostController extends ActionController
 {
+
+    const QUOTE_MODE = 'quote';
 
     /**
      * postService
@@ -143,6 +146,7 @@ class PostController extends ActionController
     /**
      * action new
      *
+     * @param string $mode
      * @param \AgoraTeam\Agora\Domain\Model\Post $newPost
      * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
      * @param \AgoraTeam\Agora\Domain\Model\Post $quotedPost
@@ -150,15 +154,34 @@ class PostController extends ActionController
      * @return void
      */
     public function newAction(
+        string $mode = '',
         \AgoraTeam\Agora\Domain\Model\Post $newPost = null,
         \AgoraTeam\Agora\Domain\Model\Post $quotedPost = null,
         \AgoraTeam\Agora\Domain\Model\Thread $thread = null
     ) {
         $this->authenticationService->assertNewPostAuthorization($thread);
-
-        $this->view->assign('newPost', $newPost);
-        $this->view->assign('quotedPost', $quotedPost);
-        $this->view->assign('thread', $thread);
+        $quote = '';
+        if (self::QUOTE_MODE == $mode) {
+            $qpCreator = $quotedPost->getCreator();
+            $qpAuthorName = $this->settings['post']['defaultCreatorName'];
+            if (!is_null($qpCreator)) {
+                /* @todo specifiy the name to display by typoscript */
+                $qpAuthorName = $qpCreator->getFirstName() . ' ' . $qpCreator->getLastName();
+            }
+            $quote = QuoteUtility::create(
+                $quotedPost->getText(),
+                $qpAuthorName,
+                $quotedPost->getCrdate()
+            );
+            $quotedPost= null;
+        }
+        $this->view->assignMultiple([
+            'mode' => $mode,
+            'quote' => $quote,
+            'newPost' => $newPost,
+            'quotedPost' => $quotedPost,
+            'thread' => $thread,
+        ]);
     }
 
     /**
