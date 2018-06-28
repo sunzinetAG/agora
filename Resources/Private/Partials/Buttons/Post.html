@@ -6,6 +6,7 @@
 
 <f:section name="main">
     <f:render section="reply" arguments="{_all}" />
+    <f:render section="quote" arguments="{_all}" />
     <f:render section="moderate" arguments="{_all}" />
     <f:render section="favorize" arguments="{_all}" />
     <f:render section="report" arguments="{_all}" />
@@ -39,6 +40,24 @@
             <f:link.action class="btn btn-default" action="new"
                            arguments="{thread:post.thread, quotedPost:post}">
                 <f:translate key="tx_agora_domain_model_post.reply"/>
+            </f:link.action>
+        </a:thread.editable>
+    </f:if>
+
+</f:section>
+
+<!--
+ #
+ # QUOTE BUTTON
+ #--------------------------------------
+-->
+<f:section name="quote">
+
+    <f:if condition="!{post.thread.closed}">
+        <a:thread.editable thread="{post.thread}" user="{user}">
+            <f:link.action class="btn btn-default" action="new"
+                           arguments="{thread:post.thread, quotedPost:post, mode:'quote'}">
+                <f:translate key="tx_agora_domain_model_post.quote"/>
             </f:link.action>
         </a:thread.editable>
     </f:if>

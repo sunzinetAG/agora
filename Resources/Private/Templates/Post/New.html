@@ -15,7 +15,7 @@
         <f:if condition="{quotedPost}">
             <f:form.hidden property="quotedPost" value="{quotedPost}"/>
         </f:if>
-        <f:render partial="Post/FormFields"/>
+        <f:render partial="Post/FormFields" arguments="{_all}"/>
         <f:form.submit class="btn btn-primary" value="{f:translate(key:'tx_agora_domain_model_post.create')}"/>
     </f:form>
 </f:section>
