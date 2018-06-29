@@ -53,8 +53,7 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
      */
     public function render($sword, $data, $maxCharacters)
     {	
-    	
-    	$cleanedWord = $this->replaceCharacters($sword);
+     	$cleanedWord = $this->replaceCharacters($sword);
     	$cleanedData = $this->replaceCharacters($data);
      	$swordCount = substr_count(strtolower($cleanedData), strtolower($cleanedWord));
     	$swordLength = strlen($sword);
@@ -88,7 +87,7 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     		} else if ($searchedWordIsInRange === false && $textLength > $maxCharacters) {
     			// check we have more that it needs $removeCharsFromStartCount
     			 $data = substr($data, $length_getInFront);
-    			 if (count($data) > $maxCharacters-3) {
+    			 if (strlen($data) > $maxCharacters-3) {
     			 	$data = substr($data, 0, $maxCharacters-3);
     			 }
     			 $data = "..." . $data . "...";
