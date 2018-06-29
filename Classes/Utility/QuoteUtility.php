@@ -67,9 +67,13 @@ class QuoteUtility implements SingletonInterface
         }
 
         $post = implode("\n", $splitTextArray);
-        $dataHolder = implode("\n", $dataHolder);
 
-        $text = $post . "\n\r\n\r\n\r" . $dataHolder;
+        if (!empty($dataHolder)) {
+            $dataHolder = implode("\n", $dataHolder);
+            $text = $post . "\n\r" . $dataHolder;
+        } else {
+            $text = $post;
+        }
 
         return $text;
     }
