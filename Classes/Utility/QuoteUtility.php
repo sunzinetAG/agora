@@ -60,10 +60,16 @@ class QuoteUtility implements SingletonInterface
                 }
             }
         }
+
+        // Remove last element of array if it is the quotedMarket
+        if ($quotedMarker == end($splitTextArray)) {
+            array_pop($splitTextArray);
+        }
+
         $post = implode("\n", $splitTextArray);
         $dataHolder = implode("\n", $dataHolder);
 
-        $text = $post . "\n\r\n\r\n\r" .  $dataHolder;
+        $text = $post . "\n\r\n\r\n\r" . $dataHolder;
 
         return $text;
     }
