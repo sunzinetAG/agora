@@ -75,7 +75,6 @@ abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence
     public function findDemanded(DemandInterface $demand, $respectEnableFields = true)
     {       	
     	$query = $this->generateQuery($demand, $respectEnableFields);
-      	
         return $query->execute();
     }
     

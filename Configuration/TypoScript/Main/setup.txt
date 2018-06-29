@@ -42,8 +42,8 @@ plugin.tx_agora {
     settings {
     	
  		search {
- 			itemsPerPage = 40 
- 			limit = 2000
+ 			itemsPerPage = 20 
+ 			limit = 1000
  			advanced = {$plugin.tx_agora.settings.advancedSearch}
  		}	
  		

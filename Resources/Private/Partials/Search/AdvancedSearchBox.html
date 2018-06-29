@@ -9,51 +9,80 @@
 		<div class="row agora-search-box">
 			<f:form object="{search}" objectName="search" pageUid="{settings.forum.resultsPageSearch}" class="agora-searh-form">
 				<div class="col-md-9 col-sm-6 col-xs-12">
- 					<f:form.textfield id="agora-search" placeholder="Sollstellung" property="sword" type="search" class="search tx-agora-searchbox-sword form-control"/>
+					<div class="row">
+ 						<f:form.textfield id="agora-search" property="sword" type="search" class="search tx-agora-searchbox-sword form-control"/>
+ 					</div>
  				</div>
  				<div class="col-md-3 col-sm-6 col-xs-12 text-right">
-					<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i>Forum durchsuchen</button>
+ 					<div class="row">
+						<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i><f:translate key="tx_agora_search.filter.submit"/></button>
+					</div>
 				</div>
 	  
 				<f:if condition="{settings.search.advanced}">
 					<f:then>
 						<div class="advanced-search-box">
-							<div class="show-advanced-option col-xs-12 mb-1">
-								<a href="#" class="show-filters">Erweiterte Suche <span class="inner-label">schliesen</span></a>
+							<div class="show-advanced-option mb-1">
+								<a href="#" class="show-filters">
+									<span class="label-hidden-filters">
+										<f:translate key="tx_agora_search.filter.advancedSearch.show"/>
+									</span>
+									<span class="label-visibled-filters">
+										<f:translate key="tx_agora_search.filter.advancedSearch.hide"/>
+									</span>
+								</a>
 							</div>	
 			 				<div class="advanced-search-fields col-xs-12 mb-2">
 			 					<div class="row">
-						 			<div class="col-md-6 col-sm-6 col-xs-12"> 
+						 			<div class="col-md-6 col-sm-6 col-xs-12">
 						 				<div class="search-themes-wrap mb-3">
-						 					<label for="search-themes">Zu durchsuchende Foren:</label>
+						 					<label for="search-themes">
+						 						<f:translate key="tx_agora_search.filter.themes.title"/>							 						
+						 					</label>
  						 					<f:render partial="Search/FilterFields/FieldThemes" arguments="{forums:themes, activeForums: search.themes}" />
  						 				</div>
-						 				<div class="search-radius-wrap mb-2">
-						 					<label for="search-radius">Suchradius eingrenzen:</label>
-											<f:form.select property="radius" options="{0: 'Beiträge', 1: 'Themen', 2: 'Überschriften'}" id="search-radius" prependOptionLabel='Bitte wählen' prependOptionValue=''/>	
-						 				</div>		
-						 			</div>
-						 			<div class="col-md-6 col-sm-6 col-xs-12"> 
+ 						 			</div>
+						 			<div class="col-md-6 col-sm-6 col-xs-12">
 						 				<div class="search-sort-wrap">
-						 					<label for="search-sort">Ergebnisse sortieren nach:</label>
-	 					 					<f:form.select property="orderBy" options="{crdate: 'Erstellungsdatum', tstamp: 'Letzte Änderungen'}" id="search-sort"/>
-	 					 				</div>
+						 					<label for="search-sort">
+						 						<f:translate key="tx_agora_search.filter.sort.title"/>
+						 					</label>
+						 					<select id="search-sort" name="tx_agora_forumsearch[search][orderBy]">
+						 						<option value="crdate" {f:if(condition:'{search.orderBy}=="crdate"', then:'selected')}>{f:translate(key:"tx_agora_search.filter.sort.option.0")}</option> 
+						 						<option value="tstamp" {f:if(condition:'{search.orderBy}=="tstamp"', then:'selected')}>{f:translate(key:"tx_agora_search.filter.sort.option.1")}</option>  
+						 					</select>
+		 					 				</div>
  						 				<div class="mb-2 search-ordering-wrap radios col-xs-12 radio-holder">
- 						 					<div class="row mb-2">
+ 						 					<div class="mb-2">
 							 					<div class="form-group radio radio">
 								 					<f:form.radio property="orderDirection" value="asc" id="search-order-0" checked="{search.orderDirection} == 'asc'"/>
-								 					<label for="search-order-0">Aufsteigend</label>
+								 					<label for="search-order-0">									 					
+								 						<f:translate key="tx_agora_search.filter.order.option.asc"/>
+								 					</label>
 							 					</div>
 							 					<div class="form-group radio radio">
 								 					<f:form.radio property="orderDirection" value="desc" id="search-order-1" checked="{search.orderDirection} == 'desc' || {search.orderDirection} == ''"/>
-								 					<label for="search-order-1">Absteigend</label>
+								 					<label for="search-order-1">
+								 						<f:translate key="tx_agora_search.filter.order.option.desc"/>
+								 					</label>
 							 					</div>
 						 					</div>
- 						 					<div class="row text-right">
-						 						<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i>Forum durchsuchen</button>
+						 					<div class="search-radius-wrap mb-2">
+							 					<label for="search-radius">
+							 						<f:translate key="tx_agora_search.filter.radius.title"/>
+							 					</label>
+							 					<select id="search-radius" name="tx_agora_forumsearch[search][radius]">
+							 						<option value="">{f:translate(key:"tx_agora_search.filter.radius.option.prepend.title",extensionName:"Typo3szAssets")}</option> 
+							 						<option value="1" {f:if(condition:'{search.radius}==1', then:'selected')}>{f:translate(key:"tx_agora_search.filter.radius.option.0",extensionName:"Typo3szAssets")}</option> 
+							 						<option value="2" {f:if(condition:'{search.radius}==2', then:'selected')}>{f:translate(key:"tx_agora_search.filter.radius.option.1",extensionName:"Typo3szAssets")}</option> 
+							 						<option value="3" {f:if(condition:'{search.radius}==3', then:'selected')}>{f:translate(key:"tx_agora_search.filter.radius.option.2",extensionName:"Typo3szAssets")}</option>  
+							 					</select>
+							 				</div>
+ 						 					<div class="text-right">
+						 						<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i><f:translate key="tx_agora_search.filter.submit"/></button>
 						 					</div>
-						 				</div>					 				
-						 			</div>		
+						 				</div>	
+ 						 			</div>		
 						 		</div>	
 							</div>
 						</div>

@@ -100,6 +100,8 @@ class SearchController extends ActionController
  		/** @var MvcPropertyMappingConfiguration $propertyMappingConfiguration * */
  		$propertyMappingConfiguration = $this->arguments['search']->getPropertyMappingConfiguration();
  		$propertyMappingConfiguration->allowProperties('themes');
+ 		$propertyMappingConfiguration->allowProperties('radius');
+ 		$propertyMappingConfiguration->allowProperties('orderBy');
  	}
  
     /**
@@ -133,14 +135,22 @@ class SearchController extends ActionController
  
       			// Initialise search query
       			$whereToSearch = $demand->getSearch()->getRadius();
+      			$results = $this->postRepository->findDemanded($demand);
       			
-      			if ($whereToSearch == 2) {
-      				$results = $this->threadRepository->findDemanded($demand);
-      			} else {
-      				$results = $this->postRepository->findDemanded($demand);
-      			}
- 
-    			$assignedValues = [  
+      			if ($whereToSearch==2) {
+      				$results2 = [];
+      				foreach ($results as $key=>$value) {
+      					$firstPost = $this->postRepository->findFirstPostOnThread($value->getThread()->getUid(), $search->getSword());
+      					$currentUid = $value->getUid();
+      					$firstPostUid = $firstPost->getUid(); 
+ 	      				if ($currentUid == $firstPostUid) {
+	      					$results2[] = $value;
+	      				}
+      				}
+      				$results = $results2;
+       			}
+
+     			$assignedValues = [  
     				'results' => $results,	
     				'search' => $search,
     				'themes' => $this->forumRepository->findAccessibleUserForumsAsMatrix(),

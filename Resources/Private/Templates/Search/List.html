@@ -4,7 +4,9 @@
       xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
       data-namespace-typo3-fluid="true">
     
-    <h2 class="root-title mb-4">Search forum</h2>
+    <h2 class="root-title mb-5">
+    	<f:translate key="tx_agora_search.results.headline"/>
+	</h2>
       
 	<f:render partial="Search/AdvancedSearchBox" arguments="{_all}" />
  
@@ -13,48 +15,34 @@
 	 		
 	 		<f:if condition="{search.sword} != ''">
 				<f:then>
-					<h3 class="mb-4 sub-title">Results for searced word <b>"{search.sword}"</b></h3>
+					<h3 class="mb-5 sub-title"><f:format.raw><f:translate key="tx_agora_search.results.subheadline.sword" arguments="{0: search.sword}"/></f:format.raw></h3>
 				</f:then>
 				<f:else>
-					<h3 class="mb-4 sub-title">Results</b></h3>
+					<h3 class="mb-5 sub-title"><f:translate key="tx_agora_search.results.subheadline"/></h3>
 				</f:else>
 			</f:if>
 	 		
 			<f:if condition="{results -> f:count()} > 0">
 				<f:then>
-					 <f:widget.paginate objects="{results}" as="paginatedResults" configuration="{itemsPerPage: '{settings.search.itemsPerPage}', insertAbove: 0, insertBelow: 1, addQueryStringMethod: 'GET'}">
+					 <f:widget.paginate objects="{results}" as="paginatedResults" configuration="{itemsPerPage: '{settings.search.itemsPerPage}', insertAbove: 0, insertBelow: 1, addQueryStringMethod: 'POST,GET', maximumNumberOfLinks: 3}">
 	  					<f:for each="{paginatedResults}" as="result" iteration="iterator">
-							<div class="result-item mb-4">
- 								<f:if condition="{result.text}">
-									<f:then>
- 										<strong class="result-title h3 mb-1 d-block">
-											<f:format.raw>{a:searchSword(sword: search.sword, data: result.thread.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{a:searchSword(sword: search.sword, data: result.thread.title, maxCharacters: 0)}</f:format.raw>
-										</strong>
- 										<p><f:format.raw>{a:searchSword(sword: search.sword, data: result.text, maxCharacters: 190)} </f:format.raw></p>
- 										<div class="read-more-button-wrap">
- 											<f:link.action pageUid="{settings.forum.listPid}" class="btn btn-primary mb-3" action="list" controller="Post" arguments="{thread:result.thread.uid}">
-										        <span class="btn-inner">Read the post</span>
-										    </f:link.action>
- 										</div>	
-									</f:then>
-									<f:else>
- 										<strong class="result-title h3 mb-1 d-block">
-											<f:format.raw>{a:searchSword(sword: search.sword, data: result.forum.title, maxCharacters: 0)}</f:format.raw> > <f:format.raw>{a:searchSword(sword: search.sword, data: result.title, maxCharacters: 0)}</f:format.raw>
-										</strong>
-										<div class="read-more-button-wrap">
-    										<f:link.action pageUid="{settings.forum.listPid}" class="btn btn-primary mb-3" action="list" controller="Thread" arguments="{forum:result.forum}">
-										        <span class="btn-inner">Go to headline overview</span>
-										    </f:link.action>
-										</div>
- 									</f:else>
-								</f:if>
+							<div class="result-item {f:if(condition:'{iterator.isLast}', else:'mb-5')}">
+ 								<strong class="result-title h3 mb-1 d-block">
+									{result.thread.forum.title} > {result.thread.title}
+								</strong>
+								<p><f:format.raw>{a:searchSword(sword: search.sword, data: result.text, maxCharacters: 300)} </f:format.raw></p>
+								<div class="read-more-button-wrap">
+									<f:link.action pageUid="{settings.forum.listPid}" class="btn btn-primary" action="list" controller="Post" arguments="{thread:result.thread.uid}">
+								        <span class="btn-inner"><f:translate key="tx_agora_search.results.post.link"/></span>
+								    </f:link.action>
+								</div>	
    							</div>
 			 			</f:for>	
 			 		</f:widget.paginate>		
 				</f:then>
 				<f:else>
 					<div class="no-results">
-						<p>For this criteria results not found.</p>
+						<p><f:translate key="tx_agora_search.results.no-results"/></p>
 					</div>
 				</f:else>
 			</f:if>

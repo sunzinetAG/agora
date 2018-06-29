@@ -4,7 +4,7 @@ namespace AgoraTeam\Agora\ViewHelpers;
 /***************************************************************
  *  Copyright notice
  *  (c) 2015 Philipp Thiele <philipp.thiele@phth.de>
- *           Björn Christopher Bresser <bjoern.bresser@gmail.com>
+ *           BjĂ¶rn Christopher Bresser <bjoern.bresser@gmail.com>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -29,6 +29,19 @@ namespace AgoraTeam\Agora\ViewHelpers;
 
 class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
 {	
+	/***
+	 * Replace unwanted Characters
+	 * 
+	 * @param string $str
+	 */
+	public function replaceCharacters($string){
+		 $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýýþÿŔŕ'; 
+		 $b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuuyybyRr'; 
+		 $string = utf8_decode($string);     
+		 $string = strtr($string, utf8_decode($a), $b); 
+		 $string = strtolower($string);
+		 return  utf8_encode($string);
+	}
 	
     /**
      * Find and wrap sword
@@ -41,18 +54,20 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     public function render($sword, $data, $maxCharacters)
     {	
     	
-     	$swordCount = substr_count(strtolower($data), strtolower($sword));
+    	$cleanedWord = $this->replaceCharacters($sword);
+    	$cleanedData = $this->replaceCharacters($data);
+     	$swordCount = substr_count(strtolower($cleanedData), strtolower($cleanedWord));
     	$swordLength = strlen($sword);
     	$textLength = strlen($data);
     	$searchedWordIsInRange = true;
     	
     	if ($maxCharacters > 0 && $swordCount > 0) {
     		// get position of the first sword letter in a string
-    		$getFirstPosOfSwordInData = stripos(strtolower($data), strtolower($sword));
+    		$getFirstPosOfSwordInData = stripos(strtolower($cleanedData), strtolower($cleanedWord))-1;
 
     		// if the position of the 'sword' is higher than zero trim, calculate how much characters it is 
      		if ($getFirstPosOfSwordInData > 0) {
-    			$getInFront = substr($data, 0, $getFirstPosOfSwordInData);
+    			$getInFront = substr($cleanedData, 0, $getFirstPosOfSwordInData);
     			$length_getInFront = strlen($getInFront); 
     		}
      		
@@ -72,10 +87,10 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     			$data .= '...';
     		} else if ($searchedWordIsInRange === false && $textLength > $maxCharacters) {
     			// check we have more that it needs $removeCharsFromStartCount
-				 $removeCharsFromStartCount = $posOfSwordLastChar - $maxCharacters-6;
-				 $trimCharMoreThenSwordLastLetter = substr($data, 0, $posOfSwordLastChar);
-    			 $countTrimmedSword = strlen($trimCharMoreThenSwordLastLetter);
-    			 $data = substr($trimCharMoreThenSwordLastLetter, $removeCharsFromStartCount, $countTrimmedSword);
+    			 $data = substr($data, $length_getInFront);
+    			 if (count($data) > $maxCharacters-3) {
+    			 	$data = substr($data, 0, $maxCharacters-3);
+    			 }
     			 $data = "..." . $data . "...";
     		}
     	} else if ($maxCharacters > 0 && $swordCount == 0 && $textLength > $maxCharacters) {

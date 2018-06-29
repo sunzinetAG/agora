@@ -97,7 +97,7 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
 
         return $result;
     }
-
+ 
 
     /**
      * @param $uid
@@ -114,6 +114,22 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
             ->execute()->getFirst();
 
         return $result;
+    }
+    
+    
+    /**
+     * @param string $sword
+     * @param int $thread
+     */
+    public function findFirstPostOnThread($thread, $sword)
+    {
+    	$query = $this->createQuery();
+    	$query->matching(
+    			$query->logicalAnd(
+    				$query->equals('thread.uid', $thread),
+    				$query->like("text", '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($sword, '') . '%')
+    			))->setOrderings(array('crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING));
+		return $query->execute()->getFirst();
     }
     
     
@@ -137,7 +153,6 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
     		$pidList = GeneralUtility::intExplode(',', $demand->getStoragePage(), true);
     		$constraints['pid'] = $query->in('pid', $pidList);
     	}
-    	
 	    // Search
         $searchConstraints = $this->getSearchConstraints($query, $demand);
         if (!empty($searchConstraints)) {
@@ -214,10 +229,6 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
     	$searchForums = $searchObject->getThemes();
     	$searchRadius = $searchObject->getRadius();
     	
-    	if ($searchRadius == 1) {
-    		$threadWithSearchedWord = $this->threadRepository->findDemanded($demand);
-    	}
-    	
     	if (!empty($searchForums)) {
     		$constraints[] = $query->in('forum', $searchForums);
     	}
@@ -225,17 +236,31 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
     	if (!is_null($searchRadius)) {
     		$constraints[] = $query->equals('original_post', 0);
     	}
-    	 
-    	$constraints[] = $query->equals('historical_versions', 0);
+    	$constraints[] = $query->greaterThan('thread', 0);
     	
+    	if ($searchRadius == 2) {
+    		
+    		$threadsWithSearchedWord = $this->threadRepository->findDemanded($demand);
+    		if (!count($threadsWithSearchedWord)) {
+    			$threadsWithSearchedWord = array(0=>'-1');
+    		}
+    	
+    		$constraints[] = $query->in('thread', $threadsWithSearchedWord);
+    		$constraints[] = $query->equals('historical_versions', 0);	
+      	}
+      	
     	if (!empty($searchSubject)) {
  
     		$searchFields = array(0 => 'text');
-  			
-    		if (is_null($searchRadius)) {
+ 
+     		if (is_null($searchRadius) && $searchRadius == 2) {
     			$searchFields = array(0 => 'text', 1 => 'thread.title');
     		}
     		
+    		if ($searchRadius == 3) {
+    			$searchFields = array(0 => 'thread.title');
+    		}
+ 
      		$searchConstraints = [];
     
     		if (count($searchFields) === 0) {
@@ -255,23 +280,22 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
     			if (count($searchConstraints)) {
     				$constraints[] = $query->logicalOr($searchConstraints);
     			}
-    			
-    		} else {
+     		} else {
     			foreach ($searchFields as $field) {
     				if (!empty($searchSubject)) {
     					$searchConstraints[] = $query->like($field, '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubject, '') . '%');
     				}
     			}
      			if (count($searchConstraints)) {
-    				$constraints[] = $query->logicalOr($searchConstraints);
+     				if ($searchRadius == 2) {
+     					$constraints[] = $query->logicalAnd($searchConstraints);
+     				} else {
+     					$constraints[] = $query->logicalOr($searchConstraints);
+     				}
     			}
     		}
     	}
  
-    	if (!is_null($threadWithSearchedWord) && count($threadWithSearchedWord) > 0) {
-    		$constraints[] = $query->in('thread.uid', $threadWithSearchedWord);
-    	}
-    	
     	return $constraints;
     }
 }
