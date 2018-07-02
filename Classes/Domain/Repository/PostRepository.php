@@ -253,7 +253,7 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
  
     		$searchFields = array(0 => 'text');
  
-     		if (is_null($searchRadius) && $searchRadius == 2) {
+     		if (is_null($searchRadius) || $searchRadius == 2) {
     			$searchFields = array(0 => 'text', 1 => 'thread.title');
     		}
     		
