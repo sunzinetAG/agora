@@ -8,12 +8,15 @@
  	<div class="container-fluid agora-search-box mb-2 hide-filters">
 		<div class="row agora-search-box">
 			<f:form object="{search}" objectName="search" pageUid="{settings.forum.resultsPageSearch}" class="agora-searh-form">
-				<div class="col-md-9 col-sm-6 col-xs-12">
+				<div class="col-md-9 col-sm-6 col-xs-12 mb-1">
 					<div class="row">
- 						<f:form.textfield id="agora-search" property="sword" type="search" class="search tx-agora-searchbox-sword form-control"/>
+ 						<f:form.textfield id="agora-search" property="sword" type="search" class="search tx-agora-searchbox-sword form-control mb-1"/>
+						<span class="error-message small d-none text-danger">
+							<f:translate key="tx_agora_search.sword.error" />
+						</span>
  					</div>
  				</div>
- 				<div class="col-md-3 col-sm-6 col-xs-12 text-right">
+ 				<div class="col-md-3 col-sm-6 col-xs-12 text-right mb-1">
  					<div class="row">
 						<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i><f:translate key="tx_agora_search.filter.submit"/></button>
 					</div>

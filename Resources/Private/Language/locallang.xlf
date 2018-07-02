@@ -503,7 +503,7 @@
 				<source>Go to headline</source>
 			</trans-unit>
  			<trans-unit id="tx_agora_search.sword.error">
-				<source>Please enter 2 or more characters to search the forum</source>
+				<source>Please enter 3 or more characters to search the forum</source>
 			</trans-unit>
 			<trans-unit id="tx_agora_search.filter.submit">
 				<source>Search forum</source>
