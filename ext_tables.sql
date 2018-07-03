@@ -114,6 +114,7 @@ CREATE TABLE tx_agora_domain_model_thread (
 
 	forum                           INT(11) UNSIGNED DEFAULT 0      NOT NULL,
 	observers                       INT(11) UNSIGNED DEFAULT 0      NOT NULL,
+	readers		                      INT(11) UNSIGNED DEFAULT 0      NOT NULL,
 
 	title                           VARCHAR(255) DEFAULT ''         NOT NULL,
 	solved                          TINYINT(1) UNSIGNED DEFAULT '0' NOT NULL,
@@ -236,11 +237,12 @@ CREATE TABLE tx_agora_domain_model_tag (
 # Table structure for table 'fe_users'
 #
 CREATE TABLE fe_users (
-	view             INT(11) UNSIGNED DEFAULT 0 NOT NULL,
-	signiture        TEXT                       NOT NULL,
-	observed_threads INT(11) UNSIGNED DEFAULT 0 NOT NULL,
-	favorite_posts   INT(11) UNSIGNED DEFAULT 0 NOT NULL,
-	tx_extbase_type  VARCHAR(255) DEFAULT ''    NOT NULL
+	view             	INT(11) 			UNSIGNED DEFAULT 0 	NOT NULL,
+	signiture        	TEXT    			                   	NOT NULL,
+	observed_threads 	INT(11) 			UNSIGNED DEFAULT 0 	NOT NULL,
+	read_threads 			INT(11) 			UNSIGNED DEFAULT 0 	NOT NULL,
+	favorite_posts   	INT(11) 			UNSIGNED DEFAULT 0 	NOT NULL,
+	tx_extbase_type  	VARCHAR(255) 	DEFAULT ''    			NOT NULL
 );
 
 #
@@ -687,13 +689,20 @@ CREATE TABLE tx_agora_domain_model_view (
 #
 # A lookup table to determine whether a user has already read a certain thread.
 #
-CREATE TABLE tx_agora_readthreads (
-	uid_feuser int(11) DEFAULT '0' NOT NULL,
-	uid_thread int(11) DEFAULT '0' NOT NULL,
-	timestamp int(11) unsigned DEFAULT '0' NOT NULL,
+CREATE TABLE tx_agora_domain_model_user_readthread (
+	uid                             INT(11)                       NOT NULL AUTO_INCREMENT,
+	pid                             INT(11) DEFAULT 0             NOT NULL,
 
-	KEY uid_feuser (uid_feuser),
-	KEY uid_thread (uid_thread)
+	uid_local 											int(11) DEFAULT 0		 					NOT NULL,
+	uid_foreign											int(11) DEFAULT 0		 					NOT NULL,
+	timestamp 											int(11) unsigned DEFAULT 0	 	NOT NULL,
+	crdate                          INT(11) UNSIGNED DEFAULT 0    NOT NULL,
+	sorting 												int(11) unsigned 							NOT NULL default '0',
+	sorting_foreign 								int(11) unsigned 							NOT NULL default '0',
+	PRIMARY KEY (uid),
+	KEY parent (pid),
+	KEY uid_local (uid_local),
+	KEY uid_foreign (uid_foreign)
 );
 
 

@@ -32,7 +32,7 @@ use AgoraTeam\Agora\Service\TagService;
 class ReportController extends ActionController
 {
     /**
-     * threadService
+     * mailService
      *
      * @var \AgoraTeam\Agora\Service\MailService
      * @inject

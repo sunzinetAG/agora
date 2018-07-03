@@ -23,7 +23,7 @@ return array(
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ),
-        'searchFields' => 'title,solved,closed,sticky,creator,posts,views,groups_with_read_access,
+        'searchFields' => 'title,solved,closed,sticky,creator,posts,groups_with_read_access,
 							groups_with_write_access,groups_with_modification_access,users_with_read_access,
 							users_with_write_access,users_with_modification_access,',
         'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('agora') .

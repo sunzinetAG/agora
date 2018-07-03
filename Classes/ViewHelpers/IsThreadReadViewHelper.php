@@ -37,12 +37,12 @@ class IsThreadReadViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTa
     protected $escapeOutput = false;
 
     /**
-     * Thread service
+     * Authentication service
      *
-     * @var \Sunzinet\Typo3szAssets\Service\Agora\ThreadService
+     * @var \AgoraTeam\Agora\Service\Authentication\AuthenticationService
      * @inject
      */
-    protected $threadService;
+    protected $authenticationService;
 
     /**
      * Render the viewhelper
@@ -53,16 +53,12 @@ class IsThreadReadViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTa
      *
      * @return $content the rendered content
      */
-    public function render(\AgoraTeam\Agora\Domain\Model\Thread $thread, $user, $checkForLatestUpdate = 0)
+    public function render(\AgoraTeam\Agora\Domain\Model\Thread $thread)
     {
         $content = '';
-        if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
-            if ($checkForLatestUpdate && $this->threadService->isLatestThreadUpdateRead($thread, $user)) {
-                $content = $this->renderChildren();
-            }
-            if (!$checkForLatestUpdate && $this->threadService->isRead($thread, $user)) {
-                $content = $this->renderChildren();
-            }
+
+        if ($thread->hasBeenReadByFrontendUser($this->authenticationService->getUser())) {
+            $content = $this->renderChildren();
         }
 
         return $content;

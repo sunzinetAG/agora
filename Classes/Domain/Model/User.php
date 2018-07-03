@@ -48,6 +48,14 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread>
      * @lazy
      */
+    protected $readThreads = null;
+
+    /**
+     * observedThreads
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread>
+     * @lazy
+     */
     protected $observedThreads = null;
 
     /**
@@ -86,6 +94,11 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $email = '';
 
     /**
+     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     */
+    protected $image;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -105,6 +118,7 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected function initStorageObjects()
     {
         $this->favoritePosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->readThreads = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->observedThreads = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->spamPosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
         $this->groups = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
@@ -173,6 +187,17 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setFavoritePosts(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $favoritePosts)
     {
         $this->favoritePosts = $favoritePosts;
+    }
+
+    /**
+     * Adds a Thread
+     *
+     * @param \AgoraTeam\Agora\Domain\Model\Thread $observedThread
+     * @return void
+     */
+    public function addReadThread(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    {
+        $this->readThreads->attach($thread);
     }
 
     /**
@@ -349,6 +374,22 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param \TYPO3\CMS\Extbase\Domain\Model\FileReference $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
     }
 
     /**
