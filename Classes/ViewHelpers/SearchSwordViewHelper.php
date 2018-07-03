@@ -34,7 +34,8 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
 	 * 
 	 * @param string $str
 	 */
-	public function replaceCharacters($string){
+	public function replaceCharacters($string)
+	{
 		 $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýýþÿŔŕ'; 
 		 $b = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuuyybyRr'; 
 		 $string = utf8_decode($string);     
@@ -43,32 +44,63 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
 		 return  utf8_encode($string);
 	}
 	
+	/**
+	 * Remove last word from the character
+	 * @param string $data
+	 * @param int $maxCharacters
+	 *
+	 * return string $data
+	 */
+	public function getRiddOfTheLastString($data, $maxCharacters) 
+	{
+		$data = trim(substr($data, 0, $maxCharacters));
+ 		$dataAsArray = explode(" ", $data);
+ 		array_pop($dataAsArray);
+ 		
+		foreach ($dataAsArray as $value) {
+			$string .= $value ." ";
+		}
+ 		return $string;
+	}
+	
     /**
      * Find and wrap sword
      *
      * @param string $sword
      * @param string $data
-     * @param int $corpMaxWords
+     * @param int $maxCharacters
      * @return string 
      */
     public function render($sword, $data, $maxCharacters)
     {	
-     	$cleanedWord = $this->replaceCharacters($sword);
+       	$cleanedWord = $this->replaceCharacters($sword);
     	$cleanedData = $this->replaceCharacters($data);
-     	$swordCount = substr_count(strtolower($cleanedData), strtolower($cleanedWord));
+      	$swordCount = substr_count(strtolower($cleanedData), strtolower($cleanedWord));
     	$swordLength = strlen($sword);
     	$textLength = strlen($data);
     	$searchedWordIsInRange = true;
-    	
+ 
     	if ($maxCharacters > 0 && $swordCount > 0) {
     		// get position of the first sword letter in a string
-    		$getFirstPosOfSwordInData = stripos(strtolower($cleanedData), strtolower($cleanedWord))-1;
+    		$getFirstPosOfSwordInData = stripos(strtolower($cleanedData), strtolower($cleanedWord));
 
     		// if the position of the 'sword' is higher than zero trim, calculate how much characters it is 
      		if ($getFirstPosOfSwordInData > 0) {
-    			$getInFront = substr($cleanedData, 0, $getFirstPosOfSwordInData);
-    			$length_getInFront = strlen($getInFront); 
-    		}
+     			
+     			$getInFront = substr($cleanedData, 0, $getFirstPosOfSwordInData);
+
+				$lastEmptySpaceIndex = strrpos($getInFront,' ');
+	     		$getInFront2 = substr($cleanedData, 0, intval($lastEmptySpaceIndex));
+    			$length_getInFront = strlen($getInFront2);
+    			
+    			$test = substr($data, intval($length_getInFront));
+    			if (strlen($test) < $maxCharacters) {
+    				
+    				$trim = $maxCharacters - strlen($test);
+      				$getInFrontRepet = substr($cleanedData, 0, $lastEmptySpaceIndex - $trim);
+     				$length_getInFront = strlen($getInFrontRepet);
+     			}
+     		}
      		
     		// Get the position of the last sword character
     		$posOfSwordLastChar = $getFirstPosOfSwordInData + $swordLength;
@@ -82,22 +114,25 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     		// and if is not, we should get the rid of the unwanted characters
     		// and keep the result of the sword and other text in the range
     		if ($searchedWordIsInRange === true && $textLength > $maxCharacters) {
-    			$data = substr($data, 0, $maxCharacters-3);
-    			$data .= '...';
+    			$data = $this->getRiddOfTheLastString($data, $maxCharacters);      		
+    			$data = $data . '...';
+    			
     		} else if ($searchedWordIsInRange === false && $textLength > $maxCharacters) {
     			// check we have more that it needs $removeCharsFromStartCount
-    			 $data = substr($data, $length_getInFront);
-    			 if (strlen($data) > $maxCharacters-3) {
-    			 	$data = substr($data, 0, $maxCharacters-3);
-    			 }
-    			 $data = "..." . $data . "...";
+    			$data = substr($data, intval($length_getInFront));
+    			$firstEmptySpaceIndex = stripos($data, ' ');
+   			 	$data = substr($data, $firstEmptySpaceIndex);
+   			 	
+    			if (strlen($data) > $maxCharacters) {
+    				$data = $this->getRiddOfTheLastString($data, $maxCharacters-10);
+    			}
+      			$data = "... " .$data. " ...";
     		}
     	} else if ($maxCharacters > 0 && $swordCount == 0 && $textLength > $maxCharacters) {
-     		$data = substr($data, 0, $maxCharacters-3);
-     		$data .= '...'; 
+     		$data = $this->getRiddOfTheLastString($data, $maxCharacters);     		
+     		$data = $data . ' ...'; 
      	}
-    	
+     	
  		return $data;
     }
-
 }
