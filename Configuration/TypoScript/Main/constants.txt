@@ -26,6 +26,12 @@ plugin.tx_agora {
         # cat=plugin.tx_agora//a; type=string; label=Default storage PID
         storagePid =
     }
+    
+    settings {
+    	includeSearch = 1
+    	advancedSearch = 1
+    	resultsPageSearch = 203
+    }
 }
 
 module.tx_agora {

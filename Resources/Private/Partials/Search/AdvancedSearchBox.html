@@ -1,0 +1,99 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+      xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
+      xmlns:v="http://typo3.org/ns/FluidTYPO3/Vhs/ViewHelpers">
+       	
+ 	<div class="container-fluid agora-search-box mb-2 hide-filters">
+		<div class="row agora-search-box">
+			<f:form object="{search}" objectName="search" pageUid="{settings.forum.resultsPageSearch}" class="agora-searh-form">
+				<div class="col-md-9 col-sm-6 col-xs-12 mb-1">
+					<div class="row">
+ 						<f:form.textfield id="agora-search" property="sword" type="search" class="search tx-agora-searchbox-sword form-control mb-1"/>
+						<span class="error-message small d-none text-danger">
+							<f:translate key="tx_agora_search.sword.error" />
+						</span>
+ 					</div>
+ 				</div>
+ 				<div class="col-md-3 col-sm-6 col-xs-12 text-right mb-1">
+ 					<div class="row">
+						<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i><f:translate key="tx_agora_search.filter.submit"/></button>
+					</div>
+				</div>
+	  
+				<f:if condition="{settings.search.advanced}">
+					<f:then>
+						<div class="advanced-search-box">
+							<div class="show-advanced-option mb-1">
+								<a href="#" class="show-filters">
+									<span class="label-hidden-filters">
+										<f:translate key="tx_agora_search.filter.advancedSearch.show"/>
+									</span>
+									<span class="label-visibled-filters">
+										<f:translate key="tx_agora_search.filter.advancedSearch.hide"/>
+									</span>
+								</a>
+							</div>	
+			 				<div class="advanced-search-fields col-xs-12 mb-2">
+			 					<div class="row">
+						 			<div class="col-md-6 col-sm-6 col-xs-12">
+						 				<div class="search-themes-wrap mb-3">
+						 					<label for="search-themes">
+						 						<f:translate key="tx_agora_search.filter.themes.title"/>							 						
+						 					</label>
+ 						 					<f:render partial="Search/FilterFields/FieldThemes" arguments="{forums:themes, activeForums: search.themes}" />
+ 						 				</div>
+ 						 			</div>
+						 			<div class="col-md-6 col-sm-6 col-xs-12">
+						 				<div class="search-sort-wrap">
+						 					<label for="search-sort">
+						 						<f:translate key="tx_agora_search.filter.sort.title"/>
+						 					</label>
+						 					<select id="search-sort" name="tx_agora_forumsearch[search][orderBy]">
+						 						<option value="crdate" {f:if(condition:'{search.orderBy}=="crdate"', then:'selected')}>{f:translate(key:"tx_agora_search.filter.sort.option.0")}</option> 
+						 						<option value="tstamp" {f:if(condition:'{search.orderBy}=="tstamp"', then:'selected')}>{f:translate(key:"tx_agora_search.filter.sort.option.1")}</option>  
+						 					</select>
+		 					 				</div>
+ 						 				<div class="mb-2 search-ordering-wrap radios col-xs-12 radio-holder">
+ 						 					<div class="mb-2">
+							 					<div class="form-group radio radio">
+								 					<f:form.radio property="orderDirection" value="asc" id="search-order-0" checked="{search.orderDirection} == 'asc'"/>
+								 					<label for="search-order-0">									 					
+								 						<f:translate key="tx_agora_search.filter.order.option.asc"/>
+								 					</label>
+							 					</div>
+							 					<div class="form-group radio radio">
+								 					<f:form.radio property="orderDirection" value="desc" id="search-order-1" checked="{search.orderDirection} == 'desc' || {search.orderDirection} == ''"/>
+								 					<label for="search-order-1">
+								 						<f:translate key="tx_agora_search.filter.order.option.desc"/>
+								 					</label>
+							 					</div>
+						 					</div>
+						 					<div class="search-radius-wrap mb-2">
+							 					<label for="search-radius">
+							 						<f:translate key="tx_agora_search.filter.radius.title"/>
+							 					</label>
+							 					<select id="search-radius" name="tx_agora_forumsearch[search][radius]">
+							 						<option value="">{f:translate(key:"tx_agora_search.filter.radius.option.prepend.title",extensionName:"Typo3szAssets")}</option> 
+							 						<option value="1" {f:if(condition:'{search.radius}==1', then:'selected')}>{f:translate(key:"tx_agora_search.filter.radius.option.0",extensionName:"Typo3szAssets")}</option> 
+							 						<option value="2" {f:if(condition:'{search.radius}==2', then:'selected')}>{f:translate(key:"tx_agora_search.filter.radius.option.1",extensionName:"Typo3szAssets")}</option> 
+							 						<option value="3" {f:if(condition:'{search.radius}==3', then:'selected')}>{f:translate(key:"tx_agora_search.filter.radius.option.2",extensionName:"Typo3szAssets")}</option>  
+							 					</select>
+							 				</div>
+ 						 					<div class="text-right">
+						 						<button class="search seach-button btn btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i><f:translate key="tx_agora_search.filter.submit"/></button>
+						 					</div>
+						 				</div>	
+ 						 			</div>		
+						 		</div>	
+							</div>
+						</div>
+					</f:then>
+				</f:if>
+			</f:form>
+		</div>
+	</div>	
+	
+</html>
+

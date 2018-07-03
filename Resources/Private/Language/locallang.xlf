@@ -489,6 +489,70 @@
 			<trans-unit id="tx_agora_domain_model_mod_report.flashMessages.reported">
 				<source>Thank you for your report. An administrator will be informed about it.</source>
 			</trans-unit>
+			
+			<trans-unit id="tx_agora_search.results.headline">
+				<source>Search forum</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.results.no-results">
+				<source>For this criteria results not found.</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.results.subheadline">
+				<source>Results</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.results.subheadline.sword">
+				<source><![CDATA[Results for the searched term <span>"%s"</span>]]></source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.results.post.link">
+				<source>Read the post</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.results.thread.link">
+				<source>Go to headline</source>
+			</trans-unit>
+ 			<trans-unit id="tx_agora_search.sword.error">
+				<source>Please enter 3 or more characters to search the forum</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.submit">
+				<source>Search forum</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.advancedSearch.show">
+				<source>Advanced Search</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.advancedSearch.hide">
+				<source>Close Advanced Search</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.themes.title">
+				<source>Forums to search:</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.radius.title">
+				<source>Narrow search radius:</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.radius.option.prepend.title">
+				<source>Please choose</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.radius.option.0">
+				<source>Posts</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.radius.option.1">
+				<source>Subjects</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.radius.option.2">
+				<source>Headlines</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.sort.title">
+				<source>Sort results by:</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.sort.option.0">
+				<source>Creation Date</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.sort.option.1">
+				<source>Last changes</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.order.option.asc">
+				<source>Ascending</source>
+			</trans-unit>
+			<trans-unit id="tx_agora_search.filter.order.option.desc">
+				<source>Descending</source>
+			</trans-unit>
 
 		</body>
 	</file>

@@ -40,11 +40,24 @@ plugin.tx_agora {
     }
 
     settings {
+    	
+ 		search {
+ 			itemsPerPage = 20 
+ 			limit = 1000
+ 			advanced = {$plugin.tx_agora.settings.advancedSearch}
+ 		}	
+ 		
+     	orderBy = crdate
+		orderDirection = desc
+		demandClass =
+    
         forum {
             listPid = {$plugin.tx_agora.listPid}
             numberOfItemsInLatestView = 5
             numberOfItemsPerPage = 10
             dateFormat = m.d.y h:i
+            includeSearch = {$plugin.tx_agora.settings.includeSearch}
+            resultsPageSearch = {$plugin.tx_agora.settings.resultsPageSearch}
         }
 
         thread {

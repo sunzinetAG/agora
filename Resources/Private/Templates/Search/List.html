@@ -1,0 +1,52 @@
+{namespace a=AgoraTeam\Agora\ViewHelpers}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+    
+    <h2 class="root-title mb-5">
+    	<f:translate key="tx_agora_search.results.headline"/>
+	</h2>
+      
+	<f:render partial="Search/AdvancedSearchBox" arguments="{_all}" />
+ 
+ 	<div class="container-fluid">
+	 	<div class="row forum-results">
+	 		
+	 		<f:if condition="{search.sword} != ''">
+				<f:then>
+					<h3 class="mb-5 sub-title"><f:format.raw><f:translate key="tx_agora_search.results.subheadline.sword" arguments="{0: search.sword}"/></f:format.raw></h3>
+				</f:then>
+				<f:else>
+					<h3 class="mb-5 sub-title"><f:translate key="tx_agora_search.results.subheadline"/></h3>
+				</f:else>
+			</f:if>
+	 		
+			<f:if condition="{results -> f:count()} > 0">
+				<f:then>
+					 <f:widget.paginate objects="{results}" as="paginatedResults" configuration="{itemsPerPage: '{settings.search.itemsPerPage}', insertAbove: 0, insertBelow: 1, addQueryStringMethod: 'POST,GET', maximumNumberOfLinks: 3}">
+	  					<f:for each="{paginatedResults}" as="result" iteration="iterator">
+							<div class="result-item {f:if(condition:'{iterator.isLast}', else:'mb-5')}">
+ 								<strong class="result-title h3 mb-1 d-block">
+									{result.thread.forum.title} > {result.thread.title}
+								</strong>
+								<p><f:format.raw>{a:searchSword(sword: search.sword, data: result.text, maxCharacters: 300)} </f:format.raw></p>
+								<div class="read-more-button-wrap">
+									<f:link.action pageUid="{settings.forum.listPid}" class="btn btn-primary" action="list" controller="Post" arguments="{thread:result.thread.uid}">
+								        <span class="btn-inner"><f:translate key="tx_agora_search.results.post.link"/></span>
+								    </f:link.action>
+								</div>	
+   							</div>
+			 			</f:for>	
+			 		</f:widget.paginate>		
+				</f:then>
+				<f:else>
+					<div class="no-results">
+						<p><f:translate key="tx_agora_search.results.no-results"/></p>
+					</div>
+				</f:else>
+			</f:if>
+		</div>
+	</div>
+ 
+</html>
