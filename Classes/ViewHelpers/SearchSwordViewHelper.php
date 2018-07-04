@@ -53,10 +53,13 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
 	 */
 	public function getRiddOfTheLastString($data, $maxCharacters) 
 	{
-		$data = trim(substr($data, 0, $maxCharacters));
+		if ($maxCharacters > 0) {
+			$data = trim(substr($data, 0, $maxCharacters));
+		}
  		$dataAsArray = explode(" ", $data);
- 		array_pop($dataAsArray);
- 		
+ 		if (count($dataAsArray) > 5) {
+ 			array_pop($dataAsArray);
+ 		}
 		foreach ($dataAsArray as $value) {
 			$string .= $value ." ";
 		}
@@ -79,29 +82,10 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     	$swordLength = strlen($sword);
     	$textLength = strlen($data);
     	$searchedWordIsInRange = true;
- 
+    	
     	if ($maxCharacters > 0 && $swordCount > 0) {
     		// get position of the first sword letter in a string
-    		$getFirstPosOfSwordInData = stripos(strtolower($cleanedData), strtolower($cleanedWord));
-
-    		// if the position of the 'sword' is higher than zero trim, calculate how much characters it is 
-     		if ($getFirstPosOfSwordInData > 0) {
-     			
-     			$getInFront = substr($cleanedData, 0, $getFirstPosOfSwordInData);
-
-				$lastEmptySpaceIndex = strrpos($getInFront,' ');
-	     		$getInFront2 = substr($cleanedData, 0, intval($lastEmptySpaceIndex));
-    			$length_getInFront = strlen($getInFront2);
-    			
-    			$test = substr($data, intval($length_getInFront));
-    			if (strlen($test) < $maxCharacters) {
-    				
-    				$trim = $maxCharacters - strlen($test);
-      				$getInFrontRepet = substr($cleanedData, 0, $lastEmptySpaceIndex - $trim);
-     				$length_getInFront = strlen($getInFrontRepet);
-     			}
-     		}
-     		
+    		$getFirstPosOfSwordInData = strpos(strtolower($cleanedData), strtolower($cleanedWord));
     		// Get the position of the last sword character
     		$posOfSwordLastChar = $getFirstPosOfSwordInData + $swordLength;
     		 
@@ -116,17 +100,19 @@ class SearchSwordViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
     		if ($searchedWordIsInRange === true && $textLength > $maxCharacters) {
     			$data = $this->getRiddOfTheLastString($data, $maxCharacters);      		
     			$data = $data . '...';
-    			
-    		} else if ($searchedWordIsInRange === false && $textLength > $maxCharacters) {
-    			// check we have more that it needs $removeCharsFromStartCount
-    			$data = substr($data, intval($length_getInFront));
-    			$firstEmptySpaceIndex = stripos($data, ' ');
-   			 	$data = substr($data, $firstEmptySpaceIndex);
-   			 	
-    			if (strlen($data) > $maxCharacters) {
-    				$data = $this->getRiddOfTheLastString($data, $maxCharacters-10);
-    			}
-      			$data = "... " .$data. " ...";
+     		} else if ($searchedWordIsInRange === false && $textLength > $maxCharacters) {
+      			$trim = ($maxCharacters - $swordLength) / 2; 
+     			$trimFromTheFront = $getFirstPosOfSwordInData - $trim;
+     			$trimFromTheBack = $textLength - ($posOfSwordLastChar + $trim);
+     				
+     			$data = substr($data, $trimFromTheFront);
+     			$data = substr($data, 0, $maxCharacters);
+					
+     			$firstEmptySpaceIndex = stripos($data, ' ');
+				$data = substr($data, $firstEmptySpaceIndex);
+     				
+				$data = $this->getRiddOfTheLastString($data, 0);
+     			$data = "..." . $data . "...";
     		}
     	} else if ($maxCharacters > 0 && $swordCount == 0 && $textLength > $maxCharacters) {
      		$data = $this->getRiddOfTheLastString($data, $maxCharacters);     		
