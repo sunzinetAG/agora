@@ -25,23 +25,10 @@ use AgoraTeam\Agora\Domain\Model\DemandInterface;
 
 /**
  * Abstract demanded repository
- *
  */
-abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence\Repository  implements \AgoraTeam\Agora\Domain\Repository\DemandedRepositoryInterface
+abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence\Repository implements
+    \AgoraTeam\Agora\Domain\Repository\DemandedRepositoryInterface
 {
-
-    /**
-     * @var \TYPO3\CMS\Extbase\Persistence\Generic\Storage\BackendInterface
-     */
-    protected $storageBackend;
-
-    /**
-     * @param \TYPO3\CMS\Extbase\Persistence\Generic\Storage\BackendInterface $storageBackend
-     */
-    public function injectStorageBackend(\TYPO3\CMS\Extbase\Persistence\Generic\Storage\BackendInterface $storageBackend
-    ) {
-        $this->storageBackend = $storageBackend;
-    }
 
     /**
      * Returns an array of constraints created from a given demand object.
@@ -73,12 +60,17 @@ abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
     public function findDemanded(DemandInterface $demand, $respectEnableFields = true)
-    {       	
-    	$query = $this->generateQuery($demand, $respectEnableFields);
+    {
+        $query = $this->generateQuery($demand, $respectEnableFields);
+
         return $query->execute();
     }
-    
-    
+
+    /**
+     * @param DemandInterface $demand
+     * @param bool $respectEnableFields
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
+     */
     protected function generateQuery(DemandInterface $demand, $respectEnableFields = true)
     {
         $query = $this->createQuery();
@@ -91,7 +83,7 @@ abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence
             $query->getQuerySettings()->setIgnoreEnableFields(true);
             $constraints[] = $query->equals('deleted', 0);
         }
- 	    
+
         if (!empty($constraints)) {
             $query->matching(
                 $query->logicalAnd($constraints)
@@ -103,25 +95,24 @@ abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence
         }
 
         if ($demand->getLimit() != null) {
-        	$query->setLimit((int)$demand->getLimit());
+            $query->setLimit((int)$demand->getLimit());
         }
-        
+
         if ($demand->getOffset() != null) {
-        	if (!$query->getLimit()) {
-        		$query->setLimit(PHP_INT_MAX);
-        	}
-        	$query->setOffset((int)$demand->getOffset());
+            if (!$query->getLimit()) {
+                $query->setLimit(PHP_INT_MAX);
+            }
+            $query->setOffset((int)$demand->getOffset());
         }
- 
+
         return $query;
     }
-    
-    
+
     /**
      * Returns the total number objects of this repository matching the demand.
      *
      * @param DemandInterface $demand
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return int
      */
     public function countDemanded(DemandInterface $demand)
     {
@@ -134,6 +125,7 @@ abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence
         }
 
         $result = $query->execute();
+
         return $result->count();
     }
 }
