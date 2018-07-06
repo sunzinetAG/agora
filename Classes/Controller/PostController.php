@@ -47,6 +47,14 @@ class PostController extends ActionController
     protected $postService;
 
     /**
+     * paginationService
+     *
+     * @var \AgoraTeam\Agora\Service\PaginationService
+     * @inject
+     */
+    protected $paginationService;
+
+    /**
      * threadService
      *
      * @var \AgoraTeam\Agora\Service\MailService
@@ -83,16 +91,35 @@ class PostController extends ActionController
      *
      * @todo Mark post as read
      * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param string $page
      * @return void
      */
-    public function listAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function listAction(\AgoraTeam\Agora\Domain\Model\Thread $thread, $page = 1)
     {
         $this->authenticationService->assertReadAuthorization($thread);
+        $observedThread = [];
+
+        // Calculate everything for the pagination
+        $itemsPerPage = ($this->settings['post']['numberOfItemsPerPage']) ?
+            $this->settings['post']['numberOfItemsPerPage'] : 20;
+
+        // Count all results
+        $countPosts = $this->postRepository->countPostsByThreadsOnFirstLevel($thread);
+
+        // Fetch data
+        $offset = ($page - 1) * $itemsPerPage;
+        $limit = $itemsPerPage;
+        $posts = $this->postRepository->findByThreadPaginated($thread, $offset, $limit);
+
+        if ($countPosts > $itemsPerPage) {
+            $totalPages = ceil($countPosts / $itemsPerPage);
+            $paginator = $this->paginationService->build($page, $totalPages);
+        }
+
         /** @var User $user */
         $user = $this->authenticationService->getUser();
         $this->increaseThreadView($thread);
 
-        $posts = $this->postRepository->findByThreadOnFirstLevel($thread);
         $firstPost = $this->postRepository->findByThread($thread)->getFirst();
 
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
@@ -109,6 +136,7 @@ class PostController extends ActionController
             array(
                 'thread' => $thread,
                 'posts' => $posts,
+                'paginator' => $paginator,
                 'firstPost' => $firstPost,
                 'user' => $user,
                 'observedThread' => $observedThread
@@ -173,7 +201,7 @@ class PostController extends ActionController
                 $qpAuthorName,
                 $quotedPost->getCrdate()
             );
-            $quotedPost= null;
+            $quotedPost = null;
         }
         $this->view->assignMultiple([
             'mode' => $mode,
@@ -224,6 +252,8 @@ class PostController extends ActionController
             'postCreated',
             ['post' => $newPost]
         );
+
+        /* @toDo Create Link to post on the specific page */
 
         $this->redirect(
             'list',
