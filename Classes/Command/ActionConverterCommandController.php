@@ -128,6 +128,7 @@ class ActionConverterCommandController extends CommandController
         foreach ($actions as $action) {
             $this->actionRepository->remove($action);
         }
+
         foreach ($trimmedNotifications as $trimmedNotification) {
             $this->notificationRepository->add($trimmedNotification);
         }
@@ -283,6 +284,7 @@ class ActionConverterCommandController extends CommandController
                 }
             }
         }
+
         return $notifications;
     }
 
@@ -326,6 +328,7 @@ class ActionConverterCommandController extends CommandController
                 $notifications[] = $notification;
             }
         }
+
         return $notifications;
     }
 
@@ -339,12 +342,15 @@ class ActionConverterCommandController extends CommandController
         $notification = new Notification();
         $notification->setType($action->getType());
         $notification->setUser($action->getUser());
-        $notification->setOwner($post->getCreator()->getUid());
         $notification->setThread($action->getThread());
         $notification->setPost($action->getPost());
         $notification->setPage($action->getPage());
         $notification->setTitle($action->getTitle());
         $notification->setTstamp($action->getTstamp());
+
+        if (!is_null($post->getCreator())) {
+            $notification->setOwner($post->getCreator()->getUid());
+        }
 
         return $notification;
     }
@@ -359,12 +365,15 @@ class ActionConverterCommandController extends CommandController
         $notification = new Notification();
         $notification->setType($action->getType());
         $notification->setUser($action->getUser());
-        $notification->setOwner($thread->getCreator()->getUid());
         $notification->setThread($action->getThread());
         $notification->setPost($action->getPost());
         $notification->setPage($action->getPage());
         $notification->setTitle($action->getTitle());
         $notification->setTstamp($action->getTstamp());
+
+        if (!is_null($thread->getCreator())) {
+            $notification->setOwner($thread->getCreator()->getUid());
+        }
 
         return $notification;
     }
@@ -383,11 +392,18 @@ class ActionConverterCommandController extends CommandController
                 $notification->setType($action->getType());
                 $notification->setTitle($action->getTitle());
                 $notification->setUser($action->getUser());
-                $notification->setOwner($post->getQuotedPost()->getCreator()->getUid());
-                $notification->setThread($post->getThread()->getUid());
                 $notification->setPost($post->getUid());
                 $notification->setPage($action->getPage());
                 $notification->setTstamp($action->getTstamp());
+
+                if (!is_null($post->getThread())) {
+                    $notification->setThread($post->getThread()->getUid());
+                }
+                if (!is_null($post->getQuotedPost())) {
+                    if (!is_null($post->getQuotedPost()->getCreator())) {
+                        $notification->setOwner($post->getQuotedPost()->getCreator()->getUid());
+                    }
+                }
             }
         }
 

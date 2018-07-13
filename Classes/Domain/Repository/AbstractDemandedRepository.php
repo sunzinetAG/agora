@@ -29,7 +29,6 @@ use AgoraTeam\Agora\Domain\Repository\DemandedRepositoryInterface;
  */
 abstract class AbstractDemandedRepository extends Repository implements DemandedRepositoryInterface
 {
-    /**
      * Returns an array of constraints created from a given demand object.
      *
      * @param \TYPO3\CMS\Extbase\Persistence\QueryInterface $query
@@ -65,6 +64,11 @@ abstract class AbstractDemandedRepository extends Repository implements Demanded
         return $query->execute();
     }
 
+    /**
+     * @param DemandInterface $demand
+     * @param bool $respectEnableFields
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
+     */
     protected function generateQuery(DemandInterface $demand, $respectEnableFields = true)
     {
         $query = $this->createQuery();
@@ -106,7 +110,7 @@ abstract class AbstractDemandedRepository extends Repository implements Demanded
      * Returns the total number objects of this repository matching the demand.
      *
      * @param DemandInterface $demand
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return int
      */
     public function countDemanded(DemandInterface $demand)
     {
