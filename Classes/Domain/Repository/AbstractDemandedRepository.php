@@ -29,7 +29,7 @@ use AgoraTeam\Agora\Domain\Repository\DemandedRepositoryInterface;
  */
 abstract class AbstractDemandedRepository extends Repository implements DemandedRepositoryInterface
 {
-     * Returns an array of constraints created from a given demand object.
+     /* Returns an array of constraints created from a given demand object.
      *
      * @param \TYPO3\CMS\Extbase\Persistence\QueryInterface $query
      * @param DemandInterface $demand
