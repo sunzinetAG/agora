@@ -21,6 +21,7 @@ namespace AgoraTeam\Agora\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\Thread;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -40,6 +41,14 @@ class PaginationService implements SingletonInterface
      * @inject
      */
     protected $postRepository;
+
+    /**
+     * threadRepository
+     *
+     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
+     * @inject
+     */
+    protected $threadRepository;
 
     /**
      * @param integer $actualPage
@@ -93,7 +102,9 @@ class PaginationService implements SingletonInterface
 
             //beginn der Paginierung berechnen:
             $i = $actualPage - 3;
-            while ($i <= $i + $pageLinks) {
+            $end = $i + $pageLinks - 1;
+
+            while ($i <= $end) {
                 $pagination[$i]['value'] = $i;
                 if ($i == $actualPage) {
                     $pagination[$i]['class'] = 'active';
@@ -107,9 +118,8 @@ class PaginationService implements SingletonInterface
             return $pagination;
         }
 
-
         /* The current page is one of the last three
-        Pagination: << | 15 | 16 | 17 | 18 | 19 | 20 | 21 | >>*/
+        Pagination: << | 15 | 16 | 17 | 18 | 19 | 20 | 21 */
         if ($actualPage >= $totalPages - 3) {
             // link to first page
             $pagination[0]['value'] = 1;
@@ -133,20 +143,41 @@ class PaginationService implements SingletonInterface
      * @param Post $post
      * @return integer $page
      */
-    public function getPagePosition(Post $post, $settings)
+    public function getPostPagePosition(Post $post, $settings)
     {
         // Check if posts is a quotedPosts
         if (!is_null($post->getQuotedPost())) {
             $post = $post->getQuotedPost();
         }
         $itemsPerPage = ($settings['post']['numberOfItemsPerPage']) ?
-            $settings['post']['numberOfItemsPerPage'] : 20;
+            $settings['post']['numberOfItemsPerPage'] : 10;
 
+        $thread = $post->getThread();
 
         /** @var QueryResult $posts */
-        $posts = $this->postRepository->findByThreadOnFirstLevel($post->getThread())->toArray();
+        $posts = $this->postRepository->findByThreadOnFirstLevel($thread)->toArray();
         $position = array_search($post, $posts) + 1;
+        if (false == $position) {
+            return 0;
+        }
 
+        $page = ceil($position / $itemsPerPage);
+
+        return $page;
+    }
+
+    /**
+     * @param Thread $thread
+     * @return integer $page
+     */
+    public function getThreadPagePosition(Thread $thread, $settings)
+    {
+        $itemsPerPage = ($settings['thread']['numberOfItemsPerPage']) ?
+            $settings['thread']['numberOfItemsPerPage'] : 10;
+
+        /** @var QueryResult $posts */
+        $threads = $this->threadRepository->findByForum($thread->getForum())->toArray();
+        $position = array_search($thread, $threads) + 1;
         if (false == $position) {
             return 0;
         }

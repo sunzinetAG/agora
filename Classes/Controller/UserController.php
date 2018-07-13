@@ -22,21 +22,14 @@ namespace AgoraTeam\Agora\Controller;
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Thread;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Web\Request;
 
 /**
  * UserController
  */
 class UserController extends ActionController
 {
-
-    /**
-     * userRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
-     * @inject
-     */
-    protected $userRepository = null;
-
     /**
      * Action favoritePosts
      *
@@ -117,30 +110,40 @@ class UserController extends ActionController
      * Action addObservedThreadAction
      *
      * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param int $page
      * @return void
      */
-    public function addObservedThreadAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function addObservedThreadAction(\AgoraTeam\Agora\Domain\Model\Thread $thread, $page = 0)
     {
         $user = $this->authenticationService->getUser();
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
             $user->addObservedThread($thread);
             $this->userRepository->update($user);
         }
-        $this->redirect('list', 'Post', 'Agora', array('thread' => $thread));
+        $redirectArgs = ['thread' => $thread];
+        if ($page > 1) {
+            $redirectArgs['page'] = $page;
+        }
+        $this->redirect('list', 'Post', 'Agora', $redirectArgs);
     }
 
     /**
      * Action removeObservedThreadAction
      *
      * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param int $page
      * @return void
      */
-    public function removeObservedThreadAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function removeObservedThreadAction(\AgoraTeam\Agora\Domain\Model\Thread $thread, $page = 0)
     {
         $user = $this->authenticationService->getUser();
         $user->removeObservedThread($thread);
         $this->userRepository->update($user);
-        $this->redirect('list', 'Post', 'Agora', array('thread' => $thread));
+        $redirectArgs = ['thread' => $thread];
+        if ($page > 1) {
+            $redirectArgs['page'] = $page;
+        }
+        $this->redirect('list', 'Post', 'Agora', $redirectArgs);
     }
 
     /**
@@ -156,7 +159,9 @@ class UserController extends ActionController
             $user->addFavoritePost($post);
             $this->userRepository->update($user);
         }
-        $this->redirect('list', 'Post', 'Agora', array('thread' => $post->getThread()));
+        // Build up the redirect
+        $uri = $this->generatePostUri($post, true);
+        $this->redirectToUri($uri);
     }
 
     /**
@@ -172,7 +177,9 @@ class UserController extends ActionController
             $user->removeFavoritePost($post);
             $this->userRepository->update($user);
         }
-        $this->redirect('list', 'Post', 'Agora', array('thread' => $post->getThread()));
+        // Build up the redirect
+        $uri = $this->generatePostUri($post, true);
+        $this->redirectToUri($uri);
     }
 
 }

@@ -49,11 +49,26 @@ class ReportController extends ActionController
 
     /**
      * @param Post $post
+     * @return void
+     */
+    public function newAction(Post $post, Report $report = null)
+    {
+        $this->authenticationService->assertReadAuthorization($post);
+        $this->view->assignMultiple([
+            'post' => $post,
+            'report' => $report,
+            'settings' => $this->settings
+        ]);
+    }
+
+    /**
+     * @param Post $post
      */
     public function reportAction(Report $report)
     {
         // For some reason the mailservice changes the TSFE id...
         $pageUid = $GLOBALS['TSFE']->id;
+        $uri = $this->generatePostUri($report->getPost(), true);
 
         $this->authenticationService->assertReadAuthorization($report->getPost());
         $report->setReporter($this->authenticationService->getUser());
@@ -69,26 +84,8 @@ class ReportController extends ActionController
             );
         }
         $this->addLocalizedFlashmessage('tx_agora_domain_model_mod_report.flashMessages.reported');
-        $this->redirect(
-            'list',
-            'Post',
-            'Agora',
-            ['thread' => $report->getPost()->getThread()],
-            $pageUid
-        );
-    }
 
-    /**
-     * @param Post $post
-     * @return void
-     */
-    public function newAction(Post $post, Report $report = null)
-    {
-        $this->authenticationService->assertReadAuthorization($post);
-        $this->view->assignMultiple([
-            'post' => $post,
-            'report' => $report,
-            'settings' => $this->settings
-        ]);
+        // Build up the redirect
+        $this->redirectToUri($uri);
     }
 }

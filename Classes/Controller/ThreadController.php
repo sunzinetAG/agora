@@ -20,11 +20,8 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * ThreadController
@@ -52,16 +49,40 @@ class ThreadController extends ActionController
      * action list
      *
      * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param string $page
      * @return void
      */
-    public function listAction(\AgoraTeam\Agora\Domain\Model\Forum $forum)
+    public function listAction(\AgoraTeam\Agora\Domain\Model\Forum $forum, $page = 1)
     {
         $this->authenticationService->assertReadAuthorization($forum);
-        $threads = $this->threadRepository->findByForum($forum);
+        $paginator = '';
+        // Calculate everything for the pagination
+        $itemsPerPage = ($this->settings['thread']['numberOfItemsPerPage']) ?
+            $this->settings['thread']['numberOfItemsPerPage'] : 10;
+
+        // Count all results
+        $countThreads = $this->threadRepository->countByForum($forum);
+
+        // Fetch data
+        $offset = ($page - 1) * $itemsPerPage;
+        $limit = $itemsPerPage;
+        if ($countThreads > $itemsPerPage) {
+            $totalPages = ceil($countThreads / $itemsPerPage);
+            $paginator = $this->paginationService->build($page, $totalPages);
+        }
+
+        if ($totalPages && $totalPages < $page) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
+
+        $threads = $this->threadRepository->findByThreadPaginated($forum, $offset, $limit);
 
         $this->view->assignMultiple(
             array(
                 'forum' => $forum,
+                'paginator' => $paginator,
+                'page' => $page,
+                'totalThreadAmount' => $countThreads,
                 'threads' => $threads
             )
         );

@@ -84,9 +84,8 @@ class NotificationMailerCommandController extends CommandController
     {
         if ($this->checkExecutionTime($start, $duration)) {
             return true;
-        } else {
-            return true;
         }
+
         $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'
         );

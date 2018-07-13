@@ -23,12 +23,8 @@ namespace AgoraTeam\Agora\Controller;
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Model\User;
-use AgoraTeam\Agora\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
 use AgoraTeam\Agora\Utility\QuoteUtility;
-use Doctrine\DBAL\Query\QueryBuilder;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * PostController
@@ -45,14 +41,6 @@ class PostController extends ActionController
      * @inject
      */
     protected $postService;
-
-    /**
-     * paginationService
-     *
-     * @var \AgoraTeam\Agora\Service\PaginationService
-     * @inject
-     */
-    protected $paginationService;
 
     /**
      * threadService
@@ -79,17 +67,8 @@ class PostController extends ActionController
     protected $threadRepository;
 
     /**
-     * userRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
-     * @inject
-     */
-    protected $userRepository;
-
-    /**
      * action list
      *
-     * @todo Mark post as read
      * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
      * @param string $page
      * @return void
@@ -98,6 +77,7 @@ class PostController extends ActionController
     {
         $this->authenticationService->assertReadAuthorization($thread);
         $observedThread = [];
+        $paginator = '';
 
         // Calculate everything for the pagination
         $itemsPerPage = ($this->settings['post']['numberOfItemsPerPage']) ?
@@ -109,12 +89,15 @@ class PostController extends ActionController
         // Fetch data
         $offset = ($page - 1) * $itemsPerPage;
         $limit = $itemsPerPage;
+
         $posts = $this->postRepository->findByThreadPaginated($thread, $offset, $limit);
 
         if ($countPosts > $itemsPerPage) {
             $totalPages = ceil($countPosts / $itemsPerPage);
             $paginator = $this->paginationService->build($page, $totalPages);
         }
+        // We need to calculate the beginning of the first post
+        $postnumber = ($page * $itemsPerPage) - $itemsPerPage;
 
         /** @var User $user */
         $user = $this->authenticationService->getUser();
@@ -136,7 +119,10 @@ class PostController extends ActionController
             array(
                 'thread' => $thread,
                 'posts' => $posts,
+                'page' => $page,
+                'postnumber' => $postnumber,
                 'paginator' => $paginator,
+                'totalPostAmount' => $countPosts,
                 'firstPost' => $firstPost,
                 'user' => $user,
                 'observedThread' => $observedThread
@@ -224,17 +210,25 @@ class PostController extends ActionController
 
         $newPost->setForum($newPost->getThread()->getForum());
         $user = $this->authenticationService->getUser();
-        $newPost->setCreator($user);
         $now = new \DateTime();
+
+        $newPost->setCreator($user);
         $newPost->setPublishingDate($now);
         $this->postRepository->add($newPost);
 
-        // To update the tstamp of the thread we've to update the thread-object
-        // just by adding the new post to the thread
         $thread = $newPost->getThread();
         $thread->addPost($newPost);
 
         $this->threadRepository->update($thread);
+
+        /* Force the post to persist for the dispatcher */
+        $this->persistenceManager->persistAll();
+
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'postCreated',
+            ['post' => $newPost]
+        );
 
         $this->addFlashMessage(
             \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
@@ -245,22 +239,9 @@ class PostController extends ActionController
             \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
         );
 
-        /* Force the post to persist for the dispatcher */
-        $this->persistenceManager->persistAll();
-        $this->signalSlotDispatcher->dispatch(
-            __CLASS__,
-            'postCreated',
-            ['post' => $newPost]
-        );
-
-        /* @toDo Create Link to post on the specific page */
-
-        $this->redirect(
-            'list',
-            'Post',
-            'agora',
-            array('thread' => $newPost->getThread())
-        );
+        // Build up the redirect
+        $uri = $this->generatePostUri($newPost, true);
+        $this->redirectToUri($uri);
     }
 
     /**
@@ -346,6 +327,9 @@ class PostController extends ActionController
             $this->threadRepository->update($thread);
         }
 
+        /* Force the post to persist for the dispatcher */
+        $this->persistenceManager->persistAll();
+
         $this->addFlashMessage(
             \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
                 'tx_agora_domain_model_post.flashMessages.updated',
@@ -361,17 +345,14 @@ class PostController extends ActionController
             ['post' => $newPost]
         );
 
-        $this->redirect(
-            'list',
-            'Post',
-            'agora',
-            array('thread' => $thread)
-        );
+        // Build up the redirect
+        $uri = $this->generatePostUri($newPost, true);
+        $this->redirectToUri($uri);
     }
 
     /**
      * action delete
-     *
+     * @todo Redirect to the right paginated page
      * @param \AgoraTeam\Agora\Domain\Model\Post $post
      * @return void
      */

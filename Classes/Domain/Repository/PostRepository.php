@@ -29,7 +29,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 /**
  * The repository for Posts
  */
-class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemandedRepository
+class PostRepository extends AbstractDemandedRepository
 {
 
     /**
@@ -67,8 +67,8 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
                 $query->equals('quotedPost', 0)
             )
         );
-        $result = $query->execute();
 
+        $result = $query->execute();
         return $result;
     }
 
@@ -106,7 +106,7 @@ class PostRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemanded
             )
         )
         ->setOffset((integer) $offset)
-        ->setLimit((integer)$limit)
+        ->setLimit((integer) $limit)
         ->execute();
 
         return $result;

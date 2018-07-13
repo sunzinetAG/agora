@@ -1,27 +1,71 @@
-<div class="paginator">
-    <f:for each="{pagination}" as="paginator">
-        <f:if condition='{paginator.class}'>
-            <f:then>
-                <f:if condition='{paginator.class} == "active"'>
-                    <span class='pagination-page'>{paginator.value}</span>
-                </f:if>
-                <f:if condition='{paginator.class} == "first"'>
-                    <f:link.action action='list' arguments='{page: paginator.value, thread: thread}'>
-                        <span class='pagination-page'><<</span>
-                    </f:link.action>
-                </f:if>
-                <f:if condition='{paginator.class} == "last"'>
-                    <f:link.action action='list' arguments='{page: paginator.value, thread: thread}'>
-                        <span class='pagination-page'>>></span>
-                    </f:link.action>
-                </f:if>
-            </f:then>
+<f:section name="thread">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="pagination">
+                <f:for each="{pagination}" as="paginator">
+                    <li class="page-item {paginator.class}">
+                        <f:if condition='{paginator.class}'>
+                            <f:then>
+                                <f:if condition='{paginator.class} == "active"'>
+                                    <span class='pagination-page'>{paginator.value}</span>
+                                </f:if>
+                                <f:if condition='{paginator.class} == "first"'>
+                                    <f:link.action action='list' arguments='{page: paginator.value, forum: obj}' class="page-link">
+                                        <span class='pagination-page'><<</span>
+                                    </f:link.action>
+                                </f:if>
+                                <f:if condition='{paginator.class} == "last"'>
+                                    <f:link.action action='list' arguments='{page: paginator.value, forum: obj}' class="page-link">
+                                        <span class='pagination-page'>>></span>
+                                    </f:link.action>
+                                </f:if>
+                            </f:then>
 
-            <f:else>
-                <f:link.action action='list' arguments='{page: paginator.value, thread: thread}'>
-                    <span class='pagination-page'>{paginator.value}</span>
-                </f:link.action>
-            </f:else>
-        </f:if>
-    </f:for>
-</div>
+                            <f:else>
+                                <f:link.action action='list' arguments='{page: paginator.value, forum: obj}' class="page-link">
+                                    <span class='pagination-page'>{paginator.value}</span>
+                                </f:link.action>
+                            </f:else>
+                        </f:if>
+                    </li>
+                </f:for>
+            </ul>
+        </div>
+    </div>
+</f:section>
+
+<f:section name="post">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="pagination">
+                <f:for each="{pagination}" as="paginator">
+                    <li class="page-item {paginator.class}">
+                        <f:if condition='{paginator.class}'>
+                            <f:then>
+                                <f:if condition='{paginator.class} == "active"'>
+                                    <span class='pagination-page'>{paginator.value}</span>
+                                </f:if>
+                                <f:if condition='{paginator.class} == "first"'>
+                                    <f:link.action action='list' arguments='{page: paginator.value, thread: obj}' class="page-link">
+                                        <span class='pagination-page'><<</span>
+                                    </f:link.action>
+                                </f:if>
+                                <f:if condition='{paginator.class} == "last"'>
+                                    <f:link.action action='list' arguments='{page: paginator.value, thread: obj}' class="page-link">
+                                        <span class='pagination-page'>>></span>
+                                    </f:link.action>
+                                </f:if>
+                            </f:then>
+
+                            <f:else>
+                                <f:link.action action='list' arguments='{page: paginator.value, thread: obj}'>
+                                    <span class='pagination-page'>{paginator.value}</span>
+                                </f:link.action>
+                            </f:else>
+                        </f:if>
+                    </li>
+                </f:for>
+            </ul>
+        </div>
+    </div>
+</f:section>

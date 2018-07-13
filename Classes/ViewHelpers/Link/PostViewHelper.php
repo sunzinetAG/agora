@@ -1,6 +1,6 @@
 <?php
 
-namespace AgoraTeam\Agora\ViewHelpers;
+namespace AgoraTeam\Agora\ViewHelpers\Link;
 
 /***************************************************************
  *  Copyright notice
@@ -28,7 +28,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 /**
  * CreatorViewHelper
  */
-class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class PostViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
 {
 
     /**
@@ -153,7 +153,7 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
         $configuration['parameter'] = $detailPid;
 
         $paginationSite = $this->paginationService->getPostPagePosition($post, $settings);
-        if ($paginationSite != 0) {
+        if ($paginationSite > 1) {
             $configuration['additionalParams'] .= '&tx_agora_forum[page]=' . $paginationSite;
         }
 

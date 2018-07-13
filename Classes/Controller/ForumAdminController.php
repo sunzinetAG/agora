@@ -37,14 +37,6 @@ class ForumAdminController extends ActionController
     protected $forumRepository = null;
 
     /**
-     * UserRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
-     * @inject
-     */
-    protected $userRepository = null;
-
-    /**
      * GroupRepository
      *
      * @var \AgoraTeam\Agora\Domain\Repository\GroupRepository

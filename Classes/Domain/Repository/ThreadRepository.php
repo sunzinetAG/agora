@@ -49,7 +49,6 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
     public function findByForum(\AgoraTeam\Agora\Domain\Model\Forum $forum)
     {
         $query = $this->createQuery();
-
         $result = $query
             ->matching(
                 $query->equals('forum', $forum)
@@ -260,4 +259,25 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
             ->set('views', $views + 1)
             ->execute();
     }
+
+    /**
+     * @param Forum $forum
+     * @param $offset
+     * @param $limit
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function findByThreadPaginated(Forum $forum, $offset, $limit)
+    {
+        $query = $this->createQuery();
+        $result = $query->matching(
+            $query->equals('forum', $forum)
+        )
+            ->setOrderings(array('tstamp' => QueryInterface::ORDER_DESCENDING))
+            ->setOffset((integer) $offset)
+            ->setLimit((integer)$limit)
+            ->execute();
+
+        return $result;
+    }
+
 }
