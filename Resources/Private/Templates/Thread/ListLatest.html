@@ -8,15 +8,15 @@
         <f:for each="{latestThreads}" as="latest">
             <li class="list-group-item">
                 <div class="strong h6">
-                    <f:link.action action="list" pluginName="Forum" controller="Post" arguments="{thread:latest}">
+                    <f:link.action pageUid="{settings.forumPageUid}" action="list" pluginName="Forum" controller="Post" arguments="{thread:latest}">
                         {latest.title}
                     </f:link.action>
                     <div class="subHeader small">
                         <label class="latestForum">
                             <f:translate key="tx_agora_domain_model_thread.list_latest.forum"/>
                             :
-                            <f:link.action action="list" pluginName="Forum" controller="Forum"
-                                           arguments="{forum:latest.forum}">
+                            <f:link.action pageUid="{settings.forumPageUid}" action="list" pluginName="Forum"
+                                           controller="Forum" arguments="{forum:latest.forum}">
                                 {latest.forum.title}
                             </f:link.action>
                         </label>

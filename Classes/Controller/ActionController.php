@@ -20,6 +20,7 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use AgoraTeam\Agora\Domain\Model\Post;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
@@ -51,6 +52,12 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
      * @inject
      */
     protected $userRepository;
+
+    /**
+     * @var \AgoraTeam\Agora\Service\PaginationService
+     * @inject
+     */
+    protected $paginationService;
 
     /**
      * @var \AgoraTeam\Agora\Service\Authentication\AuthenticationService
@@ -140,5 +147,50 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
         return $GLOBALS['TSFE'];
     }
 
+    /**
+     * @param $actionName
+     * @param null $controllerName
+     * @param null $extensionname
+     * @param array|null $arguments
+     * @return string $uri
+     */
+    protected function buildRedirectUri(
+        $actionName,
+        $controllerName = null,
+        $extensionName = null,
+        array $arguments = null,
+        $pageUid = null
+    ) {
+        if ($controllerName === null) {
+            $controllerName = $this->request->getControllerName();
+        }
+        $this->uriBuilder->reset()->setTargetPageUid($pageUid)->setCreateAbsoluteUri(true);
+        if (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL')) {
+            $this->uriBuilder->setAbsoluteUriScheme('https');
+        }
+        $uri = $this->uriBuilder->uriFor($actionName, $arguments, $controllerName, $extensionName);
+
+        return $uri;
+    }
+
+    /**
+     * @param $newPost
+     * @param $addHash
+     * @return string $uri
+     */
+    protected function generatePostUri(Post $newPost, $addHash = false)
+    {
+        $redirectArgs = ['thread' => $newPost->getThread()];
+        $pageNumber = $this->paginationService->getPostPagePosition($newPost, $this->settings);
+        if ($pageNumber > 1) {
+            $redirectArgs['page'] = $pageNumber;
+        }
+        $uri = $this->buildRedirectUri('list', 'Post', 'agora', $redirectArgs);
+        if ($addHash) {
+            $uri .= '#post' . $newPost->getUid();
+        }
+
+        return $uri;
+    }
 }
 

@@ -22,15 +22,13 @@ namespace AgoraTeam\Agora\Domain\Repository;
  ***************************************************************/
 
 use AgoraTeam\Agora\Domain\Model\DemandInterface;
+use AgoraTeam\Agora\Domain\Repository\DemandedRepositoryInterface;
 
 /**
  * Abstract demanded repository
  */
-abstract class AbstractDemandedRepository extends \TYPO3\CMS\Extbase\Persistence\Repository implements
-    \AgoraTeam\Agora\Domain\Repository\DemandedRepositoryInterface
+abstract class AbstractDemandedRepository extends Repository implements DemandedRepositoryInterface
 {
-
-    /**
      * Returns an array of constraints created from a given demand object.
      *
      * @param \TYPO3\CMS\Extbase\Persistence\QueryInterface $query
