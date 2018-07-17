@@ -10,9 +10,10 @@
         </f:translate>
     </h2>
     <f:for each="{notifications}" as="notification">
-        <a:be.link action="list" controller="Post" extensionName="Agora" pluginName="Forum"
-                   arguments="{thread: notification.notifications.0.thread}"
-                   absolute="1" pageUid="{notification.notifications.0.page}">
+        <a:link.post post="{notification.notifications.0.post}"
+                     pageUid="{settings.forum.listPid}"
+                     configuration="{forceAbsoluteUrl: 1}"
+                     section="post{notification.notifications.0.post.uid}">
             <f:if condition="{notification.notifications.0.title}">
                 <h3>{notification.notifications.0.title}</h3>
             </f:if>
@@ -28,7 +29,7 @@
                     </f:translate>
                 </f:else>
             </f:if>
-        </a:be.link>
+        </a:link.post>
         <a:format.fromUser user="{notification.user}" amount="{notification.notifications}"/>
         -
         <a:format.relativeDate timestamp="{notification.crdate}"

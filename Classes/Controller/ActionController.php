@@ -132,7 +132,7 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
                     GeneralUtility::getFileAbsFileName($configuration['templatePath'])
                 );
                 $html = $standaloneTemplate->render();
-                $this->response->appendContent($html);
+                $this->response->setContent($html);
                 break;
             default:
                 // Do nothing, it might be handled in the view

@@ -149,6 +149,7 @@ class PaginationService implements SingletonInterface
         if (!is_null($post->getQuotedPost())) {
             $post = $post->getQuotedPost();
         }
+
         $itemsPerPage = ($settings['post']['numberOfItemsPerPage']) ?
             $settings['post']['numberOfItemsPerPage'] : 10;
 

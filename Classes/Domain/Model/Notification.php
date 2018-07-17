@@ -80,9 +80,9 @@ class Notification extends Entity
     protected $owner = 0;
 
     /**
-     * @var int
+     * @var \AgoraTeam\Agora\Domain\Model\Post $post
      */
-    protected $post = 0;
+    protected $post = null;
 
     /**
      * @var int
@@ -255,9 +255,9 @@ class Notification extends Entity
     }
 
     /**
-     * @return int
+     * @return \AgoraTeam\Agora\Domain\Model\Post
      */
-    public function getPost(): int
+    public function getPost()
     {
         return $this->post;
     }
@@ -265,7 +265,7 @@ class Notification extends Entity
     /**
      * @param int $post
      */
-    public function setPost(int $post)
+    public function setPost($post)
     {
         $this->post = $post;
     }

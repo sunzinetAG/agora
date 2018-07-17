@@ -22,6 +22,7 @@ namespace AgoraTeam\Agora\Controller;
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Service\MailService;
 use AgoraTeam\Agora\Service\TagService;
+use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
 
 /**
  * ThreadController
@@ -72,7 +73,7 @@ class ThreadController extends ActionController
         }
 
         if ($totalPages && $totalPages < $page) {
-            $GLOBALS['TSFE']->pageNotFoundAndExit();
+            throw new TargetNotFoundException('Page was not found');
         }
 
         $threads = $this->threadRepository->findByThreadPaginated($forum, $offset, $limit);

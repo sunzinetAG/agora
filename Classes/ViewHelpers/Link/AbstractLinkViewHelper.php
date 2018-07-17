@@ -1,6 +1,6 @@
 <?php
 
-namespace AgoraTeam\Agora\ViewHelpers;
+namespace AgoraTeam\Agora\ViewHelpers\Link;
 
 /***************************************************************
  *  Copyright notice
@@ -19,7 +19,7 @@ namespace AgoraTeam\Agora\ViewHelpers;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use AgoraTeam\Agora\Domain\Model\Post;
+
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -28,7 +28,7 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 /**
  * CreatorViewHelper
  */
-class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+abstract class AbstractLinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
 {
 
     /**
@@ -69,16 +69,10 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
     }
 
     /**
-     * initializeArguments
-     *
-     * @return void
+     * registerLinkTagAttributes
      */
-    public function initializeArguments()
+    protected function registerLinkTagAttributes()
     {
-        parent::initializeArguments();
-        $this->registerUniversalTagAttributes();
-
-        $this->registerArgument('post', Post::class, 'post item', true);
         $this->registerArgument('settings', 'array', 'Settings', false, []);
         $this->registerArgument('uriOnly', 'bool', 'url only', false, false);
         $this->registerArgument('configuration', 'array', 'configuration', false, []);
@@ -87,36 +81,58 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
     }
 
     /**
-     * Render link to post in thread
+     * Merge Settings from fluid with typoscript settings
      *
-     * @return string link
+     * @return mixed
      */
-    public function render()
+    protected function mergeSettings()
     {
-        /** @var Post $post */
-        $post = $this->arguments['post'];
-        $pageUid = $this->arguments['pageUid'];
         $settings = $this->arguments['settings'];
-        $uriOnly = $this->arguments['uriOnly'];
-        $configuration = $this->arguments['configuration'];
 
-        $tsSettings = (array)$this->getSettings();
+        $tsSettings = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+            'Agora',
+            'Forum'
+        );
         ArrayUtility::mergeRecursiveWithOverrule($tsSettings, (array)$settings);
-        $linkContent = $this->renderChildren();
 
-        // CHeck if post is given
-        if (is_null($post)) {
-            return $linkContent;
+        return $tsSettings;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getConfiguration()
+    {
+        $pageUid = $this->arguments['pageUid'];
+        $configuration = $this->arguments['configuration'];
+        $configuration['linkAccessRestrictedPages'] = true;
+
+        if ('BE' == TYPO3_MODE && array_key_exists('forceAbsoluteUrl', $configuration)) {
+            unset($configuration['forceAbsoluteUrl']);
         }
-        $this->cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-        $configuration = $this->getLinkToPost($post, $tsSettings, $configuration);
 
         if ($pageUid) {
             $configuration['parameter'] = $pageUid;
         }
 
+        return $configuration;
+    }
+
+    /**
+     * @param $configuration
+     * @param $linkContent
+     * @return string
+     */
+    protected function renderTag($configuration, $linkContent)
+    {
+        $this->cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
         $url = $this->cObj->typoLink_URL($configuration);
-        if ($uriOnly) {
+        if ($this->hasArgument('section')) {
+            $url .= '#' . $this->arguments['section'];
+        }
+
+        if ($this->arguments['uriOnly']) {
             return $url;
         }
 
@@ -125,56 +141,10 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
             return $linkContent;
         }
 
-        if (!$this->tag->hasAttribute('target')) {
-            if (!empty($target)) {
-                $this->tag->addAttribute('target', $target);
-            }
-        }
-
-        if ($this->hasArgument('section')) {
-            $url .= '#' . $this->arguments['section'];
-        }
-
         $this->tag->addAttribute('href', $url);
         $this->tag->setContent($linkContent);
 
         return $this->tag->render();
     }
 
-    /**
-     * @param Post $post
-     * @param array $settings
-     * @param array $configuration
-     * @return array
-     */
-    protected function getLinkToPost(Post $post, $settings, array $configuration = [])
-    {
-        $detailPid = $GLOBALS['TSFE']->id;
-        $configuration['parameter'] = $detailPid;
-
-        $paginationSite = $this->paginationService->getPostPagePosition($post, $settings);
-        if ($paginationSite != 0) {
-            $configuration['additionalParams'] .= '&tx_agora_forum[page]=' . $paginationSite;
-        }
-
-        $configuration['additionalParams'] .= '&tx_agora_forum[controller]=Post' .
-            '&tx_agora_forum[action]=list';
-        $configuration['additionalParams'] .= '&tx_agora_forum[thread]=' . $post->getThread()->getUid();
-
-        return $configuration;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSettings()
-    {
-        $settings = $this->configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-            'Agora',
-            'Forum'
-        );
-
-        return $settings;
-    }
 }

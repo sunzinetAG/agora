@@ -40,17 +40,17 @@ plugin.tx_agora {
     }
 
     settings {
-    	
+
  		search {
- 			itemsPerPage = 20 
+ 			itemsPerPage = 20
  			limit = 1000
  			advanced = {$plugin.tx_agora.settings.advancedSearch}
- 		}	
- 		
+ 		}
+
      	orderBy = crdate
 		orderDirection = desc
 		demandClass =
-    
+
         forum {
             listPid = {$plugin.tx_agora.listPid}
             numberOfItemsInLatestView = 5
@@ -94,6 +94,8 @@ plugin.tx_agora {
             defaultEmailAdress = email_adress@example.de
             defaultEmailUserName = PostAdmin
             notificationSubject = Notificaiton Subject
+
+            fallbackHost = {$plugin.tx_agora.email.fallbackHost}
 
             templateRootPath = {$plugin.tx_agora.email.templateRootPath}
             partialRootPath = {$plugin.tx_agora.email.partialRootPath}

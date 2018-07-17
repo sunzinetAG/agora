@@ -8,9 +8,10 @@
 
     This was a reaction to a post in the thread <b>{report.post.thread.title}</b> in the forum <b>{post.thread.forum.title}</b>.
     Here is the post text the user with the username <b>{report.post.creator.username}</b> posted:
-    Deeplink: <a:be.link action="list" controller="Post" extensionName="Agora" pluginName="Forum"
-                         arguments="{thread: report.post.thread.uid}"
-                         absolute="1" pageUid="{settings.forumPageUid}">{report.post.thread.forum.title}</a:be.link>
+    Deeplink:  <a:link.post post="{report.post}"
+                            pageUid="{settings.forumPageUid}"
+                            configuration="{forceAbsoluteUrl: 1}"
+                            section="post{report.post.uid}">{report.post.thread.forum.title}</a:link.post>
 
     ----
 

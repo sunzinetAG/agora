@@ -25,6 +25,7 @@ use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Model\User;
 use AgoraTeam\Agora\Service\TagService;
 use AgoraTeam\Agora\Utility\QuoteUtility;
+use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
 
 /**
  * PostController
@@ -90,12 +91,16 @@ class PostController extends ActionController
         $offset = ($page - 1) * $itemsPerPage;
         $limit = $itemsPerPage;
 
-        $posts = $this->postRepository->findByThreadPaginated($thread, $offset, $limit);
 
         if ($countPosts > $itemsPerPage) {
             $totalPages = ceil($countPosts / $itemsPerPage);
             $paginator = $this->paginationService->build($page, $totalPages);
         }
+
+        if ($totalPages && $totalPages < $page) {
+            throw new TargetNotFoundException('Page was not found');
+        }
+        $posts = $this->postRepository->findByThreadPaginated($thread, $offset, $limit);
         // We need to calculate the beginning of the first post
         $postnumber = ($page * $itemsPerPage) - $itemsPerPage;
 

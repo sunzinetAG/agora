@@ -61,8 +61,6 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
             'linkAccessRestrictedPages' => 1
         ];
 
-        $this->initTSFE();
-
         /** @var ContentObjectRenderer $cObj */
         $cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
 
@@ -93,36 +91,11 @@ class LinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedVi
         }
 
         $uri = $cObj->typoLink_URL($linkConf);
+
         $this->tag->addAttribute('href', $uri, false);
         $this->tag->setContent($this->renderChildren());
         $this->tag->forceClosingTag(true);
 
         return $this->tag->render();
-    }
-
-    protected function initTSFE($id = 1, $typeNum = 0)
-    {
-        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
-        if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = new \TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
-            $GLOBALS['TT']->start();
-        }
-        $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
-            $GLOBALS['TYPO3_CONF_VARS'],
-            $id,
-            $typeNum
-        );
-        $GLOBALS['TSFE']->connectToDB();
-        $GLOBALS['TSFE']->initFEuser();
-        $GLOBALS['TSFE']->determineId();
-        $GLOBALS['TSFE']->initTemplate();
-        $GLOBALS['TSFE']->getConfigArray();
-
-        if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('realurl')) {
-            $rootline = \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($id);
-            $host = \TYPO3\CMS\Backend\Utility\BackendUtility::firstDomainRecord($rootline);
-            $_SERVER['HTTP_HOST'] = $host;
-        }
     }
 }
