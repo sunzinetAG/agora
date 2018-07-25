@@ -58,7 +58,6 @@ class PostViewHelper extends AbstractLinkViewHelper
         $tsSettings = $this->mergeSettings();
         $configuration = $this->getConfiguration();
         $configuration = $this->getLinkToPost($post, $tsSettings, $configuration);
-
         $tag = $this->renderTag($configuration, $linkContent);
 
         return $tag;
@@ -73,8 +72,10 @@ class PostViewHelper extends AbstractLinkViewHelper
     protected function getLinkToPost(Post $post, $settings, array $configuration = [])
     {
         $thread = $post->getThread();
-        $detailPid = $GLOBALS['TSFE']->id;
-        $configuration['parameter'] = $detailPid;
+        if (!$configuration['parameter']) {
+            $detailPid = $GLOBALS['TSFE']->id;
+            $configuration['parameter'] = $detailPid;
+        }
 
         $paginationSite = $this->paginationService->getPostPagePosition($post, $settings);
         if ($paginationSite > 1) {

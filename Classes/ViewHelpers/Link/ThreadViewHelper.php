@@ -72,8 +72,10 @@ class ThreadViewHelper extends AbstractLinkViewHelper
      */
     protected function getLinkToThread(Thread $thread, $settings, array $configuration = [])
     {
-        $detailPid = $GLOBALS['TSFE']->id;
-        $configuration['parameter'] = $detailPid;
+        if (!$configuration['parameter']) {
+            $detailPid = $GLOBALS['TSFE']->id;
+            $configuration['parameter'] = $detailPid;
+        }
 
         $paginationSite = $this->paginationService->getThreadPagePosition($thread, $settings);
         if ($paginationSite > 1) {
