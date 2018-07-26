@@ -30,7 +30,11 @@
  								<strong class="result-title h3 mb-1 d-block">
 									{result.thread.forum.title} > {result.thread.title}
 								</strong>
-								<p><f:format.raw>{a:searchSword(sword: search.sword, data: result.text, maxCharacters: 300)} </f:format.raw></p>
+								<p>
+									<f:format.crop maxCharacters="260" respectWordBoundaries="TRUE">
+										{result.text}
+									</f:format.crop>
+								</p>
 								<div class="read-more-button-wrap">
 									<a:link.post pageUid="{settings.forum.listPid}" post="{result}" section="post{result.uid}" class="btn btn-primary">
 								        <span class="btn-inner"><f:translate key="tx_agora_search.results.post.link"/></span>
