@@ -82,10 +82,9 @@ class NotificationMailerCommandController extends CommandController
      */
     public function notificationCommand($userStorage, $start, $duration, $amounfOfUsersPerRun = 50)
     {
-//        if ($this->checkExecutionTime($start, $duration)) {
-//            return true;
-//        }
-        var_dump('here we go');
+        if ($this->checkExecutionTime($start, $duration)) {
+            return true;
+        }
 
         $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'
@@ -122,8 +121,8 @@ class NotificationMailerCommandController extends CommandController
                     );
                 }
             }
-//              Even if the users email is not set, dump the notifications
-//            $this->notificationService->markUserNotificationsAsSent($user);
+            //  Even if the users email is not set, dump the notifications
+            $this->notificationService->markUserNotificationsAsSent($user);
         }
 
         return true;
