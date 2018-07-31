@@ -122,14 +122,23 @@ abstract class AbstractLinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\A
     /**
      * @param $configuration
      * @param $linkContent
+     * @param $tsSettings
      * @return string
      */
-    protected function renderTag($configuration, $linkContent)
+    protected function renderTag($configuration, $linkContent, $tsSettings)
     {
         $this->cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
         $url = $this->cObj->typoLink_URL($configuration);
         if ($this->hasArgument('section')) {
             $url .= '#' . $this->arguments['section'];
+        }
+
+        if ('BE' == TYPO3_MODE) {
+            $parsedUrl = parse_url($url);
+            if (!array_key_exists('host', $parsedUrl)) {
+                $fallbackHost = $tsSettings['email']['fallbackHost'];
+                $url = $fallbackHost . $url;
+            }
         }
 
         if ($this->arguments['uriOnly']) {

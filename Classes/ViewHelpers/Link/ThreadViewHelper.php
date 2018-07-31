@@ -59,7 +59,7 @@ class ThreadViewHelper extends AbstractLinkViewHelper
         $configuration = $this->getConfiguration();
         $configuration = $this->getLinkToThread($thread, $tsSettings, $configuration);
 
-        $tag = $this->renderTag($configuration, $linkContent);
+        $tag = $this->renderTag($configuration, $linkContent, $tsSettings);
 
         return $tag;
     }

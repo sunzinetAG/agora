@@ -58,7 +58,7 @@ class PostViewHelper extends AbstractLinkViewHelper
         $tsSettings = $this->mergeSettings();
         $configuration = $this->getConfiguration();
         $configuration = $this->getLinkToPost($post, $tsSettings, $configuration);
-        $tag = $this->renderTag($configuration, $linkContent);
+        $tag = $this->renderTag($configuration, $linkContent, $tsSettings);
 
         return $tag;
     }
