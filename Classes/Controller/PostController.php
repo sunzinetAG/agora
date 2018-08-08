@@ -23,22 +23,34 @@ namespace AgoraTeam\Agora\Controller;
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Model\User;
+use AgoraTeam\Agora\Domain\Repository\PostRepository;
 use AgoraTeam\Agora\Service\TagService;
 use AgoraTeam\Agora\Utility\QuoteUtility;
+use AgoraTeam\Agora\Service\MailService;
+use AgoraTeam\Agora\Domain\Service\PostService;
+use AgoraTeam\Agora\Domain\Repository\ThreadRepository;
+use \AgoraTeam\Agora\Domain\Repository\ForumRepository;
 use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
 
 /**
- * PostController
+ * Class PostController
+ * @package AgoraTeam\Agora\Controller
  */
 class PostController extends ActionController
 {
 
+    /**
+     * QUOTE_MODE
+     */
     const QUOTE_MODE = 'quote';
 
     /**
      * postService
      *
-     * @var \AgoraTeam\Agora\Domain\Service\PostService
+     * @var PostService
      * @inject
      */
     protected $postService;
@@ -46,7 +58,7 @@ class PostController extends ActionController
     /**
      * threadService
      *
-     * @var \AgoraTeam\Agora\Service\MailService
+     * @var MailService
      * @inject
      */
     protected $mailService;
@@ -54,15 +66,23 @@ class PostController extends ActionController
     /**
      * postRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\PostRepository
+     * @var PostRepository
      * @inject
      */
     protected $postRepository;
 
     /**
+     * ForumRepository
+     *
+     * @var ForumRepository
+     * @inject
+     */
+    protected $forumRepository;
+
+    /**
      * threadRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
+     * @var ThreadRepository
      * @inject
      */
     protected $threadRepository;
@@ -70,11 +90,15 @@ class PostController extends ActionController
     /**
      * action list
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
-     * @param string $page
+     * @param Thread $thread
+     * @param int $page
+     * @throws TargetNotFoundException
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @return void
      */
-    public function listAction(\AgoraTeam\Agora\Domain\Model\Thread $thread, $page = 1)
+    public function listAction(Thread $thread, $page = 1)
     {
         $this->authenticationService->assertReadAuthorization($thread);
         $observedThread = [];
@@ -136,12 +160,40 @@ class PostController extends ActionController
     }
 
     /**
+     * @param Thread $thread
+     * @return bool
+     */
+    protected function increaseThreadView(Thread $thread)
+    {
+        if ($this->settings['thread']['views']['delay'] != 0) {
+            $delay = $this->settings['thread']['views']['delay']['time'];
+
+            $tsfe = $this->getTypoScriptFrontendController();
+            $sessionData = $tsfe->fe_user->getKey('ses', 'tx_agora_views');
+            if (is_null($sessionData)) {
+                $sessionData = [];
+            } else {
+                $sessionData = json_decode($sessionData, true);
+            }
+            if (array_key_exists($thread->getUid(), $sessionData)) {
+                if (time() - $delay < $sessionData[$thread->getUid()]) {
+                    return false;
+                }
+            }
+            $sessionData[$thread->getUid()] = time();
+            $tsfe->fe_user->setKey('ses', 'tx_agora_views', json_encode($sessionData));
+        }
+        $this->threadRepository->increaseViews($thread->getUid(), $thread->getViews());
+    }
+
+    /**
      * action show
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $post
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
      * @return void
      */
-    public function showAction(\AgoraTeam\Agora\Domain\Model\Post $post)
+    public function showAction(Post $post)
     {
         $this->authenticationService->assertReadAuthorization($post);
 
@@ -153,10 +205,11 @@ class PostController extends ActionController
     /**
      * action showHistory
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $post
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
      * @return void
      */
-    public function showHistoryAction(\AgoraTeam\Agora\Domain\Model\Post $post)
+    public function showHistoryAction(Post $post)
     {
         $this->authenticationService->assertReadAuthorization($post);
         $this->view->assign('post', $post);
@@ -166,17 +219,18 @@ class PostController extends ActionController
      * action new
      *
      * @param string $mode
-     * @param \AgoraTeam\Agora\Domain\Model\Post $newPost
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
-     * @param \AgoraTeam\Agora\Domain\Model\Post $quotedPost
+     * @param Post|null $newPost
+     * @param Post|null $quotedPost
+     * @param Thread|null $thread
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
      * @ignorevalidation $newPost
      * @return void
      */
     public function newAction(
         string $mode = '',
-        \AgoraTeam\Agora\Domain\Model\Post $newPost = null,
-        \AgoraTeam\Agora\Domain\Model\Post $quotedPost = null,
-        \AgoraTeam\Agora\Domain\Model\Thread $thread = null
+        Post $newPost = null,
+        Post $quotedPost = null,
+        Thread $thread = null
     ) {
         $this->authenticationService->assertNewPostAuthorization($thread);
         $quote = '';
@@ -206,10 +260,16 @@ class PostController extends ActionController
     /**
      * action create
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $newPost
-     * @return void
+     * @param Post $newPost
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      */
-    public function createAction(\AgoraTeam\Agora\Domain\Model\Post $newPost)
+    public function createAction(Post $newPost)
     {
         $this->authenticationService->assertNewPostAuthorization($newPost->getThread());
 
@@ -236,12 +296,12 @@ class PostController extends ActionController
         );
 
         $this->addFlashMessage(
-            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
+            LocalizationUtility::translate(
                 'tx_agora_domain_model_post.flashMessages.created',
                 'agora'
             ),
             '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
+            AbstractMessage::OK
         );
 
         // Build up the redirect
@@ -252,14 +312,16 @@ class PostController extends ActionController
     /**
      * action edit
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $originalPost
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $originalPost
+     * @param Post|null $post
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @ignorevalidation $post
-     * @return void
      */
     public function editAction(
-        \AgoraTeam\Agora\Domain\Model\Post $originalPost,
-        \AgoraTeam\Agora\Domain\Model\Post $post = null
+        Post $originalPost,
+        Post $post = null
     ) {
         $this->authenticationService->assertEditPostAuthorization($originalPost);
         $isFirstPost = false;
@@ -286,14 +348,21 @@ class PostController extends ActionController
     /**
      * action update
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $originalPost
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $originalPost
+     * @param Post $post
      * @param string $tags
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      * @return void
      */
     public function updateAction(
-        \AgoraTeam\Agora\Domain\Model\Post $originalPost,
-        \AgoraTeam\Agora\Domain\Model\Post $post,
+        Post $originalPost,
+        Post $post,
         string $tags = ''
     ) {
         $this->authenticationService->assertEditPostAuthorization($originalPost);
@@ -336,12 +405,12 @@ class PostController extends ActionController
         $this->persistenceManager->persistAll();
 
         $this->addFlashMessage(
-            \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
+            LocalizationUtility::translate(
                 'tx_agora_domain_model_post.flashMessages.updated',
                 'agora'
             ),
             '',
-            \TYPO3\CMS\Core\Messaging\AbstractMessage::OK
+            AbstractMessage::OK
         );
 
         $this->signalSlotDispatcher->dispatch(
@@ -358,10 +427,17 @@ class PostController extends ActionController
     /**
      * action delete
      * @todo Redirect to the right paginated page
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     *
+     * @param Post $post
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      * @return void
      */
-    public function deleteAction(\AgoraTeam\Agora\Domain\Model\Post $post)
+    public function deleteAction(Post $post)
     {
         $this->authenticationService->assertDeletePostAuthorization($post);
 
@@ -372,7 +448,6 @@ class PostController extends ActionController
             $forum = $post->getThread()->getForum();
             $this->threadRepository->remove($post->getThread());
             $this->addLocalizedFlashmessage('tx_agora_domain_model_thread.flashMessages.deleted');
-            $arguments = ['forum' => $forum];
             $this->signalSlotDispatcher->dispatch(
                 __CLASS__,
                 'threadDeleted',
@@ -403,33 +478,8 @@ class PostController extends ActionController
     }
 
     /**
-     * @param Thread $thread
-     */
-    protected function increaseThreadView(Thread $thread)
-    {
-        if ($this->settings['thread']['views']['delay'] != 0) {
-            $delay = $this->settings['thread']['views']['delay']['time'];
-
-            $tsfe = $this->getTypoScriptFrontendController();
-            $sessionData = $tsfe->fe_user->getKey('ses', 'tx_agora_views');
-            if (is_null($sessionData)) {
-                $sessionData = [];
-            } else {
-                $sessionData = json_decode($sessionData, true);
-            }
-            if (array_key_exists($thread->getUid(), $sessionData)) {
-                if (time() - $delay < $sessionData[$thread->getUid()]) {
-                    return false;
-                }
-            }
-            $sessionData[$thread->getUid()] = time();
-            $tsfe->fe_user->setKey('ses', 'tx_agora_views', json_encode($sessionData));
-        }
-        $this->threadRepository->increaseViews($thread->getUid(), $thread->getViews());
-    }
-
-    /**
      * @param Post $post
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
      */
     public function confirmDeleteAction(Post $post)
     {
@@ -442,6 +492,7 @@ class PostController extends ActionController
     /**
      * action listLatest
      *
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      * @return void
      */
     public function listLatestAction()
@@ -450,7 +501,8 @@ class PostController extends ActionController
         if ($limit === 0) {
             $limit = $this->settings['post']['numberOfItemsInLatestView'];
         }
-        $latestPosts = $this->postRepository->findLatestPostsForUser($limit);
+        $openUserForums = $this->forumRepository->findAccessibleUserForums();
+        $latestPosts = $this->postRepository->findLatestPostsForUser($limit, $openUserForums);
         $this->view->assign('latestPosts', $latestPosts);
     }
 }

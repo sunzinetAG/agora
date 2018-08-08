@@ -21,9 +21,8 @@ namespace AgoraTeam\Agora\Service\Notification;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Model\Notification;
-use AgoraTeam\Agora\Domain\Model\Post;
-use AgoraTeam\Agora\Domain\Model\Thread;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Class NotificationService
@@ -57,69 +56,11 @@ class NotificationService implements SingletonInterface
     protected $notificationRepository = null;
 
     /**
-     * @param \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher
+     * @param Dispatcher $signalSlotDispatcher
      */
-    public function injectSignalSlotDispatcher(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher)
+    public function injectSignalSlotDispatcher(Dispatcher $signalSlotDispatcher)
     {
         $this->signalSlotDispatcher = $signalSlotDispatcher;
-    }
-
-    /**
-     * Assamble the notifications for the user to reduce
-     * the length of the list the user gets
-     *
-     * @param array $notifications
-     * @return array
-     */
-    public function assambleNotifications($notifications)
-    {
-        $assambledNotifi = [];
-        $tmpNotifications = $notifications;
-        $alreadyMatched = [];
-
-        /** @var Notification $notification */
-        foreach ($notifications as $key => $notification) {
-            $type = $notification->getType();
-            $page = $notification->getPage();
-            $thread = $notification->getThread();
-            $title = $notification->getTitle();
-            $uid = $notification->getUid();
-
-            if (array_key_exists($key, $alreadyMatched)) {
-                continue;
-            }
-
-            // First put the notification in his own assamble part
-            $assambledNotifi[$key]['notifications'][] = $notification;
-            $assambledNotifi[$key]['count'] = 1;
-            $assambledNotifi[$key]['crdate'] = $notification->getTstamp();
-            $assambledNotifi[$key]['user'] = $notification->getUser();
-            $assambledNotifi[$key]['type'] = $notification->getType();
-
-            // Iterate with the current notification through each other
-            // to find duplications and put them in the $assambleNotifi
-            foreach ($tmpNotifications as $k => $v) {
-                if ($type == $v->getType() &&
-                    $title == $v->getTitle() &&
-                    $page == $v->getPage() &&
-                    $thread == $v->getThread() &&
-                    $uid != $v->getUid()
-                ) {
-                    $assambledNotifi[$key]['notifications'][] = $v;
-                    $assambledNotifi[$key]['count'] = count($assambledNotifi[$key]['notifications']);
-
-                    if ($v->getCrdate() > $notification->getCrdate()) {
-                        $assambledNotifi[$key]['crdate'] = $v->getCrdate();
-                        $assambledNotifi[$key]['user'] = $v->getUser();
-                    }
-
-                    $alreadyMatched[$k] = $k;
-                    unset($tmpNotifications[$k]);
-                }
-            }
-        }
-
-        return $assambledNotifi;
     }
 
     /**
@@ -141,6 +82,8 @@ class NotificationService implements SingletonInterface
     /**
      * @param $user
      * @return array
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      */
     public function getNotificationsByUser($user)
     {
@@ -233,6 +176,86 @@ class NotificationService implements SingletonInterface
     }
 
     /**
+     * @param $notifications
+     * @return array
+     */
+    private function quickSort($notifications)
+    {
+        $loe = $gt = [];
+        if (count($notifications) < 2) {
+            return $notifications;
+        }
+        $pivotKey = key($notifications);
+        $pivot = array_shift($notifications);
+        foreach ($notifications as $notification) {
+            if ($notification->getTstamp() <= $pivot->getTstamp()) {
+                $gt[] = $notification;
+            } elseif ($notification->getTstamp() > $pivot->getTstamp()) {
+                $loe[] = $notification;
+            }
+        }
+        return array_merge($this->quickSort($loe), [$pivotKey => $pivot], $this->quickSort($gt));
+    }
+
+    /**
+     * Assamble the notifications for the user to reduce
+     * the length of the list the user gets
+     *
+     * @param array $notifications
+     * @return array
+     */
+    public function assambleNotifications($notifications)
+    {
+        $assambledNotifi = [];
+        $tmpNotifications = $notifications;
+        $alreadyMatched = [];
+
+        /** @var Notification $notification */
+        foreach ($notifications as $key => $notification) {
+            $type = $notification->getType();
+            $page = $notification->getPage();
+            $thread = $notification->getThread();
+            $title = $notification->getTitle();
+            $uid = $notification->getUid();
+
+            if (array_key_exists($key, $alreadyMatched)) {
+                continue;
+            }
+
+            // First put the notification in his own assamble part
+            $assambledNotifi[$key]['notifications'][] = $notification;
+            $assambledNotifi[$key]['count'] = 1;
+            $assambledNotifi[$key]['crdate'] = $notification->getTstamp();
+            $assambledNotifi[$key]['user'] = $notification->getUser();
+            $assambledNotifi[$key]['type'] = $notification->getType();
+
+            // Iterate with the current notification through each other
+            // to find duplications and put them in the $assambleNotifi
+            foreach ($tmpNotifications as $k => $v) {
+                if ($type == $v->getType() &&
+                    $title == $v->getTitle() &&
+                    $page == $v->getPage() &&
+                    $thread == $v->getThread() &&
+                    $uid != $v->getUid()
+                ) {
+                    $assambledNotifi[$key]['notifications'][] = $v;
+                    $assambledNotifi[$key]['count'] = count($assambledNotifi[$key]['notifications']);
+
+                    if ($v->getCrdate() > $notification->getCrdate()) {
+                        $assambledNotifi[$key]['crdate'] = $v->getCrdate();
+                        $assambledNotifi[$key]['user'] = $v->getUser();
+                    }
+
+                    $alreadyMatched[$k] = $k;
+                    unset($tmpNotifications[$k]);
+                }
+            }
+        }
+
+        return $assambledNotifi;
+    }
+
+    /**
      * @param $groupedNotifications
      * @return array
      */
@@ -244,7 +267,10 @@ class NotificationService implements SingletonInterface
     }
 
     /**
-     * @param $notifications
+     * @param $user
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @return void
      */
     public function markUserNotificationsAsSent($user)
     {
@@ -266,6 +292,7 @@ class NotificationService implements SingletonInterface
      * @param int $thread
      * @param string $link
      * @param array $data
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public function createNewNotification(
         int $page,
@@ -295,28 +322,6 @@ class NotificationService implements SingletonInterface
         $notification->setData(json_encode($data));
 
         $this->notificationRepository->add($notification);
-    }
-
-    /**
-     * @param $notifications
-     * @return array
-     */
-    private function quickSort($notifications)
-    {
-        $loe = $gt = [];
-        if (count($notifications) < 2) {
-            return $notifications;
-        }
-        $pivotKey = key($notifications);
-        $pivot = array_shift($notifications);
-        foreach ($notifications as $notification) {
-            if ($notification->getTstamp() <= $pivot->getTstamp()) {
-                $gt[] = $notification;
-            } elseif ($notification->getTstamp() > $pivot->getTstamp()) {
-                $loe[] = $notification;
-            }
-        }
-        return array_merge($this->quickSort($loe), [$pivotKey => $pivot], $this->quickSort($gt));
     }
 
     /**

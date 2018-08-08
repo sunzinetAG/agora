@@ -23,6 +23,9 @@ namespace AgoraTeam\Agora\Domain\Repository;
 
 /**
  * The repository for Votings
+ *
+ * Class VotingRepository
+ * @package AgoraTeam\Agora\Domain\Repository
  */
 class VotingRepository extends Repository
 {

@@ -20,6 +20,11 @@ namespace AgoraTeam\Agora\Tests\Unit\Domain\Model;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use AgoraTeam\Agora\Domain\Model\Forum;
+use AgoraTeam\Agora\Domain\Model\User;
+use AgoraTeam\Agora\Domain\Model\Group;
+use AgoraTeam\Agora\Domain\Model\Thread;
 
 /**
  * Test case for class \AgoraTeam\Agora\Domain\Model\Forum.
@@ -36,16 +41,6 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      * @var \AgoraTeam\Agora\Domain\Model\Forum
      */
     protected $subject = null;
-
-    protected function setUp()
-    {
-        $this->subject = new \AgoraTeam\Agora\Domain\Model\Forum();
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
 
     /**
      * @test
@@ -127,7 +122,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getParentReturnsInitialValueForForum()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getParent()
@@ -139,8 +134,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setParentForObjectStorageContainingForumSetsParent()
     {
-        $parent = new \AgoraTeam\Agora\Domain\Model\Forum();
-        $objectStorageHoldingExactlyOneParent = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $parent = new Forum();
+        $objectStorageHoldingExactlyOneParent = new ObjectStorage();
         $objectStorageHoldingExactlyOneParent->attach($parent);
         $this->subject->setParent($objectStorageHoldingExactlyOneParent);
 
@@ -156,7 +151,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addParentToObjectStorageHoldingParent()
     {
-        $parent = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $parent = new Forum();
         $parentObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('attach'),
             array(), '', false);
         $parentObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($parent));
@@ -170,7 +165,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeParentFromObjectStorageHoldingParent()
     {
-        $parent = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $parent = new Forum();
         $parentObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('detach'),
             array(), '', false);
         $parentObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($parent));
@@ -184,7 +179,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getThreadsReturnsInitialValueForThread()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getThreads()
@@ -196,8 +191,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setThreadsForObjectStorageContainingThreadSetsThreads()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
-        $objectStorageHoldingExactlyOneThreads = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $thread = new Thread();
+        $objectStorageHoldingExactlyOneThreads = new ObjectStorage();
         $objectStorageHoldingExactlyOneThreads->attach($thread);
         $this->subject->setThreads($objectStorageHoldingExactlyOneThreads);
 
@@ -213,7 +208,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addThreadToObjectStorageHoldingThreads()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
         $threadsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('attach'),
             array(), '', false);
         $threadsObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($thread));
@@ -227,7 +222,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeThreadFromObjectStorageHoldingThreads()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
         $threadsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('detach'),
             array(), '', false);
         $threadsObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($thread));
@@ -241,7 +236,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getGroupsWithReadAccessReturnsInitialValueForGroup()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getGroupsWithReadAccess()
@@ -253,8 +248,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setGroupsWithReadAccessForObjectStorageContainingGroupSetsGroupsWithReadAccess()
     {
-        $groupsWithReadAcces = new \AgoraTeam\Agora\Domain\Model\Group();
-        $objectStorageHoldingExactlyOneGroupsWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $groupsWithReadAcces = new Group();
+        $objectStorageHoldingExactlyOneGroupsWithReadAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneGroupsWithReadAccess->attach($groupsWithReadAcces);
         $this->subject->setGroupsWithReadAccess($objectStorageHoldingExactlyOneGroupsWithReadAccess);
 
@@ -270,7 +265,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addGroupsWithReadAccesToObjectStorageHoldingGroupsWithReadAccess()
     {
-        $groupsWithReadAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithReadAcces = new Group();
         $groupsWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $groupsWithReadAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($groupsWithReadAcces));
@@ -284,7 +279,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeGroupsWithReadAccesFromObjectStorageHoldingGroupsWithReadAccess()
     {
-        $groupsWithReadAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithReadAcces = new Group();
         $groupsWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $groupsWithReadAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($groupsWithReadAcces));
@@ -298,7 +293,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getGroupWithWriteAccesssReturnsInitialValueForGroup()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getGroupWithWriteAccesss()
@@ -310,8 +305,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setGroupWithWriteAccesssForObjectStorageContainingGroupSetsGroupWithWriteAccesss()
     {
-        $groupWithWriteAccess = new \AgoraTeam\Agora\Domain\Model\Group();
-        $objectStorageHoldingExactlyOneGroupWithWriteAccesss = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $groupWithWriteAccess = new Group();
+        $objectStorageHoldingExactlyOneGroupWithWriteAccesss = new ObjectStorage();
         $objectStorageHoldingExactlyOneGroupWithWriteAccesss->attach($groupWithWriteAccess);
         $this->subject->setGroupWithWriteAccesss($objectStorageHoldingExactlyOneGroupWithWriteAccesss);
 
@@ -327,7 +322,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addGroupWithWriteAccessToObjectStorageHoldingGroupWithWriteAccesss()
     {
-        $groupWithWriteAccess = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupWithWriteAccess = new Group();
         $groupWithWriteAccesssObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $groupWithWriteAccesssObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($groupWithWriteAccess));
@@ -341,7 +336,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeGroupWithWriteAccessFromObjectStorageHoldingGroupWithWriteAccesss()
     {
-        $groupWithWriteAccess = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupWithWriteAccess = new Group();
         $groupWithWriteAccesssObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $groupWithWriteAccesssObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($groupWithWriteAccess));
@@ -355,7 +350,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getGroupsWithModificationAccessReturnsInitialValueForGroup()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getGroupsWithModificationAccess()
@@ -367,8 +362,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setGroupsWithModificationAccessForObjectStorageContainingGroupSetsGroupsWithModificationAccess()
     {
-        $groupsWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\Group();
-        $objectStorageHoldingExactlyOneGroupsWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $groupsWithModificationAcces = new Group();
+        $objectStorageHoldingExactlyOneGroupsWithModificationAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneGroupsWithModificationAccess->attach($groupsWithModificationAcces);
         $this->subject->setGroupsWithModificationAccess($objectStorageHoldingExactlyOneGroupsWithModificationAccess);
 
@@ -384,7 +379,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addGroupsWithModificationAccesToObjectStorageHoldingGroupsWithModificationAccess()
     {
-        $groupsWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithModificationAcces = new Group();
         $groupsWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $groupsWithModificationAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($groupsWithModificationAcces));
@@ -398,7 +393,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeGroupsWithModificationAccesFromObjectStorageHoldingGroupsWithModificationAccess()
     {
-        $groupsWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithModificationAcces = new Group();
         $groupsWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $groupsWithModificationAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($groupsWithModificationAcces));
@@ -412,7 +407,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUsersWithReadAccessReturnsInitialValueForUser()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getUsersWithReadAccess()
@@ -424,8 +419,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setUsersWithReadAccessForObjectStorageContainingUserSetsUsersWithReadAccess()
     {
-        $usersWithReadAcces = new \AgoraTeam\Agora\Domain\Model\User();
-        $objectStorageHoldingExactlyOneUsersWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $usersWithReadAcces = new User();
+        $objectStorageHoldingExactlyOneUsersWithReadAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneUsersWithReadAccess->attach($usersWithReadAcces);
         $this->subject->setUsersWithReadAccess($objectStorageHoldingExactlyOneUsersWithReadAccess);
 
@@ -441,7 +436,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addUsersWithReadAccesToObjectStorageHoldingUsersWithReadAccess()
     {
-        $usersWithReadAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithReadAcces = new User();
         $usersWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $usersWithReadAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($usersWithReadAcces));
@@ -455,7 +450,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeUsersWithReadAccesFromObjectStorageHoldingUsersWithReadAccess()
     {
-        $usersWithReadAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithReadAcces = new User();
         $usersWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $usersWithReadAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($usersWithReadAcces));
@@ -469,7 +464,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUsersWthWriteAccessiiReturnsInitialValueForUser()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getUsersWthWriteAccessii()
@@ -481,8 +476,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setUsersWthWriteAccessiiForObjectStorageContainingUserSetsUsersWthWriteAccessii()
     {
-        $usersWthWriteAccessii = new \AgoraTeam\Agora\Domain\Model\User();
-        $objectStorageHoldingExactlyOneUsersWthWriteAccessii = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $usersWthWriteAccessii = new User();
+        $objectStorageHoldingExactlyOneUsersWthWriteAccessii = new ObjectStorage();
         $objectStorageHoldingExactlyOneUsersWthWriteAccessii->attach($usersWthWriteAccessii);
         $this->subject->setUsersWthWriteAccessii($objectStorageHoldingExactlyOneUsersWthWriteAccessii);
 
@@ -498,7 +493,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addUsersWthWriteAccessiiToObjectStorageHoldingUsersWthWriteAccessii()
     {
-        $usersWthWriteAccessii = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWthWriteAccessii = new User();
         $usersWthWriteAccessiiObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $usersWthWriteAccessiiObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($usersWthWriteAccessii));
@@ -512,7 +507,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeUsersWthWriteAccessiiFromObjectStorageHoldingUsersWthWriteAccessii()
     {
-        $usersWthWriteAccessii = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWthWriteAccessii = new User();
         $usersWthWriteAccessiiObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $usersWthWriteAccessiiObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($usersWthWriteAccessii));
@@ -526,7 +521,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUsersWithModificationAccessReturnsInitialValueForUser()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getUsersWithModificationAccess()
@@ -538,8 +533,8 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setUsersWithModificationAccessForObjectStorageContainingUserSetsUsersWithModificationAccess()
     {
-        $usersWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\User();
-        $objectStorageHoldingExactlyOneUsersWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $usersWithModificationAcces = new User();
+        $objectStorageHoldingExactlyOneUsersWithModificationAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneUsersWithModificationAccess->attach($usersWithModificationAcces);
         $this->subject->setUsersWithModificationAccess($objectStorageHoldingExactlyOneUsersWithModificationAccess);
 
@@ -555,7 +550,7 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addUsersWithModificationAccesToObjectStorageHoldingUsersWithModificationAccess()
     {
-        $usersWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithModificationAcces = new User();
         $usersWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $usersWithModificationAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($usersWithModificationAcces));
@@ -569,12 +564,22 @@ class ForumTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeUsersWithModificationAccesFromObjectStorageHoldingUsersWithModificationAccess()
     {
-        $usersWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithModificationAcces = new User();
         $usersWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $usersWithModificationAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($usersWithModificationAcces));
         $this->inject($this->subject, 'usersWithModificationAccess', $usersWithModificationAccessObjectStorageMock);
 
         $this->subject->removeUsersWithModificationAcces($usersWithModificationAcces);
+    }
+
+    protected function setUp()
+    {
+        $this->subject = new Forum();
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

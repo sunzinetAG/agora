@@ -22,7 +22,8 @@ namespace AgoraTeam\Agora\ViewHelpers\Link;
 use AgoraTeam\Agora\Domain\Model\Post;
 
 /**
- * CreatorViewHelper
+ * Class PostViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Link
  */
 class PostViewHelper extends AbstractLinkViewHelper
 {

@@ -20,18 +20,23 @@ namespace AgoraTeam\Agora\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\User;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+
 /**
- * CreatorViewHelper
+ * Class PostHasFavoriteUserViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers
  */
-class PostHasFavoriteUserViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class PostHasFavoriteUserViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
-     * @param \AgoraTeam\Agora\Domain\Model\User $user
+     * @param Post $post
+     * @param User $user
      * @return bool
      */
-    public function render(\AgoraTeam\Agora\Domain\Model\Post $post, \AgoraTeam\Agora\Domain\Model\User $user)
+    public function render(Post $post, User $user)
     {
         if (!$user) {
             return false;

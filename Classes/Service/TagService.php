@@ -23,7 +23,6 @@ namespace AgoraTeam\Agora\Service;
 use AgoraTeam\Agora\Domain\Model\Tag;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\LazyObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
@@ -51,6 +50,7 @@ class TagService implements SingletonInterface
     /**
      * @param string $tags
      * @return ObjectStorage
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public function prepareTags($tags)
     {

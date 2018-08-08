@@ -21,11 +21,13 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * The repository for Users
+ *
+ * Class UserRepository
+ * @package AgoraTeam\Agora\Domain\Repository
  */
 class UserRepository extends Repository
 {
@@ -52,6 +54,7 @@ class UserRepository extends Repository
     /**
      * @param string $groups
      * @return array|QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function findByUsergroups(string $groups)
     {
@@ -70,8 +73,7 @@ class UserRepository extends Repository
 
     /**
      * @param string $storage
-     * @param int $amount
-     * @return QueryResultInterface
+     * @return array|QueryResultInterface
      */
     public function findByStorage($storage)
     {

@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\Forum;
+
 /**
  * Test case for class AgoraTeam\Agora\Controller\ForumController.
  *
@@ -71,7 +73,7 @@ class ForumControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function showActionAssignsTheGivenForumToView()
     {
-        $forum = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $forum = new Forum();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $this->inject($this->subject, 'view', $view);
@@ -85,7 +87,7 @@ class ForumControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function newActionAssignsTheGivenForumToView()
     {
-        $forum = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $forum = new Forum();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $view->expects($this->once())->method('assign')->with('newForum', $forum);
@@ -99,7 +101,7 @@ class ForumControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function createActionAddsTheGivenForumToForumRepository()
     {
-        $forum = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $forum = new Forum();
 
         $forumRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\ForumRepository', array('add'),
             array(), '', false);
@@ -114,7 +116,7 @@ class ForumControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function editActionAssignsTheGivenForumToView()
     {
-        $forum = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $forum = new Forum();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $this->inject($this->subject, 'view', $view);
@@ -128,7 +130,7 @@ class ForumControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function updateActionUpdatesTheGivenForumInForumRepository()
     {
-        $forum = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $forum = new Forum();
 
         $forumRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\ForumRepository', array('update'),
             array(), '', false);
@@ -143,7 +145,7 @@ class ForumControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function deleteActionRemovesTheGivenForumFromForumRepository()
     {
-        $forum = new \AgoraTeam\Agora\Domain\Model\Forum();
+        $forum = new Forum();
 
         $forumRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\ForumRepository', array('remove'),
             array(), '', false);

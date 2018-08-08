@@ -21,6 +21,11 @@ namespace AgoraTeam\Agora\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use AgoraTeam\Agora\Domain\Model\User;
+use AgoraTeam\Agora\Domain\Model\View;
+use AgoraTeam\Agora\Domain\Model\Thread;
+
 /**
  * Test case for class \AgoraTeam\Agora\Domain\Model\View.
  *
@@ -39,7 +44,7 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     protected function setUp()
     {
-        $this->subject = new \AgoraTeam\Agora\Domain\Model\View();
+        $this->subject = new View();
     }
 
     protected function tearDown()
@@ -63,7 +68,7 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setThreadForThreadSetsThread()
     {
-        $threadFixture = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $threadFixture = new Thread();
         $this->subject->setThread($threadFixture);
 
         $this->assertAttributeEquals(
@@ -78,7 +83,7 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUserReturnsInitialValueForUser()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getUser()
@@ -90,8 +95,8 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setUserForObjectStorageContainingUserSetsUser()
     {
-        $user = new \AgoraTeam\Agora\Domain\Model\User();
-        $objectStorageHoldingExactlyOneUser = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $user = new User();
+        $objectStorageHoldingExactlyOneUser = new ObjectStorage();
         $objectStorageHoldingExactlyOneUser->attach($user);
         $this->subject->setUser($objectStorageHoldingExactlyOneUser);
 
@@ -107,7 +112,7 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addUserToObjectStorageHoldingUser()
     {
-        $user = new \AgoraTeam\Agora\Domain\Model\User();
+        $user = new User();
         $userObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('attach'),
             array(), '', false);
         $userObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($user));
@@ -121,7 +126,7 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeUserFromObjectStorageHoldingUser()
     {
-        $user = new \AgoraTeam\Agora\Domain\Model\User();
+        $user = new User();
         $userObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('detach'),
             array(), '', false);
         $userObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($user));

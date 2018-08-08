@@ -20,43 +20,30 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use AgoraTeam\Agora\Domain\Model\Forum;
+use AgoraTeam\Agora\Domain\Model\Dto\ForumDemand;
 use AgoraTeam\Agora\Domain\Model\Thread;
-use AgoraTeam\Agora\Domain\Model\DemandInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
  * The repository for Posts
+ *
+ * Class PostRepository
+ * @package AgoraTeam\Agora\Domain\Repository
  */
 class PostRepository extends AbstractDemandedRepository
 {
 
     /**
-     * ForumRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
-     * @inject
-     */
-    protected $forumRepository;
-
-    /**
-     * threadRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
-     * @inject
-     */
-    protected $threadRepository;
-
-    /**
      * @var array
      */
     protected $defaultOrderings = array(
-        'publishing_date' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING
+        'publishing_date' => QueryInterface::ORDER_ASCENDING
     );
 
     /**
      * @param Thread $thread
+     * @return mixed
      */
     public function findByThreadOnFirstLevel($thread)
     {
@@ -105,9 +92,9 @@ class PostRepository extends AbstractDemandedRepository
                 $query->equals('quotedPost', 0)
             )
         )
-        ->setOffset((integer) $offset)
-        ->setLimit((integer) $limit)
-        ->execute();
+            ->setOffset((integer)$offset)
+            ->setLimit((integer)$limit)
+            ->execute();
 
         return $result;
     }
@@ -116,12 +103,14 @@ class PostRepository extends AbstractDemandedRepository
      * Finds the latest Posts
      *
      * @param integer $limit The number of threads to return at max
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @param $openUserForums
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findLatestPostsForUser($limit)
+    public function findLatestPostsForUser($limit, $openUserForums)
     {
         $constraints = [];
-        $openUserForums = $this->forumRepository->findAccessibleUserForums();
+
         $query = $this->createQuery();
         $constraints['original_post'] = $query->equals('original_post', 0);
         if ($openUserForums && count($openUserForums) > 0) {
@@ -133,15 +122,17 @@ class PostRepository extends AbstractDemandedRepository
                     $constraints
                 )
             )
-            ->setOrderings(array('publishing_date' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING))
+            ->setOrderings(array('publishing_date' => QueryInterface::ORDER_DESCENDING))
             ->setLimit((integer)$limit)
             ->execute();
 
         return $result;
     }
 
+
     /**
      * @param $uid
+     * @return mixed
      */
     public function findPostByUid($uid)
     {
@@ -158,8 +149,10 @@ class PostRepository extends AbstractDemandedRepository
     }
 
     /**
-     * @param string $sword
      * @param int $thread
+     * @param string $sword
+     * @return mixed
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function findFirstPostOnThread($thread, $sword)
     {
@@ -168,95 +161,27 @@ class PostRepository extends AbstractDemandedRepository
             $query->logicalAnd(
                 $query->equals('thread.uid', $thread),
                 $query->like("text", '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($sword, '') . '%')
-            ))->setOrderings(array('crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING));
+            ))->setOrderings(array('crdate' => QueryInterface::ORDER_ASCENDING));
 
         return $query->execute()->getFirst();
-    }
-
-    /**
-     * Returns an array of constraints created from a given demand object.
-     *
-     * @param QueryInterface $query
-     * @param DemandInterface $demand
-     * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
-     * @return array<\TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface>
-     */
-    protected function createConstraintsFromDemand(QueryInterface $query, DemandInterface $demand)
-    {
-        /** @var ForumDeman $demand */
-        $constraints = [];
-
-        // storage page
-        if ($demand->getStoragePage() != 0) {
-            $pidList = GeneralUtility::intExplode(',', $demand->getStoragePage(), true);
-            $constraints['pid'] = $query->in('pid', $pidList);
-        }
-        // Search
-        $searchConstraints = $this->getSearchConstraints($query, $demand);
-        if (!empty($searchConstraints)) {
-            $constraints['search'] = $query->logicalAnd($searchConstraints);
-        }
-
-        // Clean not used constraints
-        foreach ($constraints as $key => $value) {
-            if (is_null($value)) {
-                unset($constraints[$key]);
-            }
-        }
-
-        return $constraints;
-    }
-
-    /**
-     * Returns an array of orderings created from a given demand object.
-     *
-     * @param DemandInterface $demand
-     * @return array<\TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface>
-     */
-    protected function createOrderingsFromDemand(DemandInterface $demand)
-    {
-
-        $orderings = [];
-        $orderField = $demand->getSearch()->getOrder();
-
-        if (!isset($orderField)) {
-            $orderField = $demand->getOrder();
-        }
-
-        $orderList = GeneralUtility::trimExplode(',', $orderField, true);
-
-        if (!empty($orderList)) {
-            // go through every order statement
-            foreach ($orderList as $orderItem) {
-                list($orderField, $ascDesc) = GeneralUtility::trimExplode(' ', $orderItem, true);
-                // count == 1 means that no direction is given
-                if ($ascDesc) {
-                    $orderings[$orderField] = ((strtolower($ascDesc) == 'desc') ?
-                        QueryInterface::ORDER_DESCENDING :
-                        QueryInterface::ORDER_ASCENDING);
-                } else {
-                    $orderings[$orderField] = QueryInterface::ORDER_ASCENDING;
-                }
-            }
-        }
-
-        return $orderings;
     }
 
     /**
      * Get the search constraints
      *
      * @param QueryInterface $query
-     * @param DemandInterface $demand
+     * @param ForumDemand $demand
+     * @param ThreadRepository $threadRepository
      * @return array
-     * @throws \UnexpectedValueException
+     * @throws \Exception
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    protected function getSearchConstraints(QueryInterface $query, DemandInterface $demand)
-    {
+    protected function getSearchConstraints(
+        QueryInterface $query,
+        ForumDemand $demand,
+        ThreadRepository $threadRepository
+    ) {
         $constraints = [];
-        $openUserForums = $this->forumRepository->findAccessibleUserForums();
 
         if ($demand->getSearch() === null) {
             return $constraints;
@@ -279,7 +204,7 @@ class PostRepository extends AbstractDemandedRepository
 
         if ($searchRadius == 2) {
 
-            $threadsWithSearchedWord = $this->threadRepository->findDemanded($demand);
+            $threadsWithSearchedWord = $threadRepository->findDemanded($demand);
             if (!count($threadsWithSearchedWord)) {
                 $threadsWithSearchedWord = array(0 => '-1');
             }

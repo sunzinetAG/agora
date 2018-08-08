@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+
 /**
  * Class ForumRepository
  *
@@ -42,16 +44,93 @@ class ForumRepository extends Repository
         $query->matching(
             $query->equals('parent', 0)
         );
-        $query->setOrderings(array('crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING));
+        $query->setOrderings(array('crdate' => QueryInterface::ORDER_DESCENDING));
         $forums = $query->execute();
 
         return $forums;
     }
 
     /**
+     * Function findAccessibleUserForums
+     *
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     */
+    public function findAccessibleUserForums()
+    {
+        $constraints = array();
+        $user = $this->getUser();
+        $query = $this->createQuery();
+
+        $constraints[] = $query->logicalAnd(
+            $query->equals('groups_with_read_access', 0),
+            $query->equals('users_with_read_access', 0)
+        );
+
+        if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
+            // Get the allowed forums for the logged in user
+            $flattenedGroups = $user->getFlattenedGroupUids();
+            $constraints[] = $query->logicalOr(
+                $query->contains('groupsWithReadAccess', $flattenedGroups),
+                $query->contains('usersWithReadAccess', $user->getUid())
+            );
+        }
+        if (count($constraints) > 1) {
+            $permissionConstraint = $query->logicalOr($constraints);
+        } else {
+            $permissionConstraint = current($constraints);
+        }
+
+        $query->matching($permissionConstraint);
+        $forums = $query->execute();
+
+        return $forums;
+    }
+
+    /**
+     * Function findForumsWithDifferentId
+     * find forums that have different id comparing with the given one
+     *
+     * @param $forum
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function findForumsWithDifferentId($forum)
+    {
+        $query = $this->createQuery();
+        $query->matching(
+            $query->logicalNot($query->equals('uid', $forum->getUid()))
+        );
+        $query->setOrderings(array('title' => QueryInterface::ORDER_DESCENDING));
+        $forums = $query->execute();
+
+        return $forums;
+    }
+
+    /**
+     * Function findAccessibleUserForumsAsMatrix
+     * find forums and childrens and generate matrix
+     *
+     * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     */
+    public function findAccessibleUserForumsAsMatrix()
+    {
+        $allAccessibleForums = $this->findVisibleRootForums();
+        $matrix = [];
+
+        foreach ($allAccessibleForums as $key => $value) {
+            $matrix[$key]['item'] = $value;
+            $matrix[$key]['children'] = $this->findAccessibleUserForumsByParent($value->getUid());
+        }
+        return $matrix;
+
+    }
+
+    /**
      * Find forums that have no parent and are therefore root forums
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function findVisibleRootForums()
     {
@@ -92,18 +171,20 @@ class ForumRepository extends Repository
                 )
             )
         );
-        $query->setOrderings(array('crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING));
+        $query->setOrderings(array('crdate' => QueryInterface::ORDER_DESCENDING));
         $forums = $query->execute();
 
         return $forums;
     }
 
     /**
-     * Function findAccessibleUserForums
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * Function findAccessibleUserForumsByParent
+     * find forums of specific parent
+     * @param int $parent
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findAccessibleUserForums()
+    public function findAccessibleUserForumsByParent($parent)
     {
         $constraints = array();
         $user = $this->getUser();
@@ -111,67 +192,10 @@ class ForumRepository extends Repository
 
         $constraints[] = $query->logicalAnd(
             $query->equals('groups_with_read_access', 0),
-            $query->equals('users_with_read_access', 0)
-        );
-
-        if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
-            // Get the allowed forums for the logged in user
-            $flattenedGroups = $user->getFlattenedGroupUids();
-            $constraints[] = $query->logicalOr(
-                $query->contains('groupsWithReadAccess', $flattenedGroups),
-                $query->contains('usersWithReadAccess', $user->getUid())
-            );
-        }
-        if (count($constraints) > 1) {
-            $permissionConstraint = $query->logicalOr($constraints);
-        } else {
-            $permissionConstraint = current($constraints);
-        }
-
-        $query->matching($permissionConstraint);
-        $forums = $query->execute();
-
-        return $forums;
-    }
-
-    /**
-     * Function findFormusWithDiferentdId
-     * find forums that have different id comparing with the given one
-     * @params $forum
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findFormusWithDiferentdId($forum)
-    {
-        $query = $this->createQuery();
-        $query->matching(
-            $query->logicalNot($query->equals('uid', $forum->getUid()))
-        );
-        $query->setOrderings(array('title' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING));
-        $forums = $query->execute();
-
-        return $forums;
-    }
-    
-/**
-     * Function findAccessibleUserForumsByParent
-     * find forums of specific parent
-     * @params int $parent
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findAccessibleUserForumsByParent($parent)
-    {
- 		$constraints = array();
-        $user = $this->getUser();
-        $query = $this->createQuery();
-
-        $constraints[] = $query->logicalAnd(
-            $query->equals('groups_with_read_access', 0),
             $query->equals('users_with_read_access', 0),
-        	$query->equals('parent', $parent)
+            $query->equals('parent', $parent)
         );
-        
+
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
             // Get the allowed forums for the logged in user
             $flattenedGroups = $user->getFlattenedGroupUids();
@@ -190,24 +214,5 @@ class ForumRepository extends Repository
         $forums = $query->execute();
 
         return $forums;
-    }
-    
-    /**
-     * Function findAccessibleUserForumsAsMatrix
-     * find forums and childrens and generate matrix
-     *
-     * @return array
-     */
-    public function findAccessibleUserForumsAsMatrix()
-    {
-    	$allAccessibleForums = $this->findVisibleRootForums();
-    	$matrix = [];
-    	
-    	foreach ($allAccessibleForums as $key => $value) {
-    		$matrix[$key]['item'] = $value;
-    		$matrix[$key]['children'] = $this->findAccessibleUserForumsByParent($value->getUid());
-    	}
-    	return $matrix;
-
     }
 }

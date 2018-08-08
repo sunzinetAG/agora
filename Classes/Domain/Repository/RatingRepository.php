@@ -24,6 +24,9 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 
 /**
  * The repository for the ratings of a post
+ *
+ * Class RatingRepository
+ * @package AgoraTeam\Agora\Domain\Repository
  */
 class RatingRepository extends Repository
 {

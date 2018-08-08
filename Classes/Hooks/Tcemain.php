@@ -23,9 +23,13 @@ namespace AgoraTeam\Agora\Hooks;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
  * Hook into tcemain
+ *
+ * Class Tcemain
+ * @package AgoraTeam\Agora\Hooks
  */
 class Tcemain
 {
@@ -37,38 +41,24 @@ class Tcemain
     protected $queryBuilder = null;
 
     /**
-     * @param string $table
-     * @param string $uid
-     * @return string
-     */
-    protected function getRecordKey($table, $uid)
-    {
-        return $table . '-' . $uid;
-    }
-
-    /**
      * processDatamap preProcessFieldArray
      * here we filter all groups and users with changed permissions and store them in $preProcessValues for later use
      * in afterDatabaseOperations
      *
-     * @param array $fields fieldArray
      * @param string $table table name
      * @param integer $recordUid id of the record
-     * @param \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject parent Object
      * @return void
      */
     public function processDatamap_preProcessFieldArray(
-        $fields,
         $table,
-        $recordUid,
-        \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject
+        $recordUid
     ) {
         if ($table === 'tx_agora_domain_model_forum') {
             $settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['agora']);
             if ($settings['recursivePermissions'] !== '1') {
                 return;
             }
-            $forum = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord('tx_agora_domain_model_forum', $recordUid);
+            $forum = BackendUtility::getRecord('tx_agora_domain_model_forum', $recordUid);
 
             $preProcessValueMapping = [
                 'tx_agora_forum_userswithreadaccess_mm' => 'usersOfForumWithReadAccess',
@@ -96,21 +86,25 @@ class Tcemain
     }
 
     /**
+     * @param string $table
+     * @param string $uid
+     * @return string
+     */
+    protected function getRecordKey($table, $uid)
+    {
+        return $table . '-' . $uid;
+    }
+
+    /**
      * processDatamap after Database Operations
      *
-     * @param string $status status
      * @param string $table table name
      * @param integer $recordUid id of the record
-     * @param array $fields fieldArray
-     * @param \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject parent Object
      * @return void
      */
     public function processDatamap_afterDatabaseOperations(
-        $status,
         $table,
-        $recordUid,
-        array $fields,
-        \TYPO3\CMS\Core\DataHandling\DataHandler $parentObject
+        $recordUid
     ) {
         // set access rights on subforums for new forums recursively
         if ($table === 'tx_agora_domain_model_forum') {
@@ -118,7 +112,7 @@ class Tcemain
             if ($settings['recursivePermissions'] !== '1') {
                 return;
             }
-            $record = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord('tx_agora_domain_model_forum', $recordUid);
+            $record = BackendUtility::getRecord('tx_agora_domain_model_forum', $recordUid);
             $this->updateSubforums($record, true);
         }
     }
@@ -202,12 +196,6 @@ class Tcemain
                             $queryBuilder->expr()->eq('uid_foreign', $value)
                         )->execute();
                     }
-
-                    //                    $GLOBALS['TYPO3_DB']->exec_DELETEquery(
-                    //                        'tx_agora_forum_userswithreadaccess_mm',
-                    //                        'uid_foreign IN (' . implode(',',
-                    //                            $this->usersOfForumWithReadAccessToDelete) . ') AND uid_local = ' . $subforum['uid']
-                    //                    );
                 }
             }
         }

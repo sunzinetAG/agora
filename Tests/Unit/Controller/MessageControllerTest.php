@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \AgoraTeam\Agora\Domain\Model\Message;
+
 /**
  * Test case for class AgoraTeam\Agora\Controller\MessageController.
  *
@@ -34,36 +36,6 @@ class MessageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      * @var \AgoraTeam\Agora\Controller\MessageController
      */
     protected $subject = null;
-
-    protected function setUp()
-    {
-        $this->subject = $this->getMock('AgoraTeam\\Agora\\Controller\\MessageController',
-            array('redirect', 'forward', 'addFlashMessage'), array(), '', false);
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
-
-    /**
-     * @test
-     */
-    public function listActionFetchesAllMessagesFromRepositoryAndAssignsThemToView()
-    {
-
-        $allMessages = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', false);
-
-        $messageRepository = $this->getMock('', array('findAll'), array(), '', false);
-        $messageRepository->expects($this->once())->method('findAll')->will($this->returnValue($allMessages));
-        $this->inject($this->subject, 'messageRepository', $messageRepository);
-
-        $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-        $view->expects($this->once())->method('assign')->with('messages', $allMessages);
-        $this->inject($this->subject, 'view', $view);
-
-        $this->subject->listAction();
-    }
 
     /**
      * @test
@@ -138,5 +110,16 @@ class MessageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->inject($this->subject, 'view', $view);
 
         $this->subject->listAction();
+    }
+
+    protected function setUp()
+    {
+        $this->subject = $this->getMock('AgoraTeam\\Agora\\Controller\\MessageController',
+            array('redirect', 'forward', 'addFlashMessage'), array(), '', false);
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

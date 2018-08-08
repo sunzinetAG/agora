@@ -22,9 +22,10 @@ namespace AgoraTeam\Agora\Service;
  ***************************************************************/
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Thread;
+use AgoraTeam\Agora\Domain\Repository\PostRepository;
+use AgoraTeam\Agora\Domain\Repository\ThreadRepository;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class PaginationService
@@ -37,7 +38,7 @@ class PaginationService implements SingletonInterface
     /**
      * postRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\PostRepository
+     * @var PostRepository
      * @inject
      */
     protected $postRepository;
@@ -45,7 +46,7 @@ class PaginationService implements SingletonInterface
     /**
      * threadRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
+     * @var ThreadRepository
      * @inject
      */
     protected $threadRepository;
@@ -141,7 +142,8 @@ class PaginationService implements SingletonInterface
 
     /**
      * @param Post $post
-     * @return integer $page
+     * @param $settings
+     * @return float|int
      */
     public function getPostPagePosition(Post $post, $settings)
     {
@@ -167,9 +169,11 @@ class PaginationService implements SingletonInterface
         return $page;
     }
 
+
     /**
      * @param Thread $thread
-     * @return integer $page
+     * @param $settings
+     * @return float|int
      */
     public function getThreadPagePosition(Thread $thread, $settings)
     {

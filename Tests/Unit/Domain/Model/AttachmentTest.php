@@ -21,6 +21,9 @@ namespace AgoraTeam\Agora\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use AgoraTeam\Agora\Domain\Model\Attachment;
+
 /**
  * Test case for class \AgoraTeam\Agora\Domain\Model\Attachment.
  *
@@ -39,7 +42,7 @@ class AttachmentTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     protected function setUp()
     {
-        $this->subject = new \AgoraTeam\Agora\Domain\Model\Attachment();
+        $this->subject = new Attachment();
     }
 
     protected function tearDown()
@@ -88,7 +91,7 @@ class AttachmentTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setFileForFileReferenceSetsFile()
     {
-        $fileReferenceFixture = new \TYPO3\CMS\Extbase\Domain\Model\FileReference();
+        $fileReferenceFixture = new FileReference();
         $this->subject->setFile($fileReferenceFixture);
 
         $this->assertAttributeEquals(

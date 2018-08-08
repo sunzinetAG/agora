@@ -22,13 +22,14 @@ namespace AgoraTeam\Agora\Domain\Model\Dto;
  ***************************************************************/
 
 use AgoraTeam\Agora\Domain\Model\NotifiableInterface;
+use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- * Class Other
- *
- * @package AgoraTeam\Agora\Domain\Model
+ * Class ActionDemand
+ * @package AgoraTeam\Agora\Domain\Model\Dto
  */
-class ActionDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity implements NotifiableInterface
+class ActionDemand extends AbstractEntity implements NotifiableInterface
 {
 
     /**
@@ -42,7 +43,7 @@ class ActionDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity implem
     protected $description = '';
 
     /**
-     * @var \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
+     * @var FrontendUser
      */
     protected $user = null;
 
@@ -89,7 +90,7 @@ class ActionDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity implem
     }
 
     /**
-     * @return \TYPO3\CMS\Extbase\Domain\Model\FrontendUser
+     * @return FrontendUser
      */
     public function getUser()
     {
@@ -97,7 +98,7 @@ class ActionDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity implem
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FrontendUser $user
+     * @param FrontendUser $user
      */
     public function setUser($user)
     {

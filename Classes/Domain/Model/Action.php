@@ -22,8 +22,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  ***************************************************************/
 
 /**
- * Class Post
- *
+ * Class Action
  * @package AgoraTeam\Agora\Domain\Model
  */
 class Action extends Entity
@@ -247,9 +246,9 @@ class Action extends Entity
     }
 
     /**
-     * @param string $crdate
+     * @param \DateTime $crdate
      */
-    public function setCrdate(string $crdate)
+    public function setCrdate($crdate)
     {
         $this->crdate = $crdate;
     }
@@ -281,7 +280,7 @@ class Action extends Entity
     /**
      * @param \DateTime $tstamp
      */
-    public function setTstamp(\DateTime $tstamp)
+    public function setTstamp($tstamp)
     {
         $this->tstamp = $tstamp;
     }
@@ -292,6 +291,18 @@ class Action extends Entity
     public function getHash(): string
     {
         return $this->hash;
+    }
+
+    /**
+     * @param string $hash
+     */
+    public function setHash(string $hash = '')
+    {
+        if ($hash == '') {
+            $objVars = get_object_vars($this);
+            $hash = md5(serialize($objVars));
+        }
+        $this->hash = $hash;
     }
 
     /**
@@ -308,17 +319,5 @@ class Action extends Entity
     public function setGroups(string $groups)
     {
         $this->groups = $groups;
-    }
-
-    /**
-     * @param string $hash
-     */
-    public function setHash(string $hash = '')
-    {
-        if ($hash == '') {
-            $objVars = get_object_vars($this);
-            $hash = md5(serialize($objVars));
-        }
-        $this->hash = $hash;
     }
 }

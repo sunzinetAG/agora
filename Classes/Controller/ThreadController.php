@@ -20,12 +20,18 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use AgoraTeam\Agora\Domain\Service\MailService;
-use AgoraTeam\Agora\Service\TagService;
+
 use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
+use AgoraTeam\Agora\Domain\Model\Forum;
+use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\Thread;
+use AgoraTeam\Agora\Service\TagService;
+use AgoraTeam\Agora\Domain\Repository\ForumRepository;
+use AgoraTeam\Agora\Domain\Repository\ThreadRepository;
 
 /**
- * ThreadController
+ * Class ThreadController
+ * @package AgoraTeam\Agora\Controller
  */
 class ThreadController extends ActionController
 {
@@ -33,7 +39,7 @@ class ThreadController extends ActionController
     /**
      * forumRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
+     * @var ForumRepository
      * @inject
      */
     protected $forumRepository = null;
@@ -41,19 +47,20 @@ class ThreadController extends ActionController
     /**
      * threadRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
+     * @var ThreadRepository
      * @inject
      */
     protected $threadRepository = null;
 
     /**
-     * action list
+     * Action list
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
-     * @param string $page
-     * @return void
+     * @param Forum $forum
+     * @param int $page
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException
      */
-    public function listAction(\AgoraTeam\Agora\Domain\Model\Forum $forum, $page = 1)
+    public function listAction(Forum $forum, $page = 1)
     {
         $this->authenticationService->assertReadAuthorization($forum);
         $paginator = '';
@@ -92,10 +99,10 @@ class ThreadController extends ActionController
     /**
      * action show
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Thread $thread
      * @return void
      */
-    public function showAction(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function showAction(Thread $thread)
     {
         $this->view->assign('thread', $thread);
     }
@@ -103,14 +110,15 @@ class ThreadController extends ActionController
     /**
      * action new
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Forum $forum
+     * @param Thread|null $thread
      * @param string $text
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
      * @return void
      */
     public function newAction(
-        \AgoraTeam\Agora\Domain\Model\Forum $forum,
-        \AgoraTeam\Agora\Domain\Model\Thread $thread = null,
+        Forum $forum,
+        Thread $thread = null,
         $text = ''
     ) {
         $this->authenticationService->assertNewThreadAuthorization($forum);
@@ -123,16 +131,23 @@ class ThreadController extends ActionController
     /**
      * action create
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Forum $forum
+     * @param Thread $thread
      * @param string $text
      * @param string $tags
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      * @validate $text notEmpty
      * @return void
      */
     public function createAction(
-        \AgoraTeam\Agora\Domain\Model\Forum $forum,
-        \AgoraTeam\Agora\Domain\Model\Thread $thread,
+        Forum $forum,
+        Thread $thread,
         $text,
         $tags = ''
     ) {
@@ -145,8 +160,8 @@ class ThreadController extends ActionController
             $thread->setTags($tags);
         }
 
-        /** @var \AgoraTeam\Agora\Domain\Model\Post $post */
-        $post = new \AgoraTeam\Agora\Domain\Model\Post;
+        /** @var Post $post */
+        $post = new Post;
         $post->setTopic($thread->getTitle());
         $post->setText($text);
         $post->setForum($forum);
@@ -186,6 +201,7 @@ class ThreadController extends ActionController
     /**
      * action listLatest
      *
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      * @return void
      */
     public function listLatestAction()
@@ -195,7 +211,7 @@ class ThreadController extends ActionController
         if ($limit === 0) {
             $limit = $this->settings['thread']['numberOfItemsInLatestView'];
         }
-        $latestThreads = $this->threadRepository->findLatestThreadsForUser($limit);
+        $latestThreads = $this->threadRepository->findLatestThreadsForUser($limit, $this->forumRepository);
 
         $this->view->assign('user', $user);
         $this->view->assign('latestThreads', $latestThreads);

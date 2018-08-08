@@ -20,6 +20,12 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use AgoraTeam\Agora\Domain\Model\Forum;
+use AgoraTeam\Agora\Domain\Repository\ForumRepository;
+use AgoraTeam\Agora\Domain\Repository\GroupRepository;
+
 /**
  * Class ForumAdminController
  *
@@ -31,7 +37,7 @@ class ForumAdminController extends ActionController
     /**
      * ForumRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
+     * @var ForumRepository
      * @inject
      */
     protected $forumRepository = null;
@@ -39,7 +45,7 @@ class ForumAdminController extends ActionController
     /**
      * GroupRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\GroupRepository
+     * @var GroupRepository
      * @inject
      */
     protected $groupRepository = null;
@@ -50,16 +56,6 @@ class ForumAdminController extends ActionController
      * @var $id
      */
     protected $id;
-
-    /**
-     * Function initializeAction
-     *
-     * @return void
-     */
-    protected function initializeAction()
-    {
-        $this->id = (int)\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('id');
-    }
 
     /**
      * Action list
@@ -75,10 +71,10 @@ class ForumAdminController extends ActionController
     /**
      * Action show
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param Forum $forum
      * @return void
      */
-    public function showAction(\AgoraTeam\Agora\Domain\Model\Forum $forum)
+    public function showAction(Forum $forum)
     {
         $this->view->assign('forum', $forum);
     }
@@ -86,10 +82,10 @@ class ForumAdminController extends ActionController
     /**
      * Action new
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $newForum
+     * @param Forum $newForum
      * @return void
      */
-    public function newAction(\AgoraTeam\Agora\Domain\Model\Forum $newForum = null)
+    public function newAction(Forum $newForum = null)
     {
         $users = $this->userRepository->findAll();
         $groups = $this->groupRepository->findAll();
@@ -107,10 +103,13 @@ class ForumAdminController extends ActionController
     /**
      * Action create
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $newForum
+     * @param Forum $newForum
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function createAction(\AgoraTeam\Agora\Domain\Model\Forum $newForum)
+    public function createAction(Forum $newForum)
     {
         $this->forumRepository->add($newForum);
         $this->addFlashMessage('The form was succesfully created!!');
@@ -120,15 +119,15 @@ class ForumAdminController extends ActionController
     /**
      * Action edit
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param Forum $forum
      * @ignorevalidation $forum
      * @return void
      */
-    public function editAction(\AgoraTeam\Agora\Domain\Model\Forum $forum)
+    public function editAction(Forum $forum)
     {
         $users = $this->userRepository->findAll();
         $groups = $this->groupRepository->findAll();
-        $forums = $this->forumRepository->findFormusWithDiferentdId($forum);
+        $forums = $this->forumRepository->findForumsWithDifferentId($forum);
         $this->view->assignMultiple(
             array(
                 'forum' => $forum,
@@ -142,10 +141,14 @@ class ForumAdminController extends ActionController
     /**
      * Action update
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param Forum $forum
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @return void
      */
-    public function updateAction(\AgoraTeam\Agora\Domain\Model\Forum $forum)
+    public function updateAction(Forum $forum)
     {
         $this->forumRepository->update($forum);
         $this->addFlashMessage('The forum was succesfully edited!!');
@@ -153,12 +156,15 @@ class ForumAdminController extends ActionController
     }
 
     /**
-     * Action delete
+     *  Action delete
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param Forum $forum
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function deleteAction(\AgoraTeam\Agora\Domain\Model\Forum $forum)
+    public function deleteAction(Forum $forum)
     {
 
         if (($forum->getThreads()->count() == 0) && ($forum->getSubForums()->count() == 0)) {
@@ -168,9 +174,19 @@ class ForumAdminController extends ActionController
             $this->addFlashMessage(
                 'You cannot delete the forum beacause it has subforums or threads!',
                 '',
-                \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR
+                AbstractMessage::ERROR
             );
             $this->redirect('list');
         }
+    }
+
+    /**
+     * Function initializeAction
+     *
+     * @return void
+     */
+    protected function initializeAction()
+    {
+        $this->id = (int)GeneralUtility::_GP('id');
     }
 }

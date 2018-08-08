@@ -21,8 +21,6 @@ namespace AgoraTeam\Agora\ViewHelpers\Widget;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper;
 
 /**
@@ -62,21 +60,9 @@ class PaginateViewHelper extends AbstractWidgetViewHelper
     /**
      * Render
      *
-     * @param QueryResultInterface|ObjectStorage|array $objects
-     * @param string $as
-     * @param array $configuration
-     * @return string
      */
-    public function render(
-        $objects,
-        $as,
-        array $configuration = array(
-            'itemsPerPage' => 10,
-            'insertAbove' => false,
-            'insertBelow' => true,
-            'maximumNumberOfLinks' => 99
-        )
-    ) {
+    public function render()
+    {
         return $this->initiateSubRequest();
     }
 }

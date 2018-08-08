@@ -21,10 +21,13 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /**
- * Post
+ * Class Entity
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class Entity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class Entity extends AbstractEntity
 {
 
     /**

@@ -9,15 +9,16 @@ namespace AgoraTeam\Agora\ViewHelpers\Format;
  */
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Domain\Model\FrontendUser;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Formats a unix timestamp to a human-readable, relative string
  *
- * @package Sunzinet\SzNotification
+ * Class FromUserViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Format
  */
-class FromUserViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class FromUserViewHelper extends AbstractViewHelper
 {
 
     /**
@@ -66,6 +67,7 @@ class FromUserViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHe
 
     /**
      * @param $user
+     * @return string
      */
     private function getUserByUid($user)
     {

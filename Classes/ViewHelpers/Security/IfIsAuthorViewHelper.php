@@ -2,6 +2,7 @@
 
 namespace AgoraTeam\Agora\ViewHelpers\Security;
 
+
 /***************************************************************
  *  Copyright notice
  *  (c) 2015 Philipp Thiele <philipp.thiele@phth.de>
@@ -21,10 +22,13 @@ namespace AgoraTeam\Agora\ViewHelpers\Security;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+
 /**
- * IfIsAuthorViewHelper
+ * Class IfIsAuthorViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Security
  */
-class IfIsAuthorViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class IfIsAuthorViewHelper extends AbstractTagBasedViewHelper
 {
 
     /**

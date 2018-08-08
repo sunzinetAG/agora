@@ -22,7 +22,8 @@ namespace AgoraTeam\Agora\Domain\Repository;
  ***************************************************************/
 
 /**
- * The repository for Attachments
+ * Class AttachmentRepository
+ * @package AgoraTeam\Agora\Domain\Repository
  */
 class AttachmentRepository extends Repository
 {

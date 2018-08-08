@@ -49,17 +49,8 @@ class AuthenticationService implements SingletonInterface
     protected $userRepository;
 
     /**
-     * @param AccessibleInterface $cObject
-     */
-    public function assertReadAuthorization(AccessibleInterface $cObject)
-    {
-        if ($cObject->checkAccess($this->getUser(), AccessibleInterface::TYPE_READ) === false) {
-            throw new PageNotFoundException('NOPE ' . __FUNCTION__);
-        }
-    }
-
-    /**
-     * @param Thread $thread
+     * @param Forum $forum
+     * @throws PageNotFoundException
      */
     public function assertNewThreadAuthorization(Forum $forum)
     {
@@ -70,34 +61,12 @@ class AuthenticationService implements SingletonInterface
     }
 
     /**
-     * @param Thread $thread
+     * @param AccessibleInterface $cObject
+     * @throws PageNotFoundException
      */
-    public function assertNewPostAuthorization(Thread $thread)
+    public function assertReadAuthorization(AccessibleInterface $cObject)
     {
-        $this->assertReadAuthorization($thread);
-        if ($thread->checkAccess($this->getUser(), AccessibleInterface::TYPE_NEW_POST) === false) {
-            throw new PageNotFoundException('NOPE ' . __FUNCTION__);
-        }
-    }
-
-    /**
-     * @param Post $post
-     */
-    public function assertEditPostAuthorization(Post $post)
-    {
-        $this->assertReadAuthorization($post);
-        if ($post->checkAccess($this->getUser(), AccessibleInterface::TYPE_EDIT_POST) === false) {
-            throw new PageNotFoundException('NOPE ' . __FUNCTION__);
-        }
-    }
-
-    /**
-     * @param Post $post
-     */
-    public function assertDeletePostAuthorization(Post $post)
-    {
-        $this->assertReadAuthorization($post);
-        if ($post->checkAccess($this->getUser(), AccessibleInterface::TYPE_DELETE_POST) === false) {
+        if ($cObject->checkAccess($this->getUser(), AccessibleInterface::TYPE_READ) === false) {
             throw new PageNotFoundException('NOPE ' . __FUNCTION__);
         }
     }
@@ -112,6 +81,42 @@ class AuthenticationService implements SingletonInterface
         }
 
         return $this->user;
+    }
+
+    /**
+     * @param Thread $thread
+     * @throws PageNotFoundException
+     */
+    public function assertNewPostAuthorization(Thread $thread)
+    {
+        $this->assertReadAuthorization($thread);
+        if ($thread->checkAccess($this->getUser(), AccessibleInterface::TYPE_NEW_POST) === false) {
+            throw new PageNotFoundException('NOPE ' . __FUNCTION__);
+        }
+    }
+
+    /**
+     * @param Post $post
+     * @throws PageNotFoundException
+     */
+    public function assertEditPostAuthorization(Post $post)
+    {
+        $this->assertReadAuthorization($post);
+        if ($post->checkAccess($this->getUser(), AccessibleInterface::TYPE_EDIT_POST) === false) {
+            throw new PageNotFoundException('NOPE ' . __FUNCTION__);
+        }
+    }
+
+    /**
+     * @param Post $post
+     * @throws PageNotFoundException
+     */
+    public function assertDeletePostAuthorization(Post $post)
+    {
+        $this->assertReadAuthorization($post);
+        if ($post->checkAccess($this->getUser(), AccessibleInterface::TYPE_DELETE_POST) === false) {
+            throw new PageNotFoundException('NOPE ' . __FUNCTION__);
+        }
     }
 
     /**

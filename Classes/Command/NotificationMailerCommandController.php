@@ -21,7 +21,14 @@ namespace AgoraTeam\Agora\Command;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Exception\RequiredArgumentMissingException;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use AgoraTeam\Agora\Domain\Repository\UserRepository;
+use AgoraTeam\Agora\Service\Notification\NotificationService;
+use AgoraTeam\Agora\Domain\Repository\NotificationRepository;
+use AgoraTeam\Agora\Service\MailService;
 
 /**
  * Class NotificationMailerCommandController
@@ -32,65 +39,68 @@ class NotificationMailerCommandController extends CommandController
 {
 
     /**
-     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+     * @var Dispatcher
      */
     protected $signalSlotDispatcher;
-
-    /**
-     * @param \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher
-     */
-    public function injectSignalSlotDispatcher(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher)
-    {
-        $this->signalSlotDispatcher = $signalSlotDispatcher;
-    }
-
     /**
      * userRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
+     * @var UserRepository
      * @inject
      */
     protected $userRepository = null;
-
     /**
      * userRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\NotificationRepository
+     * @var NotificationRepository
      * @inject
      */
     protected $notificationRepository = null;
-
     /**
-     * @var \AgoraTeam\Agora\Service\MailService
+     * @var MailService
      * @inject
      */
     protected $mailService;
-
     /**
-     * @var \AgoraTeam\Agora\Service\Notification\NotificationService
+     * @var NotificationService
      * @inject
      */
     protected $notificationService;
+
+    /**
+     * @param Dispatcher $signalSlotDispatcher
+     */
+    public function injectSignalSlotDispatcher(Dispatcher $signalSlotDispatcher)
+    {
+        $this->signalSlotDispatcher = $signalSlotDispatcher;
+    }
 
     /**
      * Assamble the commands and send them by mail
      *
      * @param string $userStorage StoragePid of the user datasets
      * @param string $start Earliest time to execute the sheduler task (Format hh:mm pm)
-     * @param integer $duration Period for the execution of the sheduler task in hours
-     * @param integer $amounfOfUsersPerRun Amout of users to notificate per run
+     * @param int $duration Period for the execution of the sheduler task in hours
+     * @param int $amountOfUsersPerRun Amount of users to notificate per run
+     * @return bool
+     * @throws RequiredArgumentMissingException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      */
-    public function notificationCommand($userStorage, $start, $duration, $amounfOfUsersPerRun = 50)
+    public function notificationCommand($userStorage, $start, $duration, $amountOfUsersPerRun = 50)
     {
         if ($this->checkExecutionTime($start, $duration)) {
             return true;
         }
 
-        $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        $configurationManager = GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'
         );
         $settings = $configurationManager->getConfiguration(
-            \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS
         );
 
         if (empty($userStorage) || is_null($userStorage)) {
@@ -100,7 +110,7 @@ class NotificationMailerCommandController extends CommandController
             );
         }
 
-        $usersIds = $this->notificationRepository->findUserListFromNotifcationsByLimit($amounfOfUsersPerRun);
+        $usersIds = $this->notificationRepository->findUserListFromNotifcationsByLimit($amountOfUsersPerRun);
         foreach ($usersIds as $key => $val) {
             $user = $this->userRepository->findByUid($val);
             if ($user->getEmail()) {
@@ -112,7 +122,7 @@ class NotificationMailerCommandController extends CommandController
                 );
                 if (!empty($userNotifications)) {
                     $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
-                    $mailSent = $this->mailService->sendMail(
+                    $this->mailService->sendMail(
                         [$user->getEmail() => $user->getLastName()],
                         [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
                         $settings['email']['notificationSubject'],

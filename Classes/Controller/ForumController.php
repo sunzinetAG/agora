@@ -21,9 +21,10 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Repository\ForumRepository;
+
 /**
  * Class ForumController
- *
  * @package AgoraTeam\Agora\Controller
  */
 class ForumController extends ActionController
@@ -32,7 +33,7 @@ class ForumController extends ActionController
     /**
      * ForumRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
+     * @var ForumRepository
      * @inject
      */
     protected $forumRepository = null;
@@ -40,6 +41,7 @@ class ForumController extends ActionController
     /**
      * Action list
      *
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      * @return void
      */
     public function listAction()

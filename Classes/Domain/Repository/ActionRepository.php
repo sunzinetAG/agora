@@ -24,8 +24,7 @@ namespace AgoraTeam\Agora\Domain\Repository;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 
 /**
- * Class TaskRepository
- *
+ * Class ActionRepository
  * @package AgoraTeam\Agora\Domain\Repository
  */
 class ActionRepository extends Repository

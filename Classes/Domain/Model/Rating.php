@@ -22,8 +22,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  ***************************************************************/
 
 /**
- * Class Post
- *
+ * Class Rating
  * @package AgoraTeam\Agora\Domain\Model
  */
 class Rating extends Entity implements NotifiableInterface
@@ -33,14 +32,14 @@ class Rating extends Entity implements NotifiableInterface
      * user
      * may be NULL if post is anonymous
      *
-     * @var \AgoraTeam\Agora\Domain\Model\User
+     * @var User
      */
     protected $user = null;
 
     /**
      * posts
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Post
+     * @var Post
      */
     protected $post = null;
 

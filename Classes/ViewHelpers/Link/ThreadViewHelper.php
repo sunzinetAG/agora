@@ -22,7 +22,8 @@ namespace AgoraTeam\Agora\ViewHelpers\Link;
 use AgoraTeam\Agora\Domain\Model\Thread;
 
 /**
- * CreatorViewHelper
+ * Class ThreadViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Link
  */
 class ThreadViewHelper extends AbstractLinkViewHelper
 {

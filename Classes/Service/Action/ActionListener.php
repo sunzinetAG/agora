@@ -43,8 +43,10 @@ class ActionListener implements SingletonInterface
 
     /**
      * Setup an action on post creation
+     *
      * @param Post $post
-     * @return void
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function onPostCreated(Post $post)
     {
@@ -57,8 +59,10 @@ class ActionListener implements SingletonInterface
 
     /**
      * Setup an action if a post got updated
+     *
      * @param Post $post
-     * @return void
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function onPostUpdated(Post $post)
     {
@@ -67,8 +71,10 @@ class ActionListener implements SingletonInterface
 
     /**
      * Setup an action if a post got deleted
-     * @param $post
-     * @return void
+     *
+     * @param Post $post
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function onPostDeleted(Post $post)
     {
@@ -77,8 +83,10 @@ class ActionListener implements SingletonInterface
 
     /**
      * Setup an action if a post got deleted
-     * @param $thread
-     * @return void
+     *
+     * @param Thread $thread
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function onThreadDeleted(Thread $thread)
     {
@@ -87,8 +95,10 @@ class ActionListener implements SingletonInterface
 
     /**
      * Setup an action if a new thread got created
+     *
      * @param Thread $thread
-     * @return void
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function onThreadCreated(Thread $thread)
     {
@@ -97,9 +107,11 @@ class ActionListener implements SingletonInterface
 
     /**
      * Setup an action if a new thread got created
+     *
      * @param Post $post
      * @param string $rating
-     * @return void
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function onConfirmedRating(Post $post, string $rating)
     {
@@ -114,7 +126,8 @@ class ActionListener implements SingletonInterface
      * @param null $user
      * @param array $data
      * @param int $type
-     * @return void
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function onOther($title, $description, $user = null, $data = [], $type = NotificationService::OTHER)
     {

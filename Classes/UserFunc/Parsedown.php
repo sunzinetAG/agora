@@ -31,10 +31,9 @@ class Parsedown
 
     /**
      * @param $pa
-     * @param $fObj
      * @return mixed
      */
-    public function getParsedText($pa, $fObj)
+    public function getParsedText($pa)
     {
         $result = array();
         $uid = $pa['row']['uid'];

@@ -1,4 +1,5 @@
 <?php
+
 namespace AgoraTeam\Agora\ViewHelpers;
 
 /***************************************************************
@@ -20,14 +21,15 @@ namespace AgoraTeam\Agora\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+
 /**
  * Class IsPartOfArrayViewHelper
  * Check if an element is a part of array
  *
  * @package AgoraTeam\Agora\ViewHelpers
  */
-
-class IsPartOfArrayViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class IsPartOfArrayViewHelper extends AbstractViewHelper
 {
     /**
      * Check if an element is a part of array
@@ -37,8 +39,8 @@ class IsPartOfArrayViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractV
      * @return bool
      */
     public function render($dataArray, $data)
-    {	
-    	return in_array($data, $dataArray);
+    {
+        return in_array($data, $dataArray);
     }
 
 }

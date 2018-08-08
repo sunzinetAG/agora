@@ -63,14 +63,14 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
      * creator
      * may be NULL if post is anonymous
      *
-     * @var \AgoraTeam\Agora\Domain\Model\User
+     * @var User
      */
     protected $creator = null;
 
     /**
      * posts
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post>
+     * @var ObjectStorage<Post>
      * @cascade remove
      * @lazy
      */
@@ -79,7 +79,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * posts
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Tag>
+     * @var ObjectStorage<Tag>
      * @cascade remove
      * @lazy
      */
@@ -95,21 +95,21 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * forum
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Forum
+     * @var Forum
      */
     protected $forum;
 
     /**
      * observers
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
+     * @var ObjectStorage<User>
      */
     protected $observers = null;
 
     /**
      * readers
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
+     * @var ObjectStorage<User>
      */
     protected $readers = null;
 
@@ -131,11 +131,11 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
      */
     protected function initStorageObjects()
     {
-        $this->posts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->user = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->observers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->tags = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->readers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->posts = new ObjectStorage();
+        $this->user = new ObjectStorage();
+        $this->observers = new ObjectStorage();
+        $this->tags = new ObjectStorage();
+        $this->readers = new ObjectStorage();
     }
 
     /**
@@ -170,6 +170,16 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
+     * Returns the boolean state of solved
+     *
+     * @return boolean
+     */
+    public function isSolved()
+    {
+        return $this->solved;
+    }
+
+    /**
      * Sets the solved
      *
      * @param boolean $solved
@@ -181,21 +191,21 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * Returns the boolean state of solved
-     *
-     * @return boolean
-     */
-    public function isSolved()
-    {
-        return $this->solved;
-    }
-
-    /**
      * Returns the closed
      *
      * @return boolean $closed
      */
     public function getClosed()
+    {
+        return $this->closed;
+    }
+
+    /**
+     * Returns the boolean state of closed
+     *
+     * @return boolean
+     */
+    public function isClosed()
     {
         return $this->closed;
     }
@@ -212,21 +222,21 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * Returns the boolean state of closed
-     *
-     * @return boolean
-     */
-    public function isClosed()
-    {
-        return $this->closed;
-    }
-
-    /**
      * Returns the sticky
      *
      * @return boolean $sticky
      */
     public function getSticky()
+    {
+        return $this->sticky;
+    }
+
+    /**
+     * Returns the boolean state of sticky
+     *
+     * @return boolean
+     */
+    public function isSticky()
     {
         return $this->sticky;
     }
@@ -240,16 +250,6 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     public function setSticky($sticky)
     {
         $this->sticky = $sticky;
-    }
-
-    /**
-     * Returns the boolean state of sticky
-     *
-     * @return boolean
-     */
-    public function isSticky()
-    {
-        return $this->sticky;
     }
 
     /**
@@ -276,9 +276,9 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Adds an observer
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $observer
+     * @param User $observer
      */
-    public function addObserver(\AgoraTeam\Agora\Domain\Model\User $observer)
+    public function addObserver(User $observer)
     {
         $this->observers->attach($observer);
     }
@@ -286,10 +286,10 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes an observer
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $observerToRemove $observerToRemove The observer to be removed
+     * @param User $observerToRemove $observerToRemove The observer to be removed
      * @return void
      */
-    public function removeObserver(\AgoraTeam\Agora\Domain\Model\User $observerToRemove)
+    public function removeObserver(User $observerToRemove)
     {
         $this->posts->detach($observerToRemove);
     }
@@ -297,7 +297,7 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Returns the observers
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $observers
+     * @return ObjectStorage<User> $observers
      */
     public function getObservers()
     {
@@ -307,10 +307,10 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Sets the observers
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $observers
+     * @param ObjectStorage<User> $observers
      * @return void
      */
-    public function setObservers(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $observers)
+    public function setObservers(ObjectStorage $observers)
     {
         $this->observers = $observers;
     }
@@ -336,6 +336,18 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
+     * Adds a Post
+     *
+     * @param Post $post
+     * @return void
+     */
+    public function addPost(Post $post)
+    {
+        $this->posts->attach($post);
+        $this->removeReaders();
+    }
+
+    /**
      * Remove all readers to mark the thread as unread
      *
      * @return void
@@ -346,51 +358,18 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * Adds a Post
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
-     * @return void
-     */
-    public function addPost(\AgoraTeam\Agora\Domain\Model\Post $post)
-    {
-        $this->posts->attach($post);
-        $this->removeReaders();
-    }
-
-    /**
      * Removes a Post
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $postToRemove The Post to be removed
+     * @param Post $postToRemove The Post to be removed
      * @return void
      */
-    public function removePost(\AgoraTeam\Agora\Domain\Model\Post $postToRemove)
+    public function removePost(Post $postToRemove)
     {
         $this->posts->detach($postToRemove);
     }
 
     /**
-     * Returns the posts
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $posts
-     */
-    public function getPosts()
-    {
-        return $this->posts;
-    }
-
-    /**
-     * Sets the posts
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $posts
-     * @return void
-     */
-    public function setPosts(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $posts)
-    {
-        $this->posts = $posts;
-    }
-
-    /**
-     * @return \AgoraTeam\Agora\Domain\Model\Post $post
+     * @return object
      */
     public function getFirstPost()
     {
@@ -400,9 +379,30 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
+     * Returns the posts
+     *
+     * @return ObjectStorage<Post> $posts
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+    /**
+     * Sets the posts
+     *
+     * @param ObjectStorage<Post> $posts
+     * @return void
+     */
+    public function setPosts(ObjectStorage $posts)
+    {
+        $this->posts = $posts;
+    }
+
+    /**
      * Returns the latest post
      *
-     * @return \boolean|\AgoraTeam\Agora\Domain\Model\Post $latestPost
+     * @return \boolean|Post $latestPost
      */
     public function getLatestPost()
     {
@@ -416,17 +416,17 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+     * @return ObjectStorage
      */
-    public function getTags(): \TYPO3\CMS\Extbase\Persistence\ObjectStorage
+    public function getTags(): ObjectStorage
     {
         return $this->tags;
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $tags
+     * @param ObjectStorage $tags
      */
-    public function setTags(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $tags)
+    public function setTags(ObjectStorage $tags)
     {
         $this->tags = $tags;
     }
@@ -446,6 +446,14 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
+     *
+     */
+    public function increaseViews()
+    {
+        $this->views = $this->getViews() + 1;
+    }
+
+    /**
      * @return int
      */
     public function getViews(): int
@@ -454,17 +462,9 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * @param int $views
-     */
-    public function increaseViews()
-    {
-        $this->views = $this->getViews() + 1;
-    }
-
-    /**
      * Returns the forum
      *
-     * @return \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @return Forum $forum
      */
     public function getForum()
     {
@@ -474,10 +474,10 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Sets the forum
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param Forum $forum
      * @return void
      */
-    public function setForum(\AgoraTeam\Agora\Domain\Model\Forum $forum)
+    public function setForum(Forum $forum)
     {
         $this->forum = $forum;
     }

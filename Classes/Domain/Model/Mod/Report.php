@@ -34,12 +34,12 @@ class Report extends Entity
 {
 
     /**
-     * @var \AgoraTeam\Agora\Domain\Model\User $feuser
+     * @var User $feuser
      */
     protected $feuser = null;
 
     /**
-     * @var \AgoraTeam\Agora\Domain\Model\Post $post
+     * @var Post $post
      * @lazy
      */
     protected $post = null;
@@ -50,7 +50,7 @@ class Report extends Entity
     protected $type = 1;
 
     /**
-     * @var \AgoraTeam\Agora\Domain\Model\User $feuser
+     * @var User $feuser
      */
     protected $reporter = null;
 
@@ -60,7 +60,7 @@ class Report extends Entity
     protected $text = '';
 
     /**
-     * @return \AgoraTeam\Agora\Domain\Model\User
+     * @return User
      */
     public function getFeuser()
     {
@@ -68,9 +68,9 @@ class Report extends Entity
     }
 
     /**
-     * @param \AgoraTeam\Agora\Domain\Model\User $feuser
+     * @param User $feuser
      */
-    public function setFeuser(\AgoraTeam\Agora\Domain\Model\User $feuser)
+    public function setFeuser(User $feuser)
     {
         $this->feuser = $feuser;
     }
@@ -108,7 +108,7 @@ class Report extends Entity
     }
 
     /**
-     * @return \AgoraTeam\Agora\Domain\Model\User
+     * @return User
      */
     public function getReporter()
     {
@@ -116,9 +116,9 @@ class Report extends Entity
     }
 
     /**
-     * @param \AgoraTeam\Agora\Domain\Model\User $reporter
+     * @param User $reporter
      */
-    public function setReporter(\AgoraTeam\Agora\Domain\Model\User $reporter)
+    public function setReporter(User $reporter)
     {
         $this->reporter = $reporter;
     }

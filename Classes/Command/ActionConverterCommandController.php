@@ -25,30 +25,39 @@ use AgoraTeam\Agora\Domain\Model\Notification;
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Thread;
 use AgoraTeam\Agora\Domain\Model\User;
+use AgoraTeam\Agora\Domain\Repository\NotificationRepository;
+use AgoraTeam\Agora\Domain\Repository\ActionRepository;
+use AgoraTeam\Agora\Domain\Repository\ThreadRepository;
+use AgoraTeam\Agora\Domain\Repository\PostRepository;
+use AgoraTeam\Agora\Domain\Repository\UserRepository;
 use AgoraTeam\Agora\Service\Notification\NotificationService;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
+
 
 /**
- * ActionController
+ * Class ActionConverterCommandController
+ * @package AgoraTeam\Agora\Command
  */
 class ActionConverterCommandController extends CommandController
 {
 
     /**
-     * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+     * @var Dispatcher
      */
     protected $signalSlotDispatcher;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
+     * @var ConfigurationManagerInterface
      */
     protected $configurationManager;
 
     /**
      * notificationRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\NotificationRepository
+     * @var NotificationRepository
      * @inject
      */
     protected $notificationRepository = null;
@@ -56,7 +65,7 @@ class ActionConverterCommandController extends CommandController
     /**
      * ActionRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ActionRepository
+     * @var ActionRepository
      * @inject
      */
     protected $actionRepository = null;
@@ -64,7 +73,7 @@ class ActionConverterCommandController extends CommandController
     /**
      * ThreadRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
+     * @var ThreadRepository
      * @inject
      */
     protected $threadRepository = null;
@@ -72,7 +81,7 @@ class ActionConverterCommandController extends CommandController
     /**
      * PostRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\PostRepository
+     * @var PostRepository
      * @inject
      */
     protected $postRepository = null;
@@ -80,7 +89,7 @@ class ActionConverterCommandController extends CommandController
     /**
      * UserRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
+     * @var UserRepository
      * @inject
      */
     protected $userRepository = null;
@@ -93,28 +102,21 @@ class ActionConverterCommandController extends CommandController
     protected $settings = array();
 
     /**
-     * NotificationCommandController constructor.
+     * @param Dispatcher $signalSlotDispatcher
      */
-    protected function initialize()
-    {
-        $this->configurationManager = $this->objectManager->get(ConfigurationManager::class);
-        // get settings
-        $this->settings = $this->configurationManager->getConfiguration(
-            \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-            'agora'
-        );
-    }
-
-    /**
-     * @param \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher
-     */
-    public function injectSignalSlotDispatcher(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher)
+    public function injectSignalSlotDispatcher(Dispatcher $signalSlotDispatcher)
     {
         $this->signalSlotDispatcher = $signalSlotDispatcher;
     }
 
     /**
      * Convert actions to notifications to save performance
+     *
+     * @return bool
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      */
     public function actionConverterCommand()
     {
@@ -137,60 +139,16 @@ class ActionConverterCommandController extends CommandController
     }
 
     /**
-     * @param $notifications
-     * @return array
+     * NotificationCommandController constructor.
      */
-    private function trimDuplications($notifications)
+    protected function initialize()
     {
-        $alreadyChecked = [];
-        $tmpNotifications = $notifications;
-        $trimmedNotifications = [];
-        foreach ($notifications as $key => $notificationAction) {
-            $noDuplications = true;
-            $type = $notificationAction->getType();
-            $page = $notificationAction->getPage();
-            $title = $notificationAction->getTitle();
-            $owner = $notificationAction->getOwner();
-            $user = $notificationAction->getUser();
-            $post = $notificationAction->getPost();
-            $thread = $notificationAction->getThread();
-            $data = $notificationAction->getData();
-
-            if (array_key_exists($key, $alreadyChecked)) {
-                continue;
-            }
-
-            foreach ($tmpNotifications as $k => $v) {
-                // Check if owner has duplications
-                if ($type == $v->getType() &&
-                    $title == $v->getTitle() &&
-                    $page == $v->getPage() &&
-                    $owner == $v->getOwner() &&
-                    $user == $v->getUser() &&
-                    $post == $v->getPost() &&
-                    $thread == $v->getThread() &&
-                    $data == $v->getData() &&
-                    $k != $key
-                ) {
-                    $trimmedNotifications[$key] = $notificationAction;
-                    $alreadyChecked[$k] = $k;
-                    $noDuplications = false;
-                    unset($tmpNotifications[$k]);
-                }
-            }
-            if ($noDuplications) {
-                $alreadyChecked[$key] = $key;
-                $trimmedNotifications[$key] = $notificationAction;
-            }
-        }
-        // Remove notifications where the user equals owner
-        foreach ($trimmedNotifications as $key => $trimmedNotification) {
-            if ($trimmedNotification->getUser() == $trimmedNotification->getOwner()) {
-                unset($trimmedNotifications[$key]);
-            }
-        }
-
-        return $trimmedNotifications;
+        $this->configurationManager = $this->objectManager->get(ConfigurationManager::class);
+        // get settings
+        $this->settings = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+            'agora'
+        );
     }
 
     /**
@@ -200,6 +158,9 @@ class ActionConverterCommandController extends CommandController
      *
      * @param array $actions
      * @return array
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      */
     private function getNotificationsFromActions($actions)
     {
@@ -290,73 +251,6 @@ class ActionConverterCommandController extends CommandController
 
     /**
      * @param Action $action
-     * @return mixed
-     */
-    private function getUserDefinedNotifications($action)
-    {
-        $notifications = [];
-        $title = $action->getTitle();
-        $description = $action->getDescription();
-        $link = $action->getLink();
-        $type = $action->getType();
-        $tstamp = $action->getTstamp();
-
-        if ($action->getUser()) {
-            $notification = new Notification();
-            $notification->setType($type);
-            $notification->setOwner($action->getUser());
-            $notification->setTitle($title);
-            $notification->setDescription($description);
-            $notification->setLink($link);
-            $notification->setTstamp($tstamp);
-            $notification->setCrdate($tstamp);
-
-            $notifications[] = $notification;
-        } else {
-            // We need to get all users by the set groups
-            $users = $this->userRepository->findByUsergroups($action->getGroups());
-            foreach ($users as $user) {
-                $notification = new Notification();
-                $notification->setType($type);
-                $notification->setOwner($user->getUid());
-                $notification->setTitle($title);
-                $notification->setDescription($description);
-                $notification->setLink($link);
-                $notification->setTstamp($tstamp);
-                $notification->setCrdate($tstamp);
-
-                $notifications[] = $notification;
-            }
-        }
-
-        return $notifications;
-    }
-
-    /**
-     * @param Action $action
-     * @param Post $post
-     * @return Notification
-     */
-    private function getPostOwnerNotification($action, $post)
-    {
-        $notification = new Notification();
-        $notification->setType($action->getType());
-        $notification->setUser($action->getUser());
-        $notification->setThread($action->getThread());
-        $notification->setPost($action->getPost());
-        $notification->setPage($action->getPage());
-        $notification->setTitle($action->getTitle());
-        $notification->setTstamp($action->getTstamp());
-
-        if (!is_null($post->getCreator())) {
-            $notification->setOwner($post->getCreator()->getUid());
-        }
-
-        return $notification;
-    }
-
-    /**
-     * @param Action $action
      * @param Thread $thread
      * @return Notification
      */
@@ -443,5 +337,130 @@ class ActionConverterCommandController extends CommandController
         }
 
         return $notifications;
+    }
+
+    /**
+     * @param Action $action
+     * @param Post $post
+     * @return Notification
+     */
+    private function getPostOwnerNotification($action, $post)
+    {
+        $notification = new Notification();
+        $notification->setType($action->getType());
+        $notification->setUser($action->getUser());
+        $notification->setThread($action->getThread());
+        $notification->setPost($action->getPost());
+        $notification->setPage($action->getPage());
+        $notification->setTitle($action->getTitle());
+        $notification->setTstamp($action->getTstamp());
+
+        if (!is_null($post->getCreator())) {
+            $notification->setOwner($post->getCreator()->getUid());
+        }
+
+        return $notification;
+    }
+
+    /**
+     * @param Action $action
+     * @return mixed
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
+     */
+    private function getUserDefinedNotifications($action)
+    {
+        $notifications = [];
+        $title = $action->getTitle();
+        $description = $action->getDescription();
+        $link = $action->getLink();
+        $type = $action->getType();
+        $tstamp = $action->getTstamp();
+
+        if ($action->getUser()) {
+            $notification = new Notification();
+            $notification->setType($type);
+            $notification->setOwner($action->getUser());
+            $notification->setTitle($title);
+            $notification->setDescription($description);
+            $notification->setLink($link);
+            $notification->setTstamp($tstamp);
+            $notification->setCrdate($tstamp);
+
+            $notifications[] = $notification;
+        } else {
+            // We need to get all users by the set groups
+            $users = $this->userRepository->findByUsergroups($action->getGroups());
+            foreach ($users as $user) {
+                $notification = new Notification();
+                $notification->setType($type);
+                $notification->setOwner($user->getUid());
+                $notification->setTitle($title);
+                $notification->setDescription($description);
+                $notification->setLink($link);
+                $notification->setTstamp($tstamp);
+                $notification->setCrdate($tstamp);
+
+                $notifications[] = $notification;
+            }
+        }
+
+        return $notifications;
+    }
+
+    /**
+     * @param $notifications
+     * @return array
+     */
+    private function trimDuplications($notifications)
+    {
+        $alreadyChecked = [];
+        $tmpNotifications = $notifications;
+        $trimmedNotifications = [];
+        foreach ($notifications as $key => $notificationAction) {
+            $noDuplications = true;
+            $type = $notificationAction->getType();
+            $page = $notificationAction->getPage();
+            $title = $notificationAction->getTitle();
+            $owner = $notificationAction->getOwner();
+            $user = $notificationAction->getUser();
+            $post = $notificationAction->getPost();
+            $thread = $notificationAction->getThread();
+            $data = $notificationAction->getData();
+
+            if (array_key_exists($key, $alreadyChecked)) {
+                continue;
+            }
+
+            foreach ($tmpNotifications as $k => $v) {
+                // Check if owner has duplications
+                if ($type == $v->getType() &&
+                    $title == $v->getTitle() &&
+                    $page == $v->getPage() &&
+                    $owner == $v->getOwner() &&
+                    $user == $v->getUser() &&
+                    $post == $v->getPost() &&
+                    $thread == $v->getThread() &&
+                    $data == $v->getData() &&
+                    $k != $key
+                ) {
+                    $trimmedNotifications[$key] = $notificationAction;
+                    $alreadyChecked[$k] = $k;
+                    $noDuplications = false;
+                    unset($tmpNotifications[$k]);
+                }
+            }
+            if ($noDuplications) {
+                $alreadyChecked[$key] = $key;
+                $trimmedNotifications[$key] = $notificationAction;
+            }
+        }
+        // Remove notifications where the user equals owner
+        foreach ($trimmedNotifications as $key => $trimmedNotification) {
+            if ($trimmedNotification->getUser() == $trimmedNotification->getOwner()) {
+                unset($trimmedNotifications[$key]);
+            }
+        }
+
+        return $trimmedNotifications;
     }
 }

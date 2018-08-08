@@ -23,6 +23,8 @@ namespace AgoraTeam\Agora\Service;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
  * Class Mailservice
@@ -42,7 +44,8 @@ class MailService implements SingletonInterface
      * @param string $templateName template name (UpperCamelCase)
      * @param array $variables variables to be passed to the Fluid view
      * @param array $replyTo reply to forthe email in the format array('reply@domain.tld' => 'Reply To Name')
-     * @return boolean TRUE on success, otherwise false
+     * @return bool TRUE on success, otherwise false
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException
      */
     public static function sendMail(
         array $recipient,
@@ -53,29 +56,29 @@ class MailService implements SingletonInterface
         $replyTo = array()
     ) {
         $extensionName = 'tx_agora';
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        $objectManager = GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Extbase\\Object\\ObjectManager'
         );
-        $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        $configurationManager = GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'
         );
 
         /** @var StandaloneView $emailView */
         $emailView = $objectManager->get(StandaloneView::class);
         $extbaseFrameworkConfiguration = $configurationManager->getConfiguration(
-            \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS
         );
         $emailView->getRequest()->setControllerExtensionName($extensionName);
         $emailView->setFormat('html');
 
         //@todo Change to variable paths!
-        $layoutRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(
+        $layoutRootPath = GeneralUtility::getFileAbsFileName(
             $extbaseFrameworkConfiguration['email']['layoutRootPath']
         );
-        $partialRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(
+        $partialRootPath = GeneralUtility::getFileAbsFileName(
             $extbaseFrameworkConfiguration['email']['partialRootPath']
         );
-        $templateRootPath = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName(
+        $templateRootPath = GeneralUtility::getFileAbsFileName(
             $extbaseFrameworkConfiguration['email']['templateRootPath']
         );
         $templatePathAndFilename = $templateRootPath . $templateName . '.html';

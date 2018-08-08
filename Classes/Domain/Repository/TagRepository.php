@@ -46,6 +46,7 @@ class TagRepository extends Repository
     /**
      * @param $part
      * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function findTagLikeTitle($part)
     {
@@ -56,6 +57,10 @@ class TagRepository extends Repository
         return $query->execute();
     }
 
+
+    /**
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
     public function findAll()
     {
         $query = $this->createQuery();

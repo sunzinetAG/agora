@@ -21,14 +21,17 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Repository\TagRepository;
+
 /**
- * TagController
+ * Class TagController
+ * @package AgoraTeam\Agora\Controller
  */
 class TagController extends ActionController
 {
 
     /**
-     * @var \AgoraTeam\Agora\Domain\Repository\TagRepository
+     * @var TagRepository
      * @inject
      */
     protected $tagRepository;
@@ -36,6 +39,7 @@ class TagController extends ActionController
     /**
      * @param string $part
      * @return string
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function autocompleteAction($part = '')
     {

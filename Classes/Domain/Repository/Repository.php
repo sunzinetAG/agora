@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\User;
+
 /**
  * Class Repository
  *
@@ -32,7 +34,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * UserRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
+     * @var UserRepository
      * @inject
      */
     protected $userRepository;
@@ -40,7 +42,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * ForumRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
+     * @var ForumRepository
      * @inject
      */
     protected $forumRepository;
@@ -48,7 +50,7 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * The logged in frontend user, if there is any
      *
-     * @var \AgoraTeam\Agora\Domain\Model\User
+     * @var User
      */
     protected $user;
 
@@ -88,10 +90,10 @@ class Repository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * Set User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $user
+     * @param User $user
      * @return void
      */
-    public function setUser(\AgoraTeam\Agora\Domain\Model\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }

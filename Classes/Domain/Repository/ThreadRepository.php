@@ -20,33 +20,30 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use AgoraTeam\Agora\Domain\Model\Forum;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
-use AgoraTeam\Agora\Domain\Model\DemandInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use AgoraTeam\Agora\Domain\Model\Dto\ForumDemand;
+use AgoraTeam\Agora\Domain\Model\Forum;
+use AgoraTeam\Agora\Domain\Model\Dto\Search;
 
 /**
  * The repository for Threads
+ *
+ * Class ThreadRepository
+ * @package AgoraTeam\Agora\Domain\Repository
  */
-class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemandedRepository
+class ThreadRepository extends AbstractDemandedRepository
 {
-
-    /**
-     * ForumRepository
-     *
-     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
-     * @inject
-     */
-    protected $forumRepository;
 
     /**
      * Find threads by forum
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @param Forum $forum
+     * @return array|QueryResultInterface
      */
-    public function findByForum(\AgoraTeam\Agora\Domain\Model\Forum $forum)
+    public function findByForum(Forum $forum)
     {
         $query = $this->createQuery();
         $result = $query
@@ -60,14 +57,14 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
     }
 
     /**
-     * Finds the latest Threads
-     *
-     * @param integer $limit The number of threads to return at max
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @param $limit
+     * @param ForumRepository $forumRepository
+     * @return array|QueryResultInterface
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    public function findLatestThreadsForUser($limit)
+    public function findLatestThreadsForUser($limit, ForumRepository $forumRepository)
     {
-        $openUserForums = $this->forumRepository->findAccessibleUserForums();
+        $openUserForums = $forumRepository->findAccessibleUserForums();
 
         $query = $this->createQuery();
 
@@ -84,6 +81,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
 
     /**
      * @param $uid
+     * @return mixed
      */
     public function findThreadByUid($uid)
     {
@@ -100,96 +98,64 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
     }
 
     /**
-     * Returns an array of constraints created from a given demand object.
+     * We need to do this by the queryBuilder, otherwise
+     * the tstamp would be updated and the sorting would be destroyed
      *
-     * @param QueryInterface $query
-     * @param DemandInterface $demand
-     * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
-     * @throws \Exception
-     * @return array<\TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface>
+     * @param $threadId
+     * @param $views
      */
-    protected function createConstraintsFromDemand(QueryInterface $query, DemandInterface $demand)
+    public function increaseViews($threadId, $views)
     {
-        /** @var ForumDeman $demand */
-        $constraints = [];
-
-        // storage page
-        if ($demand->getStoragePage() != 0) {
-            $pidList = GeneralUtility::intExplode(',', $demand->getStoragePage(), true);
-            $constraints['pid'] = $query->in('pid', $pidList);
-        }
-
-        // Search
-        $searchConstraints = $this->getSearchConstraints($query, $demand);
-        if (!empty($searchConstraints)) {
-            $constraints['search'] = $query->logicalAnd($searchConstraints);
-        }
-
-        // Clean not used constraints
-        foreach ($constraints as $key => $value) {
-            if (is_null($value)) {
-                unset($constraints[$key]);
-            }
-        }
-
-        return $constraints;
+        // We need to use the queryBuilder because we want to group the notifications by users
+        /** @var \TYPO3\CMS\Core\Database\Query\QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
+            'tx_agora_domain_model_thread'
+        );
+        $queryBuilder->update('tx_agora_domain_model_thread')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $threadId)
+            )
+            ->set('views', $views + 1)
+            ->execute();
     }
 
     /**
-     * Returns an array of orderings created from a given demand object.
-     *
-     * @param DemandInterface $demand
-     * @return array<\TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface>
+     * @param Forum $forum
+     * @param $offset
+     * @param $limit
+     * @return array|QueryResultInterface
      */
-    protected function createOrderingsFromDemand(DemandInterface $demand)
+    public function findByThreadPaginated(Forum $forum, $offset, $limit)
     {
+        $query = $this->createQuery();
+        $result = $query->matching(
+            $query->equals('forum', $forum)
+        )
+            ->setOrderings(array('tstamp' => QueryInterface::ORDER_DESCENDING))
+            ->setOffset((integer)$offset)
+            ->setLimit((integer)$limit)
+            ->execute();
 
-        $orderings = [];
-        $orderField = $demand->getSearch()->getOrder();
-
-        if (!isset($orderField)) {
-            $orderField = $demand->getOrder();
-        }
-
-        $orderList = GeneralUtility::trimExplode(',', $orderField, true);
-
-        if (!empty($orderList)) {
-            // go through every order statement
-            foreach ($orderList as $orderItem) {
-                list($orderField, $ascDesc) = GeneralUtility::trimExplode(' ', $orderItem, true);
-                // count == 1 means that no direction is given
-                if ($ascDesc) {
-                    $orderings[$orderField] = ((strtolower($ascDesc) == 'desc') ?
-                        QueryInterface::ORDER_DESCENDING :
-                        QueryInterface::ORDER_ASCENDING);
-                } else {
-                    $orderings[$orderField] = QueryInterface::ORDER_ASCENDING;
-                }
-            }
-        }
-
-        return $orderings;
+        return $result;
     }
 
     /**
      * Get the search constraints
      *
      * @param QueryInterface $query
-     * @param DemandInterface $demand
+     * @param ForumDemand $demand
      * @return array
-     * @throws \UnexpectedValueException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
-    protected function getSearchConstraints(QueryInterface $query, DemandInterface $demand)
+    protected function getSearchConstraints(QueryInterface $query, ForumDemand $demand)
     {
         $constraints = [];
-        $openUserForums = $this->forumRepository->findAccessibleUserForums();
 
         if ($demand->getSearch() === null) {
             return $constraints;
         }
 
-        /* @var $searchObject \AgoraTeam\Agora\Domain\Model\Dto\Search */
+        /* @var $searchObject Search */
         $searchObject = $demand->getSearch();
         $searchSubject = $searchObject->getSword();
         $searchForums = $searchObject->getThemes();
@@ -200,7 +166,6 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
 
         if (!empty($searchSubject)) {
             $searchConstraints = [];
-            $searchRadius = $searchObject->getRadius();
             $searchFields = array(0 => 'title');
 
             if (count($searchFields) === 0) {
@@ -238,46 +203,5 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
         return $constraints;
     }
 
-    /**
-     * We need to do this by the queryBuilder, otherwise
-     * the tstamp would be updated and the sorting would be destroyed
-     *
-     * @param $threadId
-     * @param $views
-     */
-    public function increaseViews($threadId, $views)
-    {
-        // We need to use the queryBuilder because we want to group the notifications by users
-        /** @var \TYPO3\CMS\Core\Database\Query\QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable(
-            'tx_agora_domain_model_thread'
-        );
-        $statement = $queryBuilder->update('tx_agora_domain_model_thread')
-            ->where(
-                $queryBuilder->expr()->eq('uid', $threadId)
-            )
-            ->set('views', $views + 1)
-            ->execute();
-    }
-
-    /**
-     * @param Forum $forum
-     * @param $offset
-     * @param $limit
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-     */
-    public function findByThreadPaginated(Forum $forum, $offset, $limit)
-    {
-        $query = $this->createQuery();
-        $result = $query->matching(
-            $query->equals('forum', $forum)
-        )
-            ->setOrderings(array('tstamp' => QueryInterface::ORDER_DESCENDING))
-            ->setOffset((integer) $offset)
-            ->setLimit((integer)$limit)
-            ->execute();
-
-        return $result;
-    }
 
 }

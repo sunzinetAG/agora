@@ -21,6 +21,9 @@ namespace AgoraTeam\Agora\Domain\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
+use AgoraTeam\Agora\Domain\Model\Post;
+
 /**
  * Class PostService
  *
@@ -30,17 +33,17 @@ class PostService
 {
 
     /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
+     * @var ObjectManagerInterface
      */
     protected $objectManager;
 
     /**
      * Injects the object manager
      *
-     * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
+     * @param ObjectManagerInterface $objectManager
      * @return void
      */
-    public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager)
+    public function injectObjectManager(ObjectManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
         $this->arguments = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Mvc\\Controller\\Arguments');
@@ -50,10 +53,10 @@ class PostService
      * Function clone
      *
      * @todo find a better/more elegant way to do this, maybe with EXT:tool
-     * @param \AgoraTeam\Agora\Domain\Model\Post $originalPost The original Post
-     * @return \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $originalPost The original Post
+     * @return Post $post
      */
-    public function copy(\AgoraTeam\Agora\Domain\Model\Post $originalPost)
+    public function copy(Post $originalPost)
     {
         /** @var \AgoraTeam\Agora\Domain\Model\Post $post */
         $post = $this->objectManager->get('AgoraTeam\\Agora\\Domain\\Model\\Post');
@@ -79,10 +82,10 @@ class PostService
     /**
      * Function archive
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post The post to archive
+     * @param Post $post The post to archive
      * @return void
      */
-    public function archive(\AgoraTeam\Agora\Domain\Model\Post $post)
+    public function archive(Post $post)
     {
         // detach thread so that an archived post will not shown up in thread history
         $post->setThread(0);

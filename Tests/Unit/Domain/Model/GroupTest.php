@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\Group;
+
 /**
  * Test case for class \AgoraTeam\Agora\Domain\Model\Group.
  *
@@ -37,21 +39,21 @@ class GroupTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
-    {
-        $this->subject = new \AgoraTeam\Agora\Domain\Model\Group();
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
-
     /**
      * @test
      */
     public function dummyTestToNotLeaveThisFileEmpty()
     {
         $this->markTestIncomplete();
+    }
+
+    protected function setUp()
+    {
+        $this->subject = new Group();
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

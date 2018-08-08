@@ -8,13 +8,15 @@ namespace AgoraTeam\Agora\ViewHelpers\Format;
  *  | (c) 2018 Björn Bresser <bjoern.bresser@sunzinet.com>
  */
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Formats a unix timestamp to a human-readable, relative string
  *
- * @package Sunzinet\SzComments
+ * Class RelativeDateViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Format
  */
-class RelativeDateViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class RelativeDateViewHelper extends AbstractViewHelper
 {
 
     /**
@@ -25,7 +27,7 @@ class RelativeDateViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
     /**
      * Render the supplied unix timestamp in a localized human-readable string.
      *
-     * @param DateTime $timestamp unix timestamp
+     * @param \DateTime $timestamp unix timestamp
      * @param string $format Format String to be parsed by strftime
      * @param string $wrap Uses sprintf to wrap relative date (use %s for date)
      * @param string $wrapAbsolute Same like $wrap, but used if date is absolute

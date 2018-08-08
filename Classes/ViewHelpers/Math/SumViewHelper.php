@@ -13,6 +13,9 @@ use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Math: Sum
+ *
+ * Class SumViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Math
  */
 class SumViewHelper extends AbstractViewHelper
 {

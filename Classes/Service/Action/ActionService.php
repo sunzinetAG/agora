@@ -21,12 +21,12 @@ namespace AgoraTeam\Agora\Service\Action;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use AgoraTeam\Agora\Controller\RatingController;
-use AgoraTeam\Agora\Domain\Model\AccessibleInterface;
 use AgoraTeam\Agora\Domain\Model\Action;
 use AgoraTeam\Agora\Domain\Model\NotifiableInterface;
 use AgoraTeam\Agora\Service\Notification\NotificationService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class NotificationService
@@ -55,13 +55,13 @@ class ActionService implements SingletonInterface
     protected $configurationManager = null;
 
     /**
-     * Constructor
-     *
+     * ActionService constructor.
+     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
      * @return void
      */
     public function __construct()
     {
-        $this->configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        $this->configurationManager = GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'
         );
         $this->settings = $this->configurationManager->getConfiguration(
@@ -71,9 +71,10 @@ class ActionService implements SingletonInterface
 
     /**
      * @param NotifiableInterface $notificationObject
-     * @param $type
+     * @param int $type
      * @param string $additionalValue
-     * @throws \TYPO3\CMS\Extbase\Configuration\Exception\InvalidConfigurationTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @return void
      */
     public function process(
@@ -121,30 +122,6 @@ class ActionService implements SingletonInterface
     }
 
     /**
-     * @param $post
-     * @param $type
-     * @param $ratingValue
-     */
-    private function addNewRatingAction($post, $type, $ratingValue)
-    {
-        if ($ratingValue == RatingController::RATE_TYPE_UP) {
-            $type = NotificationService::POSITIVE_RATING;
-        } elseif ($ratingValue == RatingController::RATE_TYPE_DOWN) {
-            $type = NotificationService::NEGATIVE_RATING;
-        }
-
-        $action = new Action();
-        $action->setType($type);
-        $action->setTitle($post->getThread()->getTitle());
-        $action->setThread($post->getThread()->getUid());
-        $action->setUser($GLOBALS['TSFE']->fe_user->user['uid']);
-        $action->setPage($GLOBALS['TSFE']->id);
-        $action->setPost($post->getUid());
-
-        return $action;
-    }
-
-    /**
      * @param NotifiableInterface $thread
      * @param integer $type
      * @return Action $action
@@ -164,7 +141,7 @@ class ActionService implements SingletonInterface
     /**
      * @param NotifiableInterface $post
      * @param integer $type
-     * @return AccessibleInterface $action
+     * @return Action $action
      */
     private function addPostAction($post, $type)
     {
@@ -188,6 +165,7 @@ class ActionService implements SingletonInterface
 
     /**
      * @param NotifiableInterface $other
+     * @return Action $action
      */
     private function addOtherAction($other)
     {
@@ -197,6 +175,31 @@ class ActionService implements SingletonInterface
         $action->setDescription($other->getDescription());
         $action->setData(json_encode($other->getData()));
         $action->setPage($GLOBALS['TSFE']->id);
+
+        return $action;
+    }
+
+    /**
+     * @param $post
+     * @param $type
+     * @param $ratingValue
+     * @return Action
+     */
+    private function addNewRatingAction($post, $type, $ratingValue)
+    {
+        if ($ratingValue == RatingController::RATE_TYPE_UP) {
+            $type = NotificationService::POSITIVE_RATING;
+        } elseif ($ratingValue == RatingController::RATE_TYPE_DOWN) {
+            $type = NotificationService::NEGATIVE_RATING;
+        }
+
+        $action = new Action();
+        $action->setType($type);
+        $action->setTitle($post->getThread()->getTitle());
+        $action->setThread($post->getThread()->getUid());
+        $action->setUser($GLOBALS['TSFE']->fe_user->user['uid']);
+        $action->setPage($GLOBALS['TSFE']->id);
+        $action->setPost($post->getUid());
 
         return $action;
     }

@@ -24,18 +24,22 @@ use AgoraTeam\Agora\Domain\Model\User;
 use Doctrine\DBAL\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
- * Class TaskRepository
- *
+ * Class NotificationRepository
  * @package AgoraTeam\Agora\Domain\Repository
  */
 class NotificationRepository extends Repository
 {
 
-    // Order by BE sorting
+    /**
+     * Order by BE sorting
+     *
+     * @var array
+     */
     protected $defaultOrderings = array(
-        'tstamp' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+        'tstamp' => QueryInterface::ORDER_DESCENDING
     );
 
     /**

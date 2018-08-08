@@ -21,13 +21,17 @@ namespace AgoraTeam\Agora\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+use AgoraTeam\Agora\Domain\Model\Thread;
+use AgoraTeam\Agora\Service\Authentication\AuthenticationService;
+
 /**
  * Class IsThreadReadViewHelper
  * Checks rather a thread is read or not
  *
  * @package AgoraTeam\Agora\ViewHelpers
  */
-class IsThreadReadViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class IsThreadReadViewHelper extends AbstractTagBasedViewHelper
 {
     /**
      * As this ViewHelper renders HTML, the output must not be escaped.
@@ -39,7 +43,7 @@ class IsThreadReadViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTa
     /**
      * Authentication service
      *
-     * @var \AgoraTeam\Agora\Service\Authentication\AuthenticationService
+     * @var AuthenticationService
      * @inject
      */
     protected $authenticationService;
@@ -47,13 +51,10 @@ class IsThreadReadViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTa
     /**
      * Render the viewhelper
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
-     * @param mixed $user
-     * @param int $checkForLatestUpdate
-     *
-     * @return $content the rendered content
+     * @param Thread $thread
+     * @return mixed|string $content the rendered content
      */
-    public function render(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function render(Thread $thread)
     {
         $content = '';
 

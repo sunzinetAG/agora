@@ -22,10 +22,12 @@ namespace AgoraTeam\Agora\Domain\Repository\Mod;
  ***************************************************************/
 
 use AgoraTeam\Agora\Domain\Repository\Repository;
-use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 
 /**
  * The repository for the ratings of a post
+ *
+ * Class ReportRepository
+ * @package AgoraTeam\Agora\Domain\Repository\Mod
  */
 class ReportRepository extends Repository
 {

@@ -21,8 +21,10 @@ namespace AgoraTeam\Agora\ViewHelpers\Form;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+
 /**
- * Textarea view helper.
+ * MarkdownViewHelper view helper.
  * The value of the text area needs to be set via the "value" attribute, as with all other form ViewHelpers.
  * = Examples =
  * <code title="Example">
@@ -34,7 +36,7 @@ namespace AgoraTeam\Agora\ViewHelpers\Form;
  *
  * @api
  */
-class MarkdownViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class MarkdownViewHelper extends AbstractTagBasedViewHelper
 {
 
     /**

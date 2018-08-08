@@ -28,6 +28,7 @@ use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
 
 /**
  * Class PaginateController
+ * @package AgoraTeam\Agora\ViewHelpers\Widget\Controller
  */
 class PaginateController extends AbstractWidgetController
 {
@@ -116,28 +117,38 @@ class PaginateController extends AbstractWidgetController
     }
 
     /**
-     * If a certain number of links should be displayed, adjust before and after
-     * amounts accordingly.
+     * Function prepareObjectsSlice
      *
-     * @return void
+     * @param int $itemsPerPage
+     * @param int $offset
+     * @return array|QueryResultInterface
+     * @throws \InvalidArgumentException
      */
-    protected function calculateDisplayRange()
+    protected function prepareObjectsSlice($itemsPerPage, $offset)
     {
-        $maximumNumberOfLinks = $this->maximumNumberOfLinks;
-        if ($maximumNumberOfLinks > $this->numberOfPages) {
-            $maximumNumberOfLinks = $this->numberOfPages;
+        if ($this->objects instanceof QueryResultInterface) {
+            $query = $this->objects->getQuery();
+            $query->setLimit($itemsPerPage);
+            if ($offset > 0) {
+                $query->setOffset($offset);
+            }
+            $modifiedObjects = $query->execute();
+        } elseif ($this->objects instanceof ObjectStorage) {
+            $modifiedObjects = array();
+            $endOfRange = $offset + $itemsPerPage;
+            for ($i = $offset; $i < $endOfRange; $i++) {
+                $modifiedObjects[] = $this->objects->toArray()[$i];
+            }
+        } elseif (is_array($this->objects)) {
+            $modifiedObjects = array_slice($this->objects, $offset, $itemsPerPage);
+        } else {
+            throw new \InvalidArgumentException('The view helper "' . get_class($this) .
+                '" accepts as argument "QueryResultInterface", "\SplObjectStorage", "ObjectStorage" or an array. ' .
+                'given: ' . get_class($this->objects), 1385547291
+            );
         }
-        $delta = floor($maximumNumberOfLinks / 2);
-        $this->displayRangeStart = $this->currentPage - $delta;
-        $this->displayRangeEnd = $this->currentPage + $delta - ($maximumNumberOfLinks % 2 === 0 ? 1 : 0);
-        if ($this->displayRangeStart < 1) {
-            $this->displayRangeEnd -= $this->displayRangeStart - 1;
-        }
-        if ($this->displayRangeEnd > $this->numberOfPages) {
-            $this->displayRangeStart -= $this->displayRangeEnd - $this->numberOfPages;
-        }
-        $this->displayRangeStart = (int)max($this->displayRangeStart, 1);
-        $this->displayRangeEnd = (int)min($this->displayRangeEnd, $this->numberOfPages);
+
+        return $modifiedObjects;
     }
 
     /**
@@ -173,37 +184,27 @@ class PaginateController extends AbstractWidgetController
     }
 
     /**
-     * Function prepareObjectsSlice
+     * If a certain number of links should be displayed, adjust before and after
+     * amounts accordingly.
      *
-     * @param int $itemsPerPage
-     * @param int $offset
-     * @return array|QueryResultInterface
-     * @throws \InvalidArgumentException
+     * @return void
      */
-    protected function prepareObjectsSlice($itemsPerPage, $offset)
+    protected function calculateDisplayRange()
     {
-        if ($this->objects instanceof QueryResultInterface) {
-            $query = $this->objects->getQuery();
-            $query->setLimit($itemsPerPage);
-            if ($offset > 0) {
-                $query->setOffset($offset);
-            }
-            $modifiedObjects = $query->execute();
-        } elseif ($this->objects instanceof ObjectStorage) {
-            $modifiedObjects = array();
-            $endOfRange = $offset + $itemsPerPage;
-            for ($i = $offset; $i < $endOfRange; $i++) {
-                $modifiedObjects[] = $this->objects->toArray()[$i];
-            }
-        } elseif (is_array($this->objects)) {
-            $modifiedObjects = array_slice($this->objects, $offset, $itemsPerPage);
-        } else {
-            throw new \InvalidArgumentException('The view helper "' . get_class($this) .
-                '" accepts as argument "QueryResultInterface", "\SplObjectStorage", "ObjectStorage" or an array. ' .
-                'given: ' . get_class($this->objects), 1385547291
-            );
+        $maximumNumberOfLinks = $this->maximumNumberOfLinks;
+        if ($maximumNumberOfLinks > $this->numberOfPages) {
+            $maximumNumberOfLinks = $this->numberOfPages;
         }
-
-        return $modifiedObjects;
+        $delta = floor($maximumNumberOfLinks / 2);
+        $this->displayRangeStart = $this->currentPage - $delta;
+        $this->displayRangeEnd = $this->currentPage + $delta - ($maximumNumberOfLinks % 2 === 0 ? 1 : 0);
+        if ($this->displayRangeStart < 1) {
+            $this->displayRangeEnd -= $this->displayRangeStart - 1;
+        }
+        if ($this->displayRangeEnd > $this->numberOfPages) {
+            $this->displayRangeStart -= $this->displayRangeEnd - $this->numberOfPages;
+        }
+        $this->displayRangeStart = (int)max($this->displayRangeStart, 1);
+        $this->displayRangeEnd = (int)min($this->displayRangeEnd, $this->numberOfPages);
     }
 }

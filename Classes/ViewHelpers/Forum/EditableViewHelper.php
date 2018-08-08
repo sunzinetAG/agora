@@ -22,11 +22,15 @@ namespace AgoraTeam\Agora\ViewHelpers\Forum;
  ***************************************************************/
 
 use AgoraTeam\Agora\Domain\Model\AccessibleInterface;
+use AgoraTeam\Agora\Domain\Model\Forum;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+
 
 /**
- * EditableViewHelper
+ * Class EditableViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Forum
  */
-class EditableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class EditableViewHelper extends AbstractTagBasedViewHelper
 {
 
     /**
@@ -39,11 +43,11 @@ class EditableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBas
     /**
      * render
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param Forum $forum
      * @param mixed $user
-     * @return $content the rendered content
+     * @return mixed|string $content the rendered content
      */
-    public function render(\AgoraTeam\Agora\Domain\Model\Forum $forum, $user)
+    public function render(Forum $forum, $user)
     {
         $content = '';
 

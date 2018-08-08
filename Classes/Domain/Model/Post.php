@@ -20,7 +20,8 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use AgoraTeam\Agora\Service\Authentication\AuthenticationService;
+
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class Post
@@ -55,14 +56,14 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * QuotedPost
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Post
+     * @var Post
      */
     protected $quotedPost = null;
 
     /**
      * OriginalPost
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Post
+     * @var Post
      * @lazy
      */
     protected $originalPost = null;
@@ -70,7 +71,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Replies
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post>
+     * @var ObjectStorage<Post>
      * @lazy
      */
     protected $replies = null;
@@ -78,7 +79,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Voting
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Voting
+     * @var Voting
      * @lazy
      */
     protected $voting = null;
@@ -86,7 +87,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Attachments
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Attachment>
+     * @var ObjectStorage<Attachment>
      * @cascade remove
      * @lazy
      */
@@ -96,14 +97,14 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
      * Creator
      * may be NULL if post is anonymous
      *
-     * @var \AgoraTeam\Agora\Domain\Model\User
+     * @var User
      */
     protected $creator = null;
 
     /**
      * Thread
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Thread
+     * @var Thread
      * @lazy
      */
     protected $thread = null;
@@ -111,14 +112,14 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * HistoricalVersions
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post>
+     * @var ObjectStorage<Post>
      * @cascade remove
      * @lazy
      */
     protected $historicalVersions = null;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Rating>
+     * @var ObjectStorage<Rating>
      */
     protected $ratings = null;
 
@@ -139,7 +140,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Forum
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Forum
+     * @var Forum
      * @lazy
      */
     protected $forum = null;
@@ -162,10 +163,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
      */
     protected function initStorageObjects()
     {
-        $this->replies = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->ratings = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->attachments = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->historicalVersions = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->replies = new ObjectStorage();
+        $this->ratings = new ObjectStorage();
+        $this->attachments = new ObjectStorage();
+        $this->historicalVersions = new ObjectStorage();
     }
 
     /**
@@ -236,30 +237,9 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     }
 
     /**
-     * Returns the quotedPost
-     *
-     * @return \AgoraTeam\Agora\Domain\Model\Post $quotedPost
-     */
-    public function getQuotedPost()
-    {
-        return $this->quotedPost;
-    }
-
-    /**
-     * Sets the quotedPost
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $quotedPost
-     * @return void
-     */
-    public function setQuotedPost($quotedPost)
-    {
-        $this->quotedPost = $quotedPost;
-    }
-
-    /**
      * Returns the originalPost
      *
-     * @return \AgoraTeam\Agora\Domain\Model\Post $originalPost
+     * @return Post $originalPost
      */
     public function getOriginalPost()
     {
@@ -269,10 +249,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Sets the originalPost
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $originalPost
+     * @param Post $originalPost
      * @return void
      */
-    public function setOriginalPost(\AgoraTeam\Agora\Domain\Model\Post $originalPost)
+    public function setOriginalPost(Post $originalPost)
     {
         $this->originalPost = $originalPost;
     }
@@ -280,10 +260,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Adds a Reply
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $reply
+     * @param Post $reply
      * @return void
      */
-    public function addReply(\AgoraTeam\Agora\Domain\Model\Post $reply)
+    public function addReply(Post $reply)
     {
         $this->replies->attach($reply);
     }
@@ -291,10 +271,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes a Reply
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $replyToRemove The Reply to be removed
+     * @param Post $replyToRemove The Reply to be removed
      * @return void
      */
-    public function removeReply(\AgoraTeam\Agora\Domain\Model\Post $replyToRemove)
+    public function removeReply(Post $replyToRemove)
     {
         $this->replies->detach($replyToRemove);
     }
@@ -302,7 +282,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Returns the replies
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $replies
+     * @return ObjectStorage<Post> $replies
      */
     public function getReplies()
     {
@@ -312,10 +292,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Sets the replies
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $replies
+     * @param ObjectStorage<Post> $replies
      * @return void
      */
-    public function setReplies(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $replies)
+    public function setReplies(ObjectStorage $replies)
     {
         $this->replies = $replies;
     }
@@ -323,7 +303,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Returns the voting
      *
-     * @return \AgoraTeam\Agora\Domain\Model\Voting $voting
+     * @return Voting $voting
      */
     public function getVoting()
     {
@@ -333,10 +313,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Sets the voting
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Voting $voting
+     * @param Voting $voting
      * @return void
      */
-    public function setVoting(\AgoraTeam\Agora\Domain\Model\Voting $voting)
+    public function setVoting(Voting $voting)
     {
         $this->voting = $voting;
     }
@@ -344,10 +324,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Adds a Attachment
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Attachment $attachment
+     * @param Attachment $attachment
      * @return void
      */
-    public function addAttachment(\AgoraTeam\Agora\Domain\Model\Attachment $attachment)
+    public function addAttachment(Attachment $attachment)
     {
         $this->attachments->attach($attachment);
     }
@@ -355,10 +335,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes a Attachment
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Attachment $attachmentToRemove The Attachment to be removed
+     * @param Attachment $attachmentToRemove The Attachment to be removed
      * @return void
      */
-    public function removeAttachment(\AgoraTeam\Agora\Domain\Model\Attachment $attachmentToRemove)
+    public function removeAttachment(Attachment $attachmentToRemove)
     {
         $this->attachments->detach($attachmentToRemove);
     }
@@ -366,7 +346,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Returns the attachments
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Attachment> $attachments
+     * @return ObjectStorage<Attachment> $attachments
      */
     public function getAttachments()
     {
@@ -376,69 +356,21 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Sets the attachments
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Attachment> $attachments
+     * @param ObjectStorage<Attachment> $attachments
      * @return void
      */
-    public function setAttachments(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $attachments)
+    public function setAttachments(ObjectStorage $attachments)
     {
         $this->attachments = $attachments;
     }
 
     /**
-     * Returns the creator
-     *
-     * @return mixed $creator
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * Sets the creator
-     *
-     * @param mixed $creator
-     * @return void
-     */
-    public function setCreator($creator)
-    {
-        $this->creator = $creator;
-    }
-
-    /**
-     * Returns the thread
-     *
-     * @return \AgoraTeam\Agora\Domain\Model\Thread $thread
-     */
-    public function getThread()
-    {
-        if (is_object($this->thread)) {
-            $thread = $this->thread;
-        } else {
-            $thread = $this->detectThread();
-        }
-
-        return $thread;
-    }
-
-    /**
-     * Sets the thread
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
-     * @return void
-     */
-    public function setThread($thread)
-    {
-        $this->thread = $thread;
-    }
-
-    /**
      * Adds a Post
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $historicalVersion
+     * @param Post $historicalVersion
      * @return void
      */
-    public function addHistoricalVersion(\AgoraTeam\Agora\Domain\Model\Post $historicalVersion)
+    public function addHistoricalVersion(Post $historicalVersion)
     {
         $this->historicalVersions->attach($historicalVersion);
     }
@@ -446,10 +378,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes a Post
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $historicalVersionToRemove The Post to be removed
+     * @param Post $historicalVersionToRemove The Post to be removed
      * @return void
      */
-    public function removeHistoricalVersion(\AgoraTeam\Agora\Domain\Model\Post $historicalVersionToRemove)
+    public function removeHistoricalVersion(Post $historicalVersionToRemove)
     {
         $this->historicalVersions->detach($historicalVersionToRemove);
     }
@@ -457,7 +389,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Returns the historicalVersions
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $historicalVersion
+     * @return ObjectStorage<Post> $historicalVersion
      */
     public function getHistoricalVersions()
     {
@@ -467,10 +399,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Sets the historicalVersions
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $historicalVersions
+     * @param ObjectStorage<Post> $historicalVersions
      * @return void
      */
-    public function setHistoricalVersions(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $historicalVersions)
+    public function setHistoricalVersions(ObjectStorage $historicalVersions)
     {
         $this->historicalVersions = $historicalVersions;
     }
@@ -478,10 +410,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Adds a rating
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Rating $rating
+     * @param Rating $rating
      * @return void
      */
-    public function addRating(\AgoraTeam\Agora\Domain\Model\Rating $rating)
+    public function addRating(Rating $rating)
     {
         $this->ratings->attach($rating);
     }
@@ -489,10 +421,10 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Removes a rating
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Rating $replyToRemove The Reply to be removed
+     * @param Rating $ratingToRemove The Reply to be removed
      * @return void
      */
-    public function removeRating(\AgoraTeam\Agora\Domain\Model\Rating $ratingToRemove)
+    public function removeRating(Rating $ratingToRemove)
     {
         $this->ratings->detach($ratingToRemove);
     }
@@ -500,11 +432,22 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * Returns the ratings
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $replies
+     * @return ObjectStorage<Post> $replies
      */
     public function getRatings()
     {
         return $this->ratings;
+    }
+
+    /**
+     * Sets the replies
+     *
+     * @param ObjectStorage<Post> $replies
+     * @return void
+     */
+    public function setRatings(ObjectStorage $ratings)
+    {
+        $this->ratings = $ratings;
     }
 
     /**
@@ -533,36 +476,6 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
             }
         }
         return $result;
-    }
-
-    /**
-     * Sets the replies
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $replies
-     * @return void
-     */
-    public function setRatings(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $ratings)
-    {
-        $this->ratings = $ratings;
-    }
-
-    /**
-     * Detects the Thread recursively
-     *
-     * @return Thread|bool
-     */
-    public function detectThread()
-    {
-        $thread = false;
-        if (is_object($this->thread)) {
-            $thread = $this->thread;
-        } else {
-            if (is_object($this->quotedPost)) {
-                $thread = $this->quotedPost->detectThread();
-            }
-        }
-
-        return $thread;
     }
 
     /**
@@ -595,6 +508,27 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
                 array_push($this->rootline, $this);
             }
         }
+    }
+
+    /**
+     * Returns the quotedPost
+     *
+     * @return Post $quotedPost
+     */
+    public function getQuotedPost()
+    {
+        return $this->quotedPost;
+    }
+
+    /**
+     * Sets the quotedPost
+     *
+     * @param Post $quotedPost
+     * @return void
+     */
+    public function setQuotedPost($quotedPost)
+    {
+        $this->quotedPost = $quotedPost;
     }
 
     /**
@@ -637,6 +571,7 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
     /**
      * @param User $user
      * @param $accessType
+     * @return bool
      */
     public function checkEditDeletePostAccess(User $user, $accessType)
     {
@@ -652,6 +587,73 @@ class Post extends Entity implements AccessibleInterface, NotifiableInterface
         }
 
         return false;
+    }
+
+    /**
+     * Returns the creator
+     *
+     * @return mixed $creator
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Sets the creator
+     *
+     * @param mixed $creator
+     * @return void
+     */
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    /**
+     * Returns the thread
+     *
+     * @return Thread $thread
+     */
+    public function getThread()
+    {
+        if (is_object($this->thread)) {
+            $thread = $this->thread;
+        } else {
+            $thread = $this->detectThread();
+        }
+
+        return $thread;
+    }
+
+    /**
+     * Sets the thread
+     *
+     * @param Thread $thread
+     * @return void
+     */
+    public function setThread($thread)
+    {
+        $this->thread = $thread;
+    }
+
+    /**
+     * Detects the Thread recursively
+     *
+     * @return Thread|bool
+     */
+    public function detectThread()
+    {
+        $thread = false;
+        if (is_object($this->thread)) {
+            $thread = $this->thread;
+        } else {
+            if (is_object($this->quotedPost)) {
+                $thread = $this->quotedPost->detectThread();
+            }
+        }
+
+        return $thread;
     }
 
     /**

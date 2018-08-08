@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\Thread;
+
 /**
  * Test case for class AgoraTeam\Agora\Controller\ThreadController.
  *
@@ -34,17 +36,6 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      * @var \AgoraTeam\Agora\Controller\ThreadController
      */
     protected $subject = null;
-
-    protected function setUp()
-    {
-        $this->subject = $this->getMock('AgoraTeam\\Agora\\Controller\\ThreadController',
-            array('redirect', 'forward', 'addFlashMessage'), array(), '', false);
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
 
     /**
      * @test
@@ -71,7 +62,7 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function showActionAssignsTheGivenThreadToView()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $this->inject($this->subject, 'view', $view);
@@ -85,7 +76,7 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function newActionAssignsTheGivenThreadToView()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $view->expects($this->once())->method('assign')->with('newThread', $thread);
@@ -99,7 +90,7 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function createActionAddsTheGivenThreadToThreadRepository()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
 
         $threadRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\ThreadRepository', array('add'),
             array(), '', false);
@@ -114,7 +105,7 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function editActionAssignsTheGivenThreadToView()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $this->inject($this->subject, 'view', $view);
@@ -128,7 +119,7 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function updateActionUpdatesTheGivenThreadInThreadRepository()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
 
         $threadRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\ThreadRepository', array('update'),
             array(), '', false);
@@ -143,7 +134,7 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function deleteActionRemovesTheGivenThreadFromThreadRepository()
     {
-        $thread = new \AgoraTeam\Agora\Domain\Model\Thread();
+        $thread = new Thread();
 
         $threadRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\ThreadRepository', array('remove'),
             array(), '', false);
@@ -153,23 +144,14 @@ class ThreadControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->subject->deleteAction($thread);
     }
 
-    /**
-     * @test
-     */
-    public function listActionFetchesAllThreadsFromRepositoryAndAssignsThemToView()
+    protected function setUp()
     {
+        $this->subject = $this->getMock('AgoraTeam\\Agora\\Controller\\ThreadController',
+            array('redirect', 'forward', 'addFlashMessage'), array(), '', false);
+    }
 
-        $allThreads = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', false);
-
-        $threadRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\ThreadRepository', array('findAll'),
-            array(), '', false);
-        $threadRepository->expects($this->once())->method('findAll')->will($this->returnValue($allThreads));
-        $this->inject($this->subject, 'threadRepository', $threadRepository);
-
-        $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-        $view->expects($this->once())->method('assign')->with('threads', $allThreads);
-        $this->inject($this->subject, 'view', $view);
-
-        $this->subject->listAction();
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

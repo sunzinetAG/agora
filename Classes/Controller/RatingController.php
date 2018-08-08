@@ -20,12 +20,16 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Rating;
 use AgoraTeam\Agora\Domain\Model\User;
+use AgoraTeam\Agora\Domain\Repository\PostRepository;
+use AgoraTeam\Agora\Domain\Repository\RatingRepository;
 
 /**
- * RatingController
+ * Class RatingController
+ * @package AgoraTeam\Agora\Controller
  */
 class RatingController extends ActionController
 {
@@ -37,7 +41,7 @@ class RatingController extends ActionController
     /**
      * postRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\PostRepository
+     * @var PostRepository
      * @inject
      */
     protected $postRepository = null;
@@ -45,14 +49,19 @@ class RatingController extends ActionController
     /**
      * ratingRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\RatingRepository
+     * @var RatingRepository
      * @inject
      */
     protected $ratingRepository = null;
 
     /**
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $post
      * @param string $rateType
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException
+     * @throws \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotReturnException
      */
     public function rateAction($post, $rateType)
     {
@@ -96,7 +105,9 @@ class RatingController extends ActionController
      * @param User $user
      * @param Post $post
      * @param int $rateType
-     * @return boolean
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @return void
      */
     protected function rate($user, $post, $rateType)
     {
@@ -115,7 +126,9 @@ class RatingController extends ActionController
     /**
      * @param Post $post
      * @param Rating $rating
-     * @return boolean
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @return void
      */
     protected function neutralize($post, $rating)
     {

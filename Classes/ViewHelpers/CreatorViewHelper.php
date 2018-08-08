@@ -21,10 +21,14 @@ namespace AgoraTeam\Agora\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+
 /**
- * CreatorViewHelper
+ * Class CreatorViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers
  */
-class CreatorViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class CreatorViewHelper extends AbstractViewHelper
 {
 
     /**
@@ -40,11 +44,9 @@ class CreatorViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
 
         $configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManagerInterface');
         $settings = $configurationManager->getConfiguration(
-            \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'agora'
         );
-
-        $username = '';
 
         if (is_object($object->getCreator())) {
             $username = $object->getCreator()->getDisplayName();

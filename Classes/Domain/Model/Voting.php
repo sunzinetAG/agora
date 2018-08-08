@@ -21,10 +21,15 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
+
 /**
- * Voting
+ * Class Voting
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class Voting extends AbstractEntity
 {
 
     /**
@@ -37,7 +42,7 @@ class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * answers
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\VotingAnswer>
+     * @var ObjectStorage<VotingAnswer>
      * @cascade remove
      */
     protected $answers = null;
@@ -61,7 +66,7 @@ class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected function initStorageObjects()
     {
-        $this->answers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->answers = new ObjectStorage();
     }
 
     /**
@@ -88,10 +93,10 @@ class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a VotingAnswer
      *
-     * @param \AgoraTeam\Agora\Domain\Model\VotingAnswer $answer
+     * @param VotingAnswer $answer
      * @return void
      */
-    public function addAnswer(\AgoraTeam\Agora\Domain\Model\VotingAnswer $answer)
+    public function addAnswer(VotingAnswer $answer)
     {
         $this->answers->attach($answer);
     }
@@ -99,10 +104,10 @@ class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a VotingAnswer
      *
-     * @param \AgoraTeam\Agora\Domain\Model\VotingAnswer $answerToRemove The VotingAnswer to be removed
+     * @param VotingAnswer $answerToRemove The VotingAnswer to be removed
      * @return void
      */
-    public function removeAnswer(\AgoraTeam\Agora\Domain\Model\VotingAnswer $answerToRemove)
+    public function removeAnswer(VotingAnswer $answerToRemove)
     {
         $this->answers->detach($answerToRemove);
     }
@@ -110,7 +115,7 @@ class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the answers
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\VotingAnswer> $answers
+     * @return ObjectStorage<VotingAnswer> $answers
      */
     public function getAnswers()
     {
@@ -120,10 +125,10 @@ class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the answers
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\VotingAnswer> $answers
+     * @param ObjectStorage<VotingAnswer> $answers
      * @return void
      */
-    public function setAnswers(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $answers)
+    public function setAnswers(ObjectStorage $answers)
     {
         $this->answers = $answers;
     }

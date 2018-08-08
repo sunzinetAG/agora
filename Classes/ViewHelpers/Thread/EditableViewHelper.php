@@ -21,12 +21,15 @@ namespace AgoraTeam\Agora\ViewHelpers\Thread;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\Thread;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use AgoraTeam\Agora\Domain\Model\AccessibleInterface;
 
 /**
- * EditableViewHelper
+ * Class EditableViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Thread
  */
-class EditableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class EditableViewHelper extends AbstractTagBasedViewHelper
 {
 
     /**
@@ -39,11 +42,11 @@ class EditableViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBas
     /**
      * render
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Thread $thread
      * @param mixed $user
-     * @return $content the rendered content
+     * @return mixed|string $content the rendered content
      */
-    public function render(\AgoraTeam\Agora\Domain\Model\Thread $thread, $user)
+    public function render(Thread $thread, $user)
     {
         $content = '';
 

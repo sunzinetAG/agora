@@ -20,21 +20,22 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use AgoraTeam\Agora\Domain\Model\Mod\Report;
 use AgoraTeam\Agora\Domain\Model\Post;
-use AgoraTeam\Agora\Domain\Model\User;
+use AgoraTeam\Agora\Domain\Repository\Mod\ReportRepository;
 use AgoraTeam\Agora\Service\MailService;
-use AgoraTeam\Agora\Service\TagService;
 
 /**
- * PostController
+ * Class ReportController
+ * @package AgoraTeam\Agora\Controller
  */
 class ReportController extends ActionController
 {
     /**
      * mailService
      *
-     * @var \AgoraTeam\Agora\Service\MailService
+     * @var MailService
      * @inject
      */
     protected $mailService;
@@ -42,13 +43,16 @@ class ReportController extends ActionController
     /**
      * reportRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\Mod\ReportRepository
+     * @var ReportRepository
      * @inject
      */
     protected $reportRepository;
 
+
     /**
      * @param Post $post
+     * @param Report|null $report
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
      * @return void
      */
     public function newAction(Post $post, Report $report = null)
@@ -62,12 +66,16 @@ class ReportController extends ActionController
     }
 
     /**
-     * @param Post $post
+     * @param Report $report
+     * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\InvalidExtensionNameException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      */
     public function reportAction(Report $report)
     {
-        // For some reason the mailservice changes the TSFE id...
-        $pageUid = $GLOBALS['TSFE']->id;
+
         $uri = $this->generatePostUri($report->getPost(), true);
 
         $this->authenticationService->assertReadAuthorization($report->getPost());

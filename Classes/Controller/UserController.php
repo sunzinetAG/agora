@@ -20,13 +20,13 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use AgoraTeam\Agora\Domain\Model\Post;
 use AgoraTeam\Agora\Domain\Model\Thread;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Web\Request;
 
 /**
- * UserController
+ * Class UserController
+ * @package AgoraTeam\Agora\Controller
  */
 class UserController extends ActionController
 {
@@ -109,11 +109,15 @@ class UserController extends ActionController
     /**
      * Action addObservedThreadAction
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Thread $thread
      * @param int $page
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @return void
      */
-    public function addObservedThreadAction(\AgoraTeam\Agora\Domain\Model\Thread $thread, $page = 0)
+    public function addObservedThreadAction(Thread $thread, $page = 0)
     {
         $user = $this->authenticationService->getUser();
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
@@ -130,11 +134,15 @@ class UserController extends ActionController
     /**
      * Action removeObservedThreadAction
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Thread $thread
      * @param int $page
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @return void
      */
-    public function removeObservedThreadAction(\AgoraTeam\Agora\Domain\Model\Thread $thread, $page = 0)
+    public function removeObservedThreadAction(Thread $thread, $page = 0)
     {
         $user = $this->authenticationService->getUser();
         $user->removeObservedThread($thread);
@@ -149,10 +157,14 @@ class UserController extends ActionController
     /**
      * Action addFavoritePostAction
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $post
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @return void
      */
-    public function addFavoritePostAction(\AgoraTeam\Agora\Domain\Model\Post $post)
+    public function addFavoritePostAction(Post $post)
     {
         $user = $this->authenticationService->getUser();
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
@@ -167,10 +179,14 @@ class UserController extends ActionController
     /**
      * Action removeFavoritePostAction
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $post
+     * @param Post $post
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      * @return void
      */
-    public function removeFavoritePostAction(\AgoraTeam\Agora\Domain\Model\Post $post)
+    public function removeFavoritePostAction(Post $post)
     {
         $user = $this->authenticationService->getUser();
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {

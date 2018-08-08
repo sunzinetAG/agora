@@ -21,23 +21,27 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
- * View
+ * Class View
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class View extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class View extends AbstractEntity
 {
 
     /**
      * thread
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Thread
+     * @var Thread
      */
     protected $thread = null;
 
     /**
      * user
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
+     * @var ObjectStorage<User>
      * @cascade remove
      */
     protected $user = null;
@@ -61,13 +65,13 @@ class View extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected function initStorageObjects()
     {
-        $this->user = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->user = new ObjectStorage();
     }
 
     /**
      * Returns the thread
      *
-     * @return \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @return Thread $thread
      */
     public function getThread()
     {
@@ -77,10 +81,10 @@ class View extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Thread $thread
      * @return void
      */
-    public function setThread(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function setThread(Thread $thread)
     {
         $this->thread = $thread;
     }
@@ -88,10 +92,10 @@ class View extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $user
+     * @param User $user
      * @return void
      */
-    public function addUser(\AgoraTeam\Agora\Domain\Model\User $user)
+    public function addUser(User $user)
     {
         $this->user->attach($user);
     }
@@ -99,10 +103,10 @@ class View extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $userToRemove The User to be removed
+     * @param User $userToRemove The User to be removed
      * @return void
      */
-    public function removeUser(\AgoraTeam\Agora\Domain\Model\User $userToRemove)
+    public function removeUser(User $userToRemove)
     {
         $this->user->detach($userToRemove);
     }
@@ -110,7 +114,7 @@ class View extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the user
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $user
+     * @return ObjectStorage<User> $user
      */
     public function getUser()
     {
@@ -120,10 +124,10 @@ class View extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the user
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $user
+     * @param ObjectStorage<User> $user
      * @return void
      */
-    public function setUser(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $user)
+    public function setUser(ObjectStorage $user)
     {
         $this->user = $user;
     }

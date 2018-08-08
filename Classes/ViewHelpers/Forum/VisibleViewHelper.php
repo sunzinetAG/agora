@@ -21,10 +21,14 @@ namespace AgoraTeam\Agora\ViewHelpers\Forum;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+use AgoraTeam\Agora\Domain\Model\Forum;
+
 /**
- * VisibleViewHelper
+ * Class VisibleViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Forum
  */
-class VisibleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class VisibleViewHelper extends AbstractTagBasedViewHelper
 {
 
     /**
@@ -37,11 +41,11 @@ class VisibleViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBase
     /**
      * render
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
+     * @param Forum $forum
      * @param mixed $user
-     * @return $content the rendered content
+     * @return mixed|string $content the rendered content
      */
-    public function render(\AgoraTeam\Agora\Domain\Model\Forum $forum, $user)
+    public function render(Forum $forum, $user)
     {
         $content = '';
 

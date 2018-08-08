@@ -2,6 +2,7 @@
 
 namespace AgoraTeam\Agora\ViewHelpers\Parser;
 
+
 /***************************************************************
  *  Copyright notice
  *  (c) 2015 Philipp Thiele <philipp.thiele@phth.de>
@@ -21,10 +22,13 @@ namespace AgoraTeam\Agora\ViewHelpers\Parser;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-/**a
- * CreatorViewHelper
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+
+/**
+ * Class ParsedownViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Parser
  */
-class ParsedownViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+class ParsedownViewHelper extends AbstractTagBasedViewHelper
 {
 
     /**

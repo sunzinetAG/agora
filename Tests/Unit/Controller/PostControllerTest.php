@@ -21,6 +21,8 @@ namespace AgoraTeam\Agora\Tests\Unit\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\Post;
+
 /**
  * Test case for class AgoraTeam\Agora\Controller\PostController.
  *
@@ -34,17 +36,6 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      * @var \AgoraTeam\Agora\Controller\PostController
      */
     protected $subject = null;
-
-    protected function setUp()
-    {
-        $this->subject = $this->getMock('AgoraTeam\\Agora\\Controller\\PostController',
-            array('redirect', 'forward', 'addFlashMessage'), array(), '', false);
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
 
     /**
      * @test
@@ -71,7 +62,7 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function showActionAssignsTheGivenPostToView()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $this->inject($this->subject, 'view', $view);
@@ -85,7 +76,7 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function newActionAssignsTheGivenPostToView()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $view->expects($this->once())->method('assign')->with('newPost', $post);
@@ -99,7 +90,7 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function createActionAddsTheGivenPostToPostRepository()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
 
         $postRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\PostRepository', array('add'), array(),
             '', false);
@@ -114,7 +105,7 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function editActionAssignsTheGivenPostToView()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
 
         $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
         $this->inject($this->subject, 'view', $view);
@@ -128,7 +119,7 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function updateActionUpdatesTheGivenPostInPostRepository()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
 
         $postRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\PostRepository', array('update'),
             array(), '', false);
@@ -143,7 +134,7 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function deleteActionRemovesTheGivenPostFromPostRepository()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
 
         $postRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\PostRepository', array('remove'),
             array(), '', false);
@@ -153,23 +144,14 @@ class PostControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->subject->deleteAction($post);
     }
 
-    /**
-     * @test
-     */
-    public function listActionFetchesAllPostsFromRepositoryAndAssignsThemToView()
+    protected function setUp()
     {
+        $this->subject = $this->getMock('AgoraTeam\\Agora\\Controller\\PostController',
+            array('redirect', 'forward', 'addFlashMessage'), array(), '', false);
+    }
 
-        $allPosts = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', false);
-
-        $postRepository = $this->getMock('AgoraTeam\\Agora\\Domain\\Repository\\PostRepository', array('findAll'),
-            array(), '', false);
-        $postRepository->expects($this->once())->method('findAll')->will($this->returnValue($allPosts));
-        $this->inject($this->subject, 'postRepository', $postRepository);
-
-        $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-        $view->expects($this->once())->method('assign')->with('posts', $allPosts);
-        $this->inject($this->subject, 'view', $view);
-
-        $this->subject->listAction();
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

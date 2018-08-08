@@ -22,8 +22,7 @@ namespace AgoraTeam\Agora\Domain\Model;
  ***************************************************************/
 
 /**
- * Class Post
- *
+ * Class Notification
  * @package AgoraTeam\Agora\Domain\Model
  */
 class Notification extends Entity

@@ -20,7 +20,7 @@ namespace AgoraTeam\Agora\Controller;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use AgoraTeam\Agora\Domain\Model\Post;
+
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
@@ -30,9 +30,16 @@ use TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Repository\UserRepository;
+use AgoraTeam\Agora\Service\PaginationService;
+use AgoraTeam\Agora\Service\Authentication\AuthenticationService;
+
 
 /**
- * ActionController
+ * Class ActionController
+ * @package AgoraTeam\Agora\Controller
  */
 abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
@@ -40,7 +47,7 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
     /**
      * persistenceManager
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+     * @var PersistenceManager
      * @inject
      */
     protected $persistenceManager;
@@ -48,41 +55,22 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
     /**
      * userRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\UserRepository
+     * @var UserRepository
      * @inject
      */
     protected $userRepository;
 
     /**
-     * @var \AgoraTeam\Agora\Service\PaginationService
+     * @var PaginationService
      * @inject
      */
     protected $paginationService;
 
     /**
-     * @var \AgoraTeam\Agora\Service\Authentication\AuthenticationService
+     * @var AuthenticationService
      * @inject
      */
     protected $authenticationService;
-
-    /**
-     * @param $key
-     * @param array $arguments
-     * @param null $titleKey
-     * @param int $severity
-     */
-    protected function addLocalizedFlashmessage(
-        $key,
-        array $arguments = [],
-        $titleKey = null,
-        $severity = FlashMessage::OK
-    ) {
-        $this->addFlashMessage(
-            LocalizationUtility::translate($key, 'agora', $arguments),
-            LocalizationUtility::translate($titleKey, 'agora'),
-            $severity
-        );
-    }
 
     /**
      * @param RequestInterface $request
@@ -114,7 +102,7 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
     }
 
     /**
-     * @param $condiguration
+     * @param $configuration
      * @throws \InvalidArgumentException
      * @return string
      */
@@ -140,37 +128,30 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
     }
 
     /**
+     * @param $key
+     * @param array $arguments
+     * @param null $titleKey
+     * @param int $severity
+     */
+    protected function addLocalizedFlashmessage(
+        $key,
+        array $arguments = [],
+        $titleKey = null,
+        $severity = FlashMessage::OK
+    ) {
+        $this->addFlashMessage(
+            LocalizationUtility::translate($key, 'agora', $arguments),
+            LocalizationUtility::translate($titleKey, 'agora'),
+            $severity
+        );
+    }
+
+    /**
      * @return TypoScriptFrontendController
      */
     protected function getTypoScriptFrontendController()
     {
         return $GLOBALS['TSFE'];
-    }
-
-    /**
-     * @param $actionName
-     * @param null $controllerName
-     * @param null $extensionname
-     * @param array|null $arguments
-     * @return string $uri
-     */
-    protected function buildRedirectUri(
-        $actionName,
-        $controllerName = null,
-        $extensionName = null,
-        array $arguments = null,
-        $pageUid = null
-    ) {
-        if ($controllerName === null) {
-            $controllerName = $this->request->getControllerName();
-        }
-        $this->uriBuilder->reset()->setTargetPageUid($pageUid)->setCreateAbsoluteUri(true);
-        if (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL')) {
-            $this->uriBuilder->setAbsoluteUriScheme('https');
-        }
-        $uri = $this->uriBuilder->uriFor($actionName, $arguments, $controllerName, $extensionName);
-
-        return $uri;
     }
 
     /**
@@ -189,6 +170,33 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
         if ($addHash) {
             $uri .= '#post' . $newPost->getUid();
         }
+
+        return $uri;
+    }
+
+    /**
+     * @param $actionName
+     * @param null $controllerName
+     * @param null $extensionName
+     * @param array|null $arguments
+     * @param null $pageUid
+     * @return string
+     */
+    protected function buildRedirectUri(
+        $actionName,
+        $controllerName = null,
+        $extensionName = null,
+        array $arguments = null,
+        $pageUid = null
+    ) {
+        if ($controllerName === null) {
+            $controllerName = $this->request->getControllerName();
+        }
+        $this->uriBuilder->reset()->setTargetPageUid($pageUid)->setCreateAbsoluteUri(true);
+        if (GeneralUtility::getIndpEnv('TYPO3_SSL')) {
+            $this->uriBuilder->setAbsoluteUriScheme('https');
+        }
+        $uri = $this->uriBuilder->uriFor($actionName, $arguments, $controllerName, $extensionName);
 
         return $uri;
     }

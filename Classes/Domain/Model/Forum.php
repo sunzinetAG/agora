@@ -21,8 +21,11 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
- * Forum
+ * Class Forum
+ * @package AgoraTeam\Agora\Domain\Model
  */
 class Forum extends Entity implements AccessibleInterface
 {
@@ -44,7 +47,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * parent
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Forum
+     * @var Forum
      * @lazy
      */
     protected $parent = null;
@@ -52,7 +55,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * parent
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Forum>
+     * @var ObjectStorage<Forum>
      * @cascade remove
      * @lazy
      */
@@ -61,7 +64,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * threads
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread>
+     * @var ObjectStorage<Thread>
      * @cascade remove
      * @lazy
      */
@@ -70,7 +73,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * groupsWithReadAccess
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
+     * @var ObjectStorage<Group>
      * @lazy
      */
     protected $groupsWithReadAccess = null;
@@ -78,7 +81,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * groupsWithWriteAccess
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
+     * @var ObjectStorage<Group>
      * @lazy
      */
     protected $groupsWithWriteAccess = null;
@@ -86,7 +89,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * groupsWithModificationAccess
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
+     * @var ObjectStorage<Group>
      * @lazy
      */
     protected $groupsWithModificationAccess = null;
@@ -94,7 +97,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * usersWithReadAccess
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
+     * @var ObjectStorage<User>
      * @lazy
      */
     protected $usersWithReadAccess = null;
@@ -102,7 +105,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * usersWithWriteAccess
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
+     * @var ObjectStorage<User>
      * @lazy
      */
     protected $usersWithWriteAccess = null;
@@ -110,7 +113,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * usersWithModificationAccess
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User>
+     * @var ObjectStorage<User>
      * @lazy
      */
     protected $usersWithModificationAccess = null;
@@ -140,14 +143,14 @@ class Forum extends Entity implements AccessibleInterface
      */
     protected function initStorageObjects()
     {
-        $this->subForums = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->threads = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->groupsWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->groupsWithWriteAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->groupsWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->usersWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->usersWithWriteAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->usersWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->subForums = new ObjectStorage();
+        $this->threads = new ObjectStorage();
+        $this->groupsWithReadAccess = new ObjectStorage();
+        $this->groupsWithWriteAccess = new ObjectStorage();
+        $this->groupsWithModificationAccess = new ObjectStorage();
+        $this->usersWithReadAccess = new ObjectStorage();
+        $this->usersWithWriteAccess = new ObjectStorage();
+        $this->usersWithModificationAccess = new ObjectStorage();
     }
 
     /**
@@ -193,33 +196,12 @@ class Forum extends Entity implements AccessibleInterface
     }
 
     /**
-     * Returns the parent
-     *
-     * @return \AgoraTeam\Agora\Domain\Model\Forum $parent
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * Sets the parent
-     *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $parent
-     * @return void
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
-    /**
      * Adds a SubForum
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $subForum
+     * @param Forum $subForum
      * @return void
      */
-    public function addSubForum(\AgoraTeam\Agora\Domain\Model\Forum $subForum)
+    public function addSubForum(Forum $subForum)
     {
         $this->subForums->attach($subForum);
     }
@@ -227,10 +209,10 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes a Forum
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Forum $subForumToRemove The SubForum to be removed
+     * @param Forum $subForumToRemove The SubForum to be removed
      * @return void
      */
-    public function removeSubForum(\AgoraTeam\Agora\Domain\Model\Forum $subForumToRemove)
+    public function removeSubForum(Forum $subForumToRemove)
     {
         $this->subForums->detach($subForumToRemove);
     }
@@ -238,7 +220,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Returns the subForums
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Forum> $parent
+     * @return ObjectStorage<Forum> $parent
      */
     public function getSubForums()
     {
@@ -248,10 +230,10 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Sets the subForums
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Forum> $subForums
+     * @param ObjectStorage<Forum> $subForums
      * @return void
      */
-    public function setSubForums(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $subForums)
+    public function setSubForums(ObjectStorage $subForums)
     {
         $this->subForums = $subForums;
     }
@@ -259,10 +241,10 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Adds a Thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
+     * @param Thread $thread
      * @return void
      */
-    public function addThread(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function addThread(Thread $thread)
     {
         $this->threads->attach($thread);
     }
@@ -270,10 +252,10 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes a Thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $threadToRemove The Thread to be removed
+     * @param Thread $threadToRemove The Thread to be removed
      * @return void
      */
-    public function removeThread(\AgoraTeam\Agora\Domain\Model\Thread $threadToRemove)
+    public function removeThread(Thread $threadToRemove)
     {
         $this->threads->detach($threadToRemove);
     }
@@ -281,7 +263,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Returns the threads
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread> $threads
+     * @return ObjectStorage<Thread> $threads
      */
     public function getThreads()
     {
@@ -291,10 +273,10 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Sets the threads
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread> $threads
+     * @param ObjectStorage<Thread> $threads
      * @return void
      */
-    public function setThreads(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $threads)
+    public function setThreads(ObjectStorage $threads)
     {
         $this->threads = $threads;
     }
@@ -302,7 +284,7 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Returns the latest thread
      *
-     * @return \boolean|\AgoraTeam\Agora\Domain\Model\Thread $latestThread
+     * @return \boolean|Thread $latestThread
      */
     public function getLatestThread()
     {
@@ -317,10 +299,10 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Adds a Group
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccess
+     * @param Group $groupsWithReadAccess
      * @return void
      */
-    public function addGroupsWithReadAccess(\AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccess)
+    public function addGroupsWithReadAccess(Group $groupsWithReadAccess)
     {
         $this->groupsWithReadAccess->attach($groupsWithReadAccess);
     }
@@ -328,42 +310,21 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes the Group
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccessToRemove The Group to be removed
+     * @param Group $groupsWithReadAccessToRemove The Group to be removed
      * @return void
      */
-    public function removeGroupsWithReadAccess(\AgoraTeam\Agora\Domain\Model\Group $groupsWithReadAccessToRemove)
+    public function removeGroupsWithReadAccess(Group $groupsWithReadAccessToRemove)
     {
         $this->groupsWithReadAccess->detach($groupsWithReadAccessToRemove);
     }
 
     /**
-     * Returns the groupsWithReadAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithReadAccess
-     */
-    public function getGroupsWithReadAccess()
-    {
-        return $this->groupsWithReadAccess;
-    }
-
-    /**
-     * Sets the groupsWithReadAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithReadAccess
-     * @return void
-     */
-    public function setGroupsWithReadAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $groupsWithReadAccess)
-    {
-        $this->groupsWithReadAccess = $groupsWithReadAccess;
-    }
-
-    /**
      * Adds the Group
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccess
+     * @param Group $groupWithWriteAccess
      * @return void
      */
-    public function addGroupWithWriteAccess(\AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccess)
+    public function addGroupWithWriteAccess(Group $groupWithWriteAccess)
     {
         $this->groupsWithWriteAccess->attach($groupWithWriteAccess);
     }
@@ -371,42 +332,21 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes the groupsWithWriteAccess
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccessToRemove The Group to be removed
+     * @param Group $groupWithWriteAccessToRemove The Group to be removed
      * @return void
      */
-    public function removeGroupWithWriteAccess(\AgoraTeam\Agora\Domain\Model\Group $groupWithWriteAccessToRemove)
+    public function removeGroupWithWriteAccess(Group $groupWithWriteAccessToRemove)
     {
         $this->groupsWithWriteAccess->detach($groupWithWriteAccessToRemove);
     }
 
     /**
-     * Returns the groupsWithWriteAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithWriteAccess
-     */
-    public function getGroupsWithWriteAccess()
-    {
-        return $this->groupsWithWriteAccess;
-    }
-
-    /**
-     * Sets the groupsWithWriteAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithWriteAccess
-     * @return void
-     */
-    public function setGroupsWithWriteAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $groupsWithWriteAccess)
-    {
-        $this->groupsWithWriteAccess = $groupsWithWriteAccess;
-    }
-
-    /**
      * Adds a Group
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupWithModificationAccess
+     * @param Group $groupWithModificationAccess
      * @return void
      */
-    public function addGroupWithModificationAccess(\AgoraTeam\Agora\Domain\Model\Group $groupWithModificationAccess)
+    public function addGroupWithModificationAccess(Group $groupWithModificationAccess)
     {
         $this->groupsWithModificationAccess->attach($groupWithModificationAccess);
     }
@@ -414,44 +354,22 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes a Group
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupWithModificationAccessToRemove The Group to be removed
+     * @param Group $groupWithModificationAccessToRemove The Group to be removed
      * @return void
      */
     public function removeGroupWithModificationAccess(
-        \AgoraTeam\Agora\Domain\Model\Group $groupWithModificationAccessToRemove
+        Group $groupWithModificationAccessToRemove
     ) {
         $this->groupsWithModificationAccess->detach($groupWithModificationAccessToRemove);
     }
 
     /**
-     * Returns the groupsWithModificationAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithModificationAccess
-     */
-    public function getGroupsWithModificationAccess()
-    {
-        return $this->groupsWithModificationAccess;
-    }
-
-    /**
-     * Sets the groupsWithModificationAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groupsWithModificationAccess
-     * @return void
-     */
-    public function setGroupsWithModificationAccess(
-        \TYPO3\CMS\Extbase\Persistence\ObjectStorage $groupsWithModificationAccess
-    ) {
-        $this->groupsWithModificationAccess = $groupsWithModificationAccess;
-    }
-
-    /**
      * Adds a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $userWithReadAccess
+     * @param User $userWithReadAccess
      * @return void
      */
-    public function addUserWithReadAccess(\AgoraTeam\Agora\Domain\Model\User $userWithReadAccess)
+    public function addUserWithReadAccess(User $userWithReadAccess)
     {
         $this->usersWithReadAccess->attach($userWithReadAccess);
     }
@@ -459,42 +377,21 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $userWithReadAccessToRemove The User to be removed
+     * @param User $userWithReadAccessToRemove The User to be removed
      * @return void
      */
-    public function removeUserWithReadAccess(\AgoraTeam\Agora\Domain\Model\User $userWithReadAccessToRemove)
+    public function removeUserWithReadAccess(User $userWithReadAccessToRemove)
     {
         $this->usersWithReadAccess->detach($userWithReadAccessToRemove);
     }
 
     /**
-     * Returns the usersWithReadAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithReadAccess
-     */
-    public function getUsersWithReadAccess()
-    {
-        return $this->usersWithReadAccess;
-    }
-
-    /**
-     * Sets the usersWithReadAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithReadAccess
-     * @return void
-     */
-    public function setUsersWithReadAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $usersWithReadAccess)
-    {
-        $this->usersWithReadAccess = $usersWithReadAccess;
-    }
-
-    /**
      * Adds a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $userWithWriteAccess
+     * @param User $userWithWriteAccess
      * @return void
      */
-    public function addUserWithWriteAccess(\AgoraTeam\Agora\Domain\Model\User $userWithWriteAccess)
+    public function addUserWithWriteAccess(User $userWithWriteAccess)
     {
         $this->usersWithWriteAccess->attach($userWithWriteAccess);
     }
@@ -502,42 +399,21 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $userWithWriteAccessToRemove The User to be removed
+     * @param User $userWithWriteAccessToRemove The User to be removed
      * @return void
      */
-    public function removeUserWithWriteAccess(\AgoraTeam\Agora\Domain\Model\User $userWithWriteAccessToRemove)
+    public function removeUserWithWriteAccess(User $userWithWriteAccessToRemove)
     {
         $this->usersWithWriteAccess->detach($userWithWriteAccessToRemove);
     }
 
     /**
-     * Returns the usersWithWriteAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithWriteAccess
-     */
-    public function getUsersWithWriteAccess()
-    {
-        return $this->usersWithWriteAccess;
-    }
-
-    /**
-     * Sets the usersWithWriteAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithWriteAccess
-     * @return void
-     */
-    public function setUsersWithWriteAccess(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $usersWithWriteAccess)
-    {
-        $this->usersWithWriteAccess = $usersWithWriteAccess;
-    }
-
-    /**
      * Adds a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $userWithModificationAccess
+     * @param User $userWithModificationAccess
      * @return void
      */
-    public function addUserWithModificationAccess(\AgoraTeam\Agora\Domain\Model\User $userWithModificationAccess)
+    public function addUserWithModificationAccess(User $userWithModificationAccess)
     {
         $this->usersWithModificationAccess->attach($userWithModificationAccess);
     }
@@ -545,91 +421,23 @@ class Forum extends Entity implements AccessibleInterface
     /**
      * Removes a User
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $userWithModificationAccessToRemove The User to be removed
+     * @param User $userWithModificationAccessToRemove The User to be removed
      * @return void
      */
     public function removeUserWithModificationAccess(
-        \AgoraTeam\Agora\Domain\Model\User $userWithModificationAccessToRemove
+        User $userWithModificationAccessToRemove
     ) {
         $this->usersWithModificationAccess->detach($userWithModificationAccessToRemove);
     }
 
     /**
-     * Returns the usersWithModificationAccess
-     *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithModificationAccess
-     */
-    public function getUsersWithModificationAccess()
-    {
-        return $this->usersWithModificationAccess;
-    }
-
-    /**
-     * Sets the usersWithModificationAccess
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\User> $usersWithModificationAccess
-     * @return void
-     */
-    public function setUsersWithModificationAccess(
-        \TYPO3\CMS\Extbase\Persistence\ObjectStorage $usersWithModificationAccess
-    ) {
-        $this->usersWithModificationAccess = $usersWithModificationAccess;
-    }
-
-    /**
-     * Returns the read protected flag
-     *
-     * @return boolean $readProtected
-     */
-    public function getReadProtected()
-    {
-        $readProtected = false;
-        if ($this->getUsersWithReadAccess()->count() > 0) {
-            $readProtected = true;
-        }
-        if ($this->getGroupsWithReadAccess()->count() > 0) {
-            $readProtected = true;
-        }
-
-        return $readProtected;
-    }
-
-    /**
-     * Returns the boolean state of the read protected flag
+     * Returns the boolean state of the modify protected flag
      *
      * @return boolean
      */
-    public function isReadProtected()
+    public function isModifyProtected()
     {
-        return $this->getReadProtected();
-    }
-
-    /**
-     * Returns the write protected flag
-     *
-     * @return boolean $writeProtected
-     */
-    public function getWriteProtected()
-    {
-        $writeProtected = false;
-        if ($this->getUsersWithWriteAccess()->count() > 0) {
-            $writeProtected = true;
-        }
-        if ($this->getGroupsWithWriteAccess()->count() > 0) {
-            $writeProtected = true;
-        }
-
-        return $writeProtected;
-    }
-
-    /**
-     * Returns the boolean state of the write protected flag
-     *
-     * @return boolean
-     */
-    public function isWriteProtected()
-    {
-        return $this->getWriteProtected();
+        return $this->getModifyProtected();
     }
 
     /**
@@ -651,13 +459,47 @@ class Forum extends Entity implements AccessibleInterface
     }
 
     /**
-     * Returns the boolean state of the modify protected flag
+     * Returns the usersWithModificationAccess
      *
-     * @return boolean
+     * @return ObjectStorage<User> $usersWithModificationAccess
      */
-    public function isModifyProtected()
+    public function getUsersWithModificationAccess()
     {
-        return $this->getModifyProtected();
+        return $this->usersWithModificationAccess;
+    }
+
+    /**
+     * Sets the usersWithModificationAccess
+     *
+     * @param ObjectStorage<User> $usersWithModificationAccess
+     * @return void
+     */
+    public function setUsersWithModificationAccess(
+        ObjectStorage $usersWithModificationAccess
+    ) {
+        $this->usersWithModificationAccess = $usersWithModificationAccess;
+    }
+
+    /**
+     * Returns the groupsWithModificationAccess
+     *
+     * @return ObjectStorage<Group> $groupsWithModificationAccess
+     */
+    public function getGroupsWithModificationAccess()
+    {
+        return $this->groupsWithModificationAccess;
+    }
+
+    /**
+     * Sets the groupsWithModificationAccess
+     *
+     * @param ObjectStorage<Group> $groupsWithModificationAccess
+     * @return void
+     */
+    public function setGroupsWithModificationAccess(
+        ObjectStorage $groupsWithModificationAccess
+    ) {
+        $this->groupsWithModificationAccess = $groupsWithModificationAccess;
     }
 
     /**
@@ -692,48 +534,42 @@ class Forum extends Entity implements AccessibleInterface
         }
     }
 
-
-
+    /**
+     * Returns the parent
+     *
+     * @return Forum $parent
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
 
     /**
-     * checks if the forum is accessible for the given user
+     * Sets the parent
      *
-     * @param mixed $user
+     * @param Forum $parent
+     * @return void
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @param User|null $user
+     * @param string $accessType
      * @return bool
      */
-    public function isAccessibleForUser($user)
+    public function checkAccess(User $user = null, $accessType = self::TYPE_READ)
     {
-        $isAccessible = false;
-
-        if ($this->isReadProtected()) {
-            if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
-                if ($this->getUsersWithReadAccess()->count() > 0) {
-                    foreach ($this->getUsersWithReadAccess() as $currentUser) {
-                        if ($user->getUid() == $currentUser->getUid()) {
-                            $isAccessible = true;
-                            break;
-                        }
-                    }
-                }
-                // the comparision on group level is expensive, so check and double-check if this is really necessary
-                if ($isAccessible != true) {
-                    if ($this->getGroupsWithReadAccess()->count() > 0) {
-                        foreach ($this->getGroupsWithReadAccess() as $groupWithAccess) {
-                            foreach ($user->getFlattenedGroups() as $group) {
-                                if ($groupWithAccess->getUid() == $group->getUid()) {
-                                    $isAccessible = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            $isAccessible = true;
+        switch ($accessType) {
+            case self::TYPE_EDIT_POST:
+            case self::TYPE_NEW_POST:
+            case self::TYPE_WRITE:
+                return $this->isWritableForUser($user);
+            default:
+                return $this->isAccessibleForUser($user);
         }
-
-        return $isAccessible;
     }
 
     /**
@@ -778,19 +614,183 @@ class Forum extends Entity implements AccessibleInterface
     }
 
     /**
-     * @param User|null $user
-     * @param string $accessType
+     * Returns the boolean state of the write protected flag
+     *
+     * @return boolean
+     */
+    public function isWriteProtected()
+    {
+        return $this->getWriteProtected();
+    }
+
+    /**
+     * Returns the write protected flag
+     *
+     * @return boolean $writeProtected
+     */
+    public function getWriteProtected()
+    {
+        $writeProtected = false;
+        if ($this->getUsersWithWriteAccess()->count() > 0) {
+            $writeProtected = true;
+        }
+        if ($this->getGroupsWithWriteAccess()->count() > 0) {
+            $writeProtected = true;
+        }
+
+        return $writeProtected;
+    }
+
+    /**
+     * Returns the usersWithWriteAccess
+     *
+     * @return ObjectStorage<User> $usersWithWriteAccess
+     */
+    public function getUsersWithWriteAccess()
+    {
+        return $this->usersWithWriteAccess;
+    }
+
+    /**
+     * Sets the usersWithWriteAccess
+     *
+     * @param ObjectStorage<User> $usersWithWriteAccess
+     * @return void
+     */
+    public function setUsersWithWriteAccess(ObjectStorage $usersWithWriteAccess)
+    {
+        $this->usersWithWriteAccess = $usersWithWriteAccess;
+    }
+
+    /**
+     * Returns the groupsWithWriteAccess
+     *
+     * @return ObjectStorage<Group> $groupsWithWriteAccess
+     */
+    public function getGroupsWithWriteAccess()
+    {
+        return $this->groupsWithWriteAccess;
+    }
+
+    /**
+     * Sets the groupsWithWriteAccess
+     *
+     * @param ObjectStorage<Group> $groupsWithWriteAccess
+     * @return void
+     */
+    public function setGroupsWithWriteAccess(ObjectStorage $groupsWithWriteAccess)
+    {
+        $this->groupsWithWriteAccess = $groupsWithWriteAccess;
+    }
+
+    /**
+     * checks if the forum is accessible for the given user
+     *
+     * @param mixed $user
      * @return bool
      */
-    public function checkAccess(User $user = null, $accessType = self::TYPE_READ)
+    public function isAccessibleForUser($user)
     {
-        switch ($accessType) {
-            case self::TYPE_EDIT_POST:
-            case self::TYPE_NEW_POST:
-            case self::TYPE_WRITE:
-                return $this->isWritableForUser($user);
-            default:
-                return $this->isAccessibleForUser($user);
+        $isAccessible = false;
+
+        if ($this->isReadProtected()) {
+            if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
+                if ($this->getUsersWithReadAccess()->count() > 0) {
+                    foreach ($this->getUsersWithReadAccess() as $currentUser) {
+                        if ($user->getUid() == $currentUser->getUid()) {
+                            $isAccessible = true;
+                            break;
+                        }
+                    }
+                }
+                // the comparision on group level is expensive, so check and double-check if this is really necessary
+                if ($isAccessible != true) {
+                    if ($this->getGroupsWithReadAccess()->count() > 0) {
+                        foreach ($this->getGroupsWithReadAccess() as $groupWithAccess) {
+                            foreach ($user->getFlattenedGroups() as $group) {
+                                if ($groupWithAccess->getUid() == $group->getUid()) {
+                                    $isAccessible = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            $isAccessible = true;
         }
+
+        return $isAccessible;
+    }
+
+    /**
+     * Returns the boolean state of the read protected flag
+     *
+     * @return boolean
+     */
+    public function isReadProtected()
+    {
+        return $this->getReadProtected();
+    }
+
+    /**
+     * Returns the read protected flag
+     *
+     * @return boolean $readProtected
+     */
+    public function getReadProtected()
+    {
+        $readProtected = false;
+        if ($this->getUsersWithReadAccess()->count() > 0) {
+            $readProtected = true;
+        }
+        if ($this->getGroupsWithReadAccess()->count() > 0) {
+            $readProtected = true;
+        }
+
+        return $readProtected;
+    }
+
+    /**
+     * Returns the usersWithReadAccess
+     *
+     * @return ObjectStorage<User> $usersWithReadAccess
+     */
+    public function getUsersWithReadAccess()
+    {
+        return $this->usersWithReadAccess;
+    }
+
+    /**
+     * Sets the usersWithReadAccess
+     *
+     * @param ObjectStorage<User> $usersWithReadAccess
+     * @return void
+     */
+    public function setUsersWithReadAccess(ObjectStorage $usersWithReadAccess)
+    {
+        $this->usersWithReadAccess = $usersWithReadAccess;
+    }
+
+    /**
+     * Returns the groupsWithReadAccess
+     *
+     * @return ObjectStorage<Group> $groupsWithReadAccess
+     */
+    public function getGroupsWithReadAccess()
+    {
+        return $this->groupsWithReadAccess;
+    }
+
+    /**
+     * Sets the groupsWithReadAccess
+     *
+     * @param ObjectStorage<Group> $groupsWithReadAccess
+     * @return void
+     */
+    public function setGroupsWithReadAccess(ObjectStorage $groupsWithReadAccess)
+    {
+        $this->groupsWithReadAccess = $groupsWithReadAccess;
     }
 }

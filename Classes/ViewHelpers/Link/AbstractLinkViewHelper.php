@@ -20,15 +20,18 @@ namespace AgoraTeam\Agora\ViewHelpers\Link;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Service\PaginationService;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 /**
- * CreatorViewHelper
+ * Class AbstractLinkViewHelper
+ * @package AgoraTeam\Agora\ViewHelpers\Link
  */
-abstract class AbstractLinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper
+abstract class AbstractLinkViewHelper extends AbstractTagBasedViewHelper
 {
 
     /**
@@ -40,30 +43,30 @@ abstract class AbstractLinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\A
     protected $cObj;
 
     /**
-     * @var \AgoraTeam\Agora\Service\PaginationService
+     * @var PaginationService
      */
     protected $paginationService;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
+     * @var ConfigurationManagerInterface
      */
     protected $configurationManager;
 
     /**
      * Injects the Configuration Manager and loads the settings
      *
-     * @param \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface $configurationManager
+     * @param ConfigurationManagerInterface $configurationManager
      */
     public function injectConfigurationManager(
-        \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface $configurationManager
+        ConfigurationManagerInterface $configurationManager
     ) {
         $this->configurationManager = $configurationManager;
     }
 
     /**
-     * @param \AgoraTeam\Agora\Service\PaginationService $paginationService
+     * @param PaginationService $paginationService
      */
-    public function injectPaginationService(\AgoraTeam\Agora\Service\PaginationService $paginationService)
+    public function injectPaginationService(PaginationService $paginationService)
     {
         $this->paginationService = $paginationService;
     }

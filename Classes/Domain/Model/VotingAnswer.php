@@ -21,10 +21,13 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /**
- * VotingAnswer
+ * Class VotingAnswer
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class VotingAnswer extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class VotingAnswer extends AbstractEntity
 {
 
     /**

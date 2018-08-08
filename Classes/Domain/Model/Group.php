@@ -21,10 +21,15 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Domain\Model\FrontendUserGroup;
+
 /**
- * Group
+ * Class Group
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class Group extends AbstractEntity
 {
 
     /**
@@ -43,7 +48,7 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $description = '';
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
+     * @var ObjectStorage<Group>
      */
     protected $subgroups;
 
@@ -55,7 +60,18 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function __construct($title = '')
     {
         $this->setTitle($title);
-        $this->subgroups = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->subgroups = new ObjectStorage();
+    }
+
+    /**
+     * Returns the title value
+     *
+     * @return string
+     * @api
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
@@ -71,14 +87,14 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Returns the title value
+     * Returns the lockToDomain value
      *
      * @return string
      * @api
      */
-    public function getTitle()
+    public function getLockToDomain()
     {
-        return $this->title;
+        return $this->lockToDomain;
     }
 
     /**
@@ -94,14 +110,14 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Returns the lockToDomain value
+     * Returns the description value
      *
      * @return string
      * @api
      */
-    public function getLockToDomain()
+    public function getDescription()
     {
-        return $this->lockToDomain;
+        return $this->description;
     }
 
     /**
@@ -117,36 +133,13 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Returns the description value
-     *
-     * @return string
-     * @api
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Sets the subgroups
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage $subgroups An object storage containing the subgroups to add
-     * @return void
-     * @api
-     */
-    public function setSubgroups(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $subgroups)
-    {
-        $this->subgroups = $subgroups;
-    }
-
-    /**
      * Adds a subgroup to the frontend user
      *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FrontendUserGroup $subgroup
+     * @param FrontendUserGroup $subgroup
      * @return void
      * @api
      */
-    public function addSubgroup(\TYPO3\CMS\Extbase\Domain\Model\FrontendUserGroup $subgroup)
+    public function addSubgroup(FrontendUserGroup $subgroup)
     {
         $this->subgroups->attach($subgroup);
     }
@@ -154,11 +147,11 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a subgroup from the frontend user group
      *
-     * @param \TYPO3\CMS\Extbase\Domain\Model\FrontendUserGroup $subgroup
+     * @param FrontendUserGroup $subgroup
      * @return void
      * @api
      */
-    public function removeSubgroup(\TYPO3\CMS\Extbase\Domain\Model\FrontendUserGroup $subgroup)
+    public function removeSubgroup(FrontendUserGroup $subgroup)
     {
         $this->subgroups->detach($subgroup);
     }
@@ -166,18 +159,7 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the subgroups
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage An object storage containing the subgroups
-     * @api
-     */
-    public function getSubgroups()
-    {
-        return $this->subgroups;
-    }
-
-    /**
-     * Returns the subgroups
-     *
-     * @return \Array An array containing the flattened subgroups
+     * @return array An array containing the flattened subgroups
      * @api
      */
     public function getFlattenedSubgroups()
@@ -189,5 +171,28 @@ class Group extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         }
 
         return $flattenedSubgroups;
+    }
+
+    /**
+     * Returns the subgroups
+     *
+     * @return ObjectStorage An object storage containing the subgroups
+     * @api
+     */
+    public function getSubgroups()
+    {
+        return $this->subgroups;
+    }
+
+    /**
+     * Sets the subgroups
+     *
+     * @param ObjectStorage $subgroups An object storage containing the subgroups to add
+     * @return void
+     * @api
+     */
+    public function setSubgroups(ObjectStorage $subgroups)
+    {
+        $this->subgroups = $subgroups;
     }
 }

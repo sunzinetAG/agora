@@ -21,23 +21,27 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
- * Vote
+ * Class Vote
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class Vote extends AbstractEntity
 {
 
     /**
      * voting
      *
-     * @var \AgoraTeam\Agora\Domain\Model\Voting
+     * @var Voting
      */
     protected $voting = null;
 
     /**
      * votingAnswers
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\VotingAnswer>
+     * @var ObjectStorage<VotingAnswer>
      * @cascade remove
      */
     protected $votingAnswers = null;
@@ -45,7 +49,7 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * user
      *
-     * @var \AgoraTeam\Agora\Domain\Model\User
+     * @var User
      */
     protected $user = null;
 
@@ -68,13 +72,13 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected function initStorageObjects()
     {
-        $this->votingAnswers = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->votingAnswers = new ObjectStorage();
     }
 
     /**
      * Returns the voting
      *
-     * @return \AgoraTeam\Agora\Domain\Model\Voting $voting
+     * @return Voting $voting
      */
     public function getVoting()
     {
@@ -84,10 +88,10 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the voting
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Voting $voting
+     * @param Voting $voting
      * @return void
      */
-    public function setVoting(\AgoraTeam\Agora\Domain\Model\Voting $voting)
+    public function setVoting(Voting $voting)
     {
         $this->voting = $voting;
     }
@@ -95,10 +99,10 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a VotingAnswer
      *
-     * @param \AgoraTeam\Agora\Domain\Model\VotingAnswer $votingAnswer
+     * @param VotingAnswer $votingAnswer
      * @return void
      */
-    public function addVotingAnswer(\AgoraTeam\Agora\Domain\Model\VotingAnswer $votingAnswer)
+    public function addVotingAnswer(VotingAnswer $votingAnswer)
     {
         $this->votingAnswers->attach($votingAnswer);
     }
@@ -106,10 +110,10 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a VotingAnswer
      *
-     * @param \AgoraTeam\Agora\Domain\Model\VotingAnswer $votingAnswerToRemove The VotingAnswer to be removed
+     * @param VotingAnswer $votingAnswerToRemove The VotingAnswer to be removed
      * @return void
      */
-    public function removeVotingAnswer(\AgoraTeam\Agora\Domain\Model\VotingAnswer $votingAnswerToRemove)
+    public function removeVotingAnswer(VotingAnswer $votingAnswerToRemove)
     {
         $this->votingAnswers->detach($votingAnswerToRemove);
     }
@@ -117,7 +121,7 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the votingAnswers
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\VotingAnswer> $votingAnswers
+     * @return ObjectStorage<VotingAnswer> $votingAnswers
      */
     public function getVotingAnswers()
     {
@@ -127,10 +131,10 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the votingAnswers
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\VotingAnswer> $votingAnswers
+     * @param ObjectStorage<VotingAnswer> $votingAnswers
      * @return void
      */
-    public function setVotingAnswers(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $votingAnswers)
+    public function setVotingAnswers(ObjectStorage $votingAnswers)
     {
         $this->votingAnswers = $votingAnswers;
     }
@@ -138,7 +142,7 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the user
      *
-     * @return \AgoraTeam\Agora\Domain\Model\User $user
+     * @return User $user
      */
     public function getUser()
     {
@@ -148,10 +152,10 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the user
      *
-     * @param \AgoraTeam\Agora\Domain\Model\User $user
+     * @param User $user
      * @return void
      */
-    public function setUser(\AgoraTeam\Agora\Domain\Model\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }

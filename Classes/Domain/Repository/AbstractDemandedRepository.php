@@ -20,45 +20,26 @@ namespace AgoraTeam\Agora\Domain\Repository;
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-use AgoraTeam\Agora\Domain\Model\DemandInterface;
-use AgoraTeam\Agora\Domain\Repository\DemandedRepositoryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use AgoraTeam\Agora\Domain\Model\Dto\ForumDemand;
 
 /**
  * Abstract demanded repository
  */
-abstract class AbstractDemandedRepository extends Repository implements DemandedRepositoryInterface
+abstract class AbstractDemandedRepository extends Repository
 {
-
-     /* Returns an array of constraints created from a given demand object.
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\QueryInterface $query
-     * @param DemandInterface $demand
-     * @return array<\TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface>
-     * @abstract
-     */
-    abstract protected function createConstraintsFromDemand(
-        \TYPO3\CMS\Extbase\Persistence\QueryInterface $query,
-        DemandInterface $demand
-    );
-
-    /**
-     * Returns an array of orderings created from a given demand object.
-     *
-     * @param DemandInterface $demand
-     * @return array<\TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface>
-     * @abstract
-     */
-    abstract protected function createOrderingsFromDemand(DemandInterface $demand);
 
     /**
      * Returns the objects of this repository matching the demand.
      *
-     * @param DemandInterface $demand
+     * @param ForumDemand $demand
      * @param bool $respectEnableFields
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return array|QueryResultInterface
+     * @throws \Exception
      */
-    public function findDemanded(DemandInterface $demand, $respectEnableFields = true)
+    public function findDemanded(ForumDemand $demand, $respectEnableFields = true)
     {
         $query = $this->generateQuery($demand, $respectEnableFields);
 
@@ -66,11 +47,12 @@ abstract class AbstractDemandedRepository extends Repository implements Demanded
     }
 
     /**
-     * @param DemandInterface $demand
+     * @param ForumDemand $demand
      * @param bool $respectEnableFields
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryInterface
+     * @return QueryInterface
+     * @throws \Exception
      */
-    protected function generateQuery(DemandInterface $demand, $respectEnableFields = true)
+    protected function generateQuery(ForumDemand $demand, $respectEnableFields = true)
     {
         $query = $this->createQuery();
 
@@ -108,12 +90,86 @@ abstract class AbstractDemandedRepository extends Repository implements Demanded
     }
 
     /**
-     * Returns the total number objects of this repository matching the demand.
+     * Returns an array of constraints created from a given demand object.
      *
-     * @param DemandInterface $demand
-     * @return int
+     * @param QueryInterface $query
+     * @param ForumDemand $demand
+     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
+     * @throws \Exception
+     * @return array<ConstraintInterface>
      */
-    public function countDemanded(DemandInterface $demand)
+    protected function createConstraintsFromDemand(QueryInterface $query, ForumDemand $demand)
+    {
+        /** @var ForumDemand $demand */
+        $constraints = [];
+
+        // storage page
+        if ($demand->getStoragePage() != 0) {
+            $pidList = GeneralUtility::intExplode(',', $demand->getStoragePage(), true);
+            $constraints['pid'] = $query->in('pid', $pidList);
+        }
+
+        // Search
+        $searchConstraints = $this->getSearchConstraints($query, $demand);
+        if (!empty($searchConstraints)) {
+            $constraints['search'] = $query->logicalAnd($searchConstraints);
+        }
+
+        // Clean not used constraints
+        foreach ($constraints as $key => $value) {
+            if (is_null($value)) {
+                unset($constraints[$key]);
+            }
+        }
+
+        return $constraints;
+    }
+
+    /**
+     * Returns an array of orderings created from a given demand object.
+     *
+     * @param ForumDemand $demand
+     * @return array<ConstraintInterface>
+     */
+    protected function createOrderingsFromDemand(ForumDemand $demand)
+    {
+
+        $orderings = [];
+        $orderField = $demand->getSearch()->getOrder();
+
+        if (!isset($orderField)) {
+            $orderField = $demand->getOrder();
+        }
+
+        $orderList = GeneralUtility::trimExplode(',', $orderField, true);
+
+        if (!empty($orderList)) {
+            // go through every order statement
+            foreach ($orderList as $orderItem) {
+                list($orderField, $ascDesc) = GeneralUtility::trimExplode(' ', $orderItem, true);
+                // count == 1 means that no direction is given
+                if ($ascDesc) {
+                    $orderings[$orderField] = ((strtolower($ascDesc) == 'desc') ?
+                        QueryInterface::ORDER_DESCENDING :
+                        QueryInterface::ORDER_ASCENDING);
+                } else {
+                    $orderings[$orderField] = QueryInterface::ORDER_ASCENDING;
+                }
+            }
+        }
+
+        return $orderings;
+    }
+
+    /**
+     *  Returns the total number objects of this repository matching the demand.
+     *
+     * @param ForumDemand $demand
+     * @return int
+     * @throws \Exception
+     */
+    public function countDemanded(ForumDemand $demand)
     {
         $query = $this->createQuery();
 

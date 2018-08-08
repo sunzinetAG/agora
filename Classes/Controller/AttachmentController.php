@@ -21,8 +21,11 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Repository\AttachmentRepository;
+
 /**
- * AttachmentController
+ * Class AttachmentController
+ * @package AgoraTeam\Agora\Controller
  */
 class AttachmentController extends ActionController
 {
@@ -30,7 +33,7 @@ class AttachmentController extends ActionController
     /**
      * attachmentRepository
      *
-     * @var \AgoraTeam\Agora\Domain\Repository\AttachmentRepository
+     * @var AttachmentRepository
      * @inject
      */
     protected $attachmentRepository = null;

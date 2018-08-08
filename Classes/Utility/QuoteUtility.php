@@ -31,13 +31,14 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 class QuoteUtility implements SingletonInterface
 {
 
+
     /**
      * @param $text
      * @param $author
      * @param string $quotedMarker
      * @return string
      */
-    public static function create($text, $author, $time = 0, $quotedMarker = '>')
+    public static function create($text, $author, $quotedMarker = '>')
     {
         $headline = LocalizationUtility::translate('tx_agora_domain_model_post.quoted_headline', 'agora', [$author]);
         $textArray = preg_split('#(\r\n?|\n)+#', $text);

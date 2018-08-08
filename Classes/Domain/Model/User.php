@@ -21,10 +21,15 @@ namespace AgoraTeam\Agora\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+
 /**
- * User
+ * Class User
+ * @package AgoraTeam\Agora\Domain\Model
  */
-class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+class User extends AbstractEntity
 {
 
     /**
@@ -38,14 +43,14 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * favoritePosts
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post>
+     * @var ObjectStorage<Post>
      */
     protected $favoritePosts = null;
 
     /**
      * observedThreads
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread>
+     * @var ObjectStorage<Thread>
      * @lazy
      */
     protected $readThreads = null;
@@ -53,7 +58,7 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * observedThreads
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread>
+     * @var ObjectStorage<Thread>
      * @lazy
      */
     protected $observedThreads = null;
@@ -61,14 +66,14 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * spamPosts
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post>
+     * @var ObjectStorage<Post>
      */
     protected $spamPosts = null;
 
     /**
      * groups
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group>
+     * @var ObjectStorage<Group>
      * @lazy
      */
     protected $groups = null;
@@ -94,7 +99,7 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     protected $email = '';
 
     /**
-     * @var \TYPO3\CMS\Extbase\Domain\Model\FileReference
+     * @var FileReference
      */
     protected $image;
 
@@ -117,11 +122,11 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      */
     protected function initStorageObjects()
     {
-        $this->favoritePosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->readThreads = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->observedThreads = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->spamPosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
-        $this->groups = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $this->favoritePosts = new ObjectStorage();
+        $this->readThreads = new ObjectStorage();
+        $this->observedThreads = new ObjectStorage();
+        $this->spamPosts = new ObjectStorage();
+        $this->groups = new ObjectStorage();
     }
 
     /**
@@ -149,10 +154,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a Thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $favoritePost
+     * @param Post $favoritePost
      * @return void
      */
-    public function addFavoritePost(\AgoraTeam\Agora\Domain\Model\Post $favoritePost)
+    public function addFavoritePost(Post $favoritePost)
     {
         $this->favoritePosts->attach($favoritePost);
     }
@@ -160,10 +165,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a Thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $favoritePostToRemove The Thread to be removed
+     * @param Post $favoritePostToRemove The Thread to be removed
      * @return void
      */
-    public function removeFavoritePost(\AgoraTeam\Agora\Domain\Model\Post $favoritePostToRemove)
+    public function removeFavoritePost(Post $favoritePostToRemove)
     {
         $this->favoritePosts->detach($favoritePostToRemove);
     }
@@ -171,7 +176,7 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the favoritePosts
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $favoritePosts
+     * @return ObjectStorage<Post> $favoritePosts
      */
     public function getFavoritePosts()
     {
@@ -181,10 +186,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the favoritePosts
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $favoritePosts
+     * @param ObjectStorage<Post> $favoritePosts
      * @return void
      */
-    public function setFavoritePosts(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $favoritePosts)
+    public function setFavoritePosts(ObjectStorage $favoritePosts)
     {
         $this->favoritePosts = $favoritePosts;
     }
@@ -192,10 +197,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a Thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $observedThread
+     * @param Thread $thread
      * @return void
      */
-    public function addReadThread(\AgoraTeam\Agora\Domain\Model\Thread $thread)
+    public function addReadThread(Thread $thread)
     {
         $this->readThreads->attach($thread);
     }
@@ -203,10 +208,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a Thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $observedThread
+     * @param Thread $observedThread
      * @return void
      */
-    public function addObservedThread(\AgoraTeam\Agora\Domain\Model\Thread $observedThread)
+    public function addObservedThread(Thread $observedThread)
     {
         $this->observedThreads->attach($observedThread);
     }
@@ -214,10 +219,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a Thread
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Thread $observedThreadToRemove The Thread to be removed
+     * @param Thread $observedThreadToRemove The Thread to be removed
      * @return void
      */
-    public function removeObservedThread(\AgoraTeam\Agora\Domain\Model\Thread $observedThreadToRemove)
+    public function removeObservedThread(Thread $observedThreadToRemove)
     {
         $this->observedThreads->detach($observedThreadToRemove);
     }
@@ -225,7 +230,7 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the observedThreads
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread> $observedThreads
+     * @return ObjectStorage<Thread> $observedThreads
      */
     public function getObservedThreads()
     {
@@ -235,10 +240,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the observedThreads
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Thread> $observedThreads
+     * @param ObjectStorage<Thread> $observedThreads
      * @return void
      */
-    public function setObservedThreads(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $observedThreads)
+    public function setObservedThreads(ObjectStorage $observedThreads)
     {
         $this->observedThreads = $observedThreads;
     }
@@ -246,10 +251,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a Post
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $spamPost
+     * @param Post $spamPost
      * @return void
      */
-    public function addSpamPost(\AgoraTeam\Agora\Domain\Model\Post $spamPost)
+    public function addSpamPost(Post $spamPost)
     {
         $this->spamPosts->attach($spamPost);
     }
@@ -257,10 +262,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a Post
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Post $spamPostToRemove The Post to be removed
+     * @param Post $spamPostToRemove The Post to be removed
      * @return void
      */
-    public function removeSpamPost(\AgoraTeam\Agora\Domain\Model\Post $spamPostToRemove)
+    public function removeSpamPost(Post $spamPostToRemove)
     {
         $this->spamPosts->detach($spamPostToRemove);
     }
@@ -268,7 +273,7 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns the spamPosts
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $spamPosts
+     * @return ObjectStorage<Post> $spamPosts
      */
     public function getSpamPosts()
     {
@@ -278,10 +283,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Sets the spamPosts
      *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Post> $spamPosts
+     * @param ObjectStorage<Post> $spamPosts
      * @return void
      */
-    public function setSpamPosts(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $spamPosts)
+    public function setSpamPosts(ObjectStorage $spamPosts)
     {
         $this->spamPosts = $spamPosts;
     }
@@ -289,10 +294,10 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Adds a Group
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $group
+     * @param Group $group
      * @return void
      */
-    public function addGroup(\AgoraTeam\Agora\Domain\Model\Group $group)
+    public function addGroup(Group $group)
     {
         $this->groups->attach($group);
     }
@@ -300,33 +305,27 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Removes a Group
      *
-     * @param \AgoraTeam\Agora\Domain\Model\Group $groupToRemove The Group to be removed
+     * @param Group $groupToRemove The Group to be removed
      * @return void
      */
-    public function removeGroup(\AgoraTeam\Agora\Domain\Model\Group $groupToRemove)
+    public function removeGroup(Group $groupToRemove)
     {
         $this->groups->detach($groupToRemove);
     }
 
     /**
-     * Returns the groups
+     * Returns the flattened groups
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groups
+     * @return array $groups
      */
-    public function getGroups()
+    public function getFlattenedGroupUids()
     {
-        return $this->groups;
-    }
+        $flattenedGroupUids = array();
+        foreach ($this->getFlattenedGroups() as $group) {
+            $flattenedGroupUids[] = (int)$group->getUid();
+        }
 
-    /**
-     * Sets the groups
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\AgoraTeam\Agora\Domain\Model\Group> $groups
-     * @return void
-     */
-    public function setGroups(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $groups)
-    {
-        $this->groups = $groups;
+        return $flattenedGroupUids;
     }
 
     /**
@@ -346,18 +345,24 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * Returns the flattened groups
+     * Returns the groups
      *
-     * @return array $groups
+     * @return ObjectStorage<Group> $groups
      */
-    public function getFlattenedGroupUids()
+    public function getGroups()
     {
-        $flattenedGroupUids = array();
-        foreach ($this->getFlattenedGroups() as $group) {
-            $flattenedGroupUids[] = (int)$group->getUid();
-        }
+        return $this->groups;
+    }
 
-        return $flattenedGroupUids;
+    /**
+     * Sets the groups
+     *
+     * @param ObjectStorage<Group> $groups
+     * @return void
+     */
+    public function setGroups(ObjectStorage $groups)
+    {
+        $this->groups = $groups;
     }
 
     /**
@@ -393,75 +398,12 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
 
     /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-    }
-
-    /**
-     * Sets the firstName value
-     *
-     * @param string $firstName
-     * @return void
-     * @api
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-    }
-
-    /**
-     * Returns the firstName value
-     *
-     * @return string
-     * @api
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * Sets the lastName value
-     *
-     * @param string $lastName
-     * @return void
-     * @api
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-    }
-
-    /**
-     * Returns the lastName value
-     *
-     * @return string
-     * @api
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
      * displayName
      *
      * @return string
      */
     public function getDisplayName()
     {
-        $displayName = '';
         $displayNameParts = array();
 
         if ($this->getFirstName()) {
@@ -478,5 +420,67 @@ class User extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         }
 
         return $displayName;
+    }
+
+    /**
+     * Returns the firstName value
+     *
+     * @return string
+     * @api
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Sets the firstName value
+     *
+     * @param string $firstName
+     * @return void
+     * @api
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * Returns the lastName value
+     *
+     * @return string
+     * @api
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Sets the lastName value
+     *
+     * @param string $lastName
+     * @return void
+     * @api
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
     }
 }
