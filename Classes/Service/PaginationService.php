@@ -157,7 +157,7 @@ class PaginationService implements SingletonInterface
 
         /** @var QueryResult $posts */
         $posts = $this->postRepository->findByThreadOnFirstLevel($thread)->toArray();
-        $position = array_search($post, $posts) + 1;
+        $position = array_search($post, $posts, true) + 1;
         if (false == $position) {
             return 0;
         }
