@@ -42,16 +42,6 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
-    {
-        $this->subject = new View();
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
-
     /**
      * @test
      */
@@ -133,5 +123,15 @@ class ViewTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->inject($this->subject, 'user', $userObjectStorageMock);
 
         $this->subject->removeUser($user);
+    }
+
+    protected function setUp()
+    {
+        $this->subject = new View();
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

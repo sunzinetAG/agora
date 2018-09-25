@@ -21,6 +21,10 @@ namespace AgoraTeam\Agora\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use RecursiveIteratorIterator;
+use RecursiveArrayIterator;
+
+use AgoraTeam\Agora\Domain\Model\Forum;
 use TYPO3\CMS\Extbase\Mvc\Controller\MvcPropertyMappingConfiguration;
 use AgoraTeam\Agora\Domain\Model\Dto\Search;
 use AgoraTeam\Agora\Domain\Model\Dto\ForumDemand;
@@ -39,7 +43,7 @@ class SearchController extends ActionController
     /**
      * forumRepository
      *
-     * @var ForumRepository
+     * @var \AgoraTeam\Agora\Domain\Repository\ForumRepository
      * @inject
      */
     protected $forumRepository = null;
@@ -47,7 +51,7 @@ class SearchController extends ActionController
     /**
      * threadRepository
      *
-     * @var ThreadRepository
+     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
      * @inject
      */
     protected $threadRepository = null;
@@ -55,7 +59,7 @@ class SearchController extends ActionController
     /**
      * postRepository
      *
-     * @var PostRepository
+     * @var \AgoraTeam\Agora\Domain\Repository\PostRepository
      * @inject
      */
     protected $postRepository;
@@ -122,10 +126,63 @@ class SearchController extends ActionController
             $results = $results2;
         }
 
+
+        $accessibleUserForums = $this->forumRepository->findVisibleRootForums();
+        $user = $this->authenticationService->getUser();
+        /** @var Forum $forum */
+               foreach ($accessibleUserForums as $forum) {
+//            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forum,__FILE__ . " " . __LINE__);
+            if ($forum->isAccessibleForUser($user)) {
+
+                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forum,__FILE__ . " " . __LINE__);
+
+
+
+//                    $forumMatrix = [];
+//
+//
+//                    $subforum =  $forum->getSubForums();
+//
+//                    $forumArray = [
+//                        'item' => $forum,
+//                        'children' => $subforum
+//                    ];
+//
+//                    array_push($forumMatrix, $forumArray);
+//
+                $themes = $this->forumRepository->findAccessibleUserForumsAsMatrix();
+                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($themes,__FILE__ . " " . __LINE__);
+//
+//
+//
+//                    foreach($subforum as $key => $currentForum) {
+//                            $forumArray['item'] = $currentForum;
+//                            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forumArray['item'],__FILE__ . " " . __LINE__);
+//                        do {
+//                            $children = $currentForum->getSubForums();
+//                            $forumArray['children'] = $children;
+//                            array_push($forumMatrix, $forumArray);
+//                            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forumMatrix,__FILE__ . " " . __LINE__);die;
+//                        } while ($children > 0);
+//                   }
+
+
+
+            } else {
+                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump('false',__FILE__ . " " . __LINE__);
+            }
+        }
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($accessibleUserForums,__FILE__ . " " . __LINE__);
+        $themes = $this->forumRepository->findAccessibleUserForumsAsMatrix();
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($themes,__FILE__ . " " . __LINE__);
+        die;
+//
+//        die;
         $assignedValues = [
             'results' => $results,
             'search' => $search,
-            'themes' => $this->forumRepository->findAccessibleUserForumsAsMatrix(),
+            'themes' => $themes,
             'demand' => $demand,
             'settings' => $this->settings
         ];

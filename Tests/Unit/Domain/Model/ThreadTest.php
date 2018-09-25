@@ -21,6 +21,13 @@ namespace AgoraTeam\Agora\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use AgoraTeam\Agora\Domain\Model\Thread;
+use AgoraTeam\Agora\Domain\Model\User;
+use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\Group;
+use AgoraTeam\Agora\Domain\Model\View;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+
 /**
  * Test case for class \AgoraTeam\Agora\Domain\Model\Thread.
  *
@@ -36,16 +43,6 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      * @var \AgoraTeam\Agora\Domain\Model\Thread
      */
     protected $subject = null;
-
-    protected function setUp()
-    {
-        $this->subject = new \AgoraTeam\Agora\Domain\Model\Thread();
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
 
     /**
      * @test
@@ -163,7 +160,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setCreatorForUserSetsCreator()
     {
-        $creatorFixture = new \AgoraTeam\Agora\Domain\Model\User();
+        $creatorFixture = new User();
         $this->subject->setCreator($creatorFixture);
 
         $this->assertAttributeEquals(
@@ -178,7 +175,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getPostsReturnsInitialValueForPost()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getPosts()
@@ -190,8 +187,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setPostsForObjectStorageContainingPostSetsPosts()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
-        $objectStorageHoldingExactlyOnePosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $post = new Post();
+        $objectStorageHoldingExactlyOnePosts = new ObjectStorage();
         $objectStorageHoldingExactlyOnePosts->attach($post);
         $this->subject->setPosts($objectStorageHoldingExactlyOnePosts);
 
@@ -207,7 +204,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addPostToObjectStorageHoldingPosts()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
         $postsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('attach'),
             array(), '', false);
         $postsObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($post));
@@ -221,7 +218,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removePostFromObjectStorageHoldingPosts()
     {
-        $post = new \AgoraTeam\Agora\Domain\Model\Post();
+        $post = new Post();
         $postsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('detach'),
             array(), '', false);
         $postsObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($post));
@@ -235,7 +232,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getViewsReturnsInitialValueFor()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getViews()
@@ -247,8 +244,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setViewsForObjectStorageContainingSetsViews()
     {
-        $view = new ();
-        $objectStorageHoldingExactlyOneViews = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $view = new View();
+        $objectStorageHoldingExactlyOneViews = new ObjectStorage();
         $objectStorageHoldingExactlyOneViews->attach($view);
         $this->subject->setViews($objectStorageHoldingExactlyOneViews);
 
@@ -264,7 +261,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addViewToObjectStorageHoldingViews()
     {
-        $view = new ();
+        $view = new View();
         $viewsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('attach'),
             array(), '', false);
         $viewsObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($view));
@@ -278,7 +275,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeViewFromObjectStorageHoldingViews()
     {
-        $view = new ();
+        $view = new View();
         $viewsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array('detach'),
             array(), '', false);
         $viewsObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($view));
@@ -292,7 +289,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getGroupsWithReadAccessReturnsInitialValueForGroup()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getGroupsWithReadAccess()
@@ -304,8 +301,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setGroupsWithReadAccessForObjectStorageContainingGroupSetsGroupsWithReadAccess()
     {
-        $groupsWithReadAcces = new \AgoraTeam\Agora\Domain\Model\Group();
-        $objectStorageHoldingExactlyOneGroupsWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $groupsWithReadAcces = new Group();
+        $objectStorageHoldingExactlyOneGroupsWithReadAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneGroupsWithReadAccess->attach($groupsWithReadAcces);
         $this->subject->setGroupsWithReadAccess($objectStorageHoldingExactlyOneGroupsWithReadAccess);
 
@@ -321,7 +318,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addGroupsWithReadAccesToObjectStorageHoldingGroupsWithReadAccess()
     {
-        $groupsWithReadAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithReadAcces = new Group();
         $groupsWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $groupsWithReadAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($groupsWithReadAcces));
@@ -335,7 +332,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeGroupsWithReadAccesFromObjectStorageHoldingGroupsWithReadAccess()
     {
-        $groupsWithReadAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithReadAcces = new Group();
         $groupsWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $groupsWithReadAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($groupsWithReadAcces));
@@ -349,7 +346,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getGroupWithWriteAccesssReturnsInitialValueForGroup()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getGroupWithWriteAccesss()
@@ -361,8 +358,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setGroupWithWriteAccesssForObjectStorageContainingGroupSetsGroupWithWriteAccesss()
     {
-        $groupWithWriteAccess = new \AgoraTeam\Agora\Domain\Model\Group();
-        $objectStorageHoldingExactlyOneGroupWithWriteAccesss = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $groupWithWriteAccess = new Group();
+        $objectStorageHoldingExactlyOneGroupWithWriteAccesss = new ObjectStorage();
         $objectStorageHoldingExactlyOneGroupWithWriteAccesss->attach($groupWithWriteAccess);
         $this->subject->setGroupWithWriteAccesss($objectStorageHoldingExactlyOneGroupWithWriteAccesss);
 
@@ -378,7 +375,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addGroupWithWriteAccessToObjectStorageHoldingGroupWithWriteAccesss()
     {
-        $groupWithWriteAccess = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupWithWriteAccess = new Group();
         $groupWithWriteAccesssObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $groupWithWriteAccesssObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($groupWithWriteAccess));
@@ -392,7 +389,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeGroupWithWriteAccessFromObjectStorageHoldingGroupWithWriteAccesss()
     {
-        $groupWithWriteAccess = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupWithWriteAccess = new Group();
         $groupWithWriteAccesssObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $groupWithWriteAccesssObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($groupWithWriteAccess));
@@ -406,7 +403,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getGroupsWithModificationAccessReturnsInitialValueForGroup()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getGroupsWithModificationAccess()
@@ -418,8 +415,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setGroupsWithModificationAccessForObjectStorageContainingGroupSetsGroupsWithModificationAccess()
     {
-        $groupsWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\Group();
-        $objectStorageHoldingExactlyOneGroupsWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $groupsWithModificationAcces = new Group();
+        $objectStorageHoldingExactlyOneGroupsWithModificationAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneGroupsWithModificationAccess->attach($groupsWithModificationAcces);
         $this->subject->setGroupsWithModificationAccess($objectStorageHoldingExactlyOneGroupsWithModificationAccess);
 
@@ -435,7 +432,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addGroupsWithModificationAccesToObjectStorageHoldingGroupsWithModificationAccess()
     {
-        $groupsWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithModificationAcces = new Group();
         $groupsWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $groupsWithModificationAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($groupsWithModificationAcces));
@@ -449,7 +446,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeGroupsWithModificationAccesFromObjectStorageHoldingGroupsWithModificationAccess()
     {
-        $groupsWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\Group();
+        $groupsWithModificationAcces = new Group();
         $groupsWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $groupsWithModificationAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($groupsWithModificationAcces));
@@ -463,7 +460,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUsersWithReadAccessReturnsInitialValueForUser()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getUsersWithReadAccess()
@@ -475,8 +472,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setUsersWithReadAccessForObjectStorageContainingUserSetsUsersWithReadAccess()
     {
-        $usersWithReadAcces = new \AgoraTeam\Agora\Domain\Model\User();
-        $objectStorageHoldingExactlyOneUsersWithReadAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $usersWithReadAcces = new User();
+        $objectStorageHoldingExactlyOneUsersWithReadAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneUsersWithReadAccess->attach($usersWithReadAcces);
         $this->subject->setUsersWithReadAccess($objectStorageHoldingExactlyOneUsersWithReadAccess);
 
@@ -492,7 +489,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addUsersWithReadAccesToObjectStorageHoldingUsersWithReadAccess()
     {
-        $usersWithReadAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithReadAcces = new User();
         $usersWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $usersWithReadAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($usersWithReadAcces));
@@ -506,7 +503,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeUsersWithReadAccesFromObjectStorageHoldingUsersWithReadAccess()
     {
-        $usersWithReadAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithReadAcces = new User();
         $usersWithReadAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $usersWithReadAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($usersWithReadAcces));
@@ -520,7 +517,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUsersWthWriteAccessiiReturnsInitialValueForUser()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getUsersWthWriteAccessii()
@@ -532,8 +529,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setUsersWthWriteAccessiiForObjectStorageContainingUserSetsUsersWthWriteAccessii()
     {
-        $usersWthWriteAccessii = new \AgoraTeam\Agora\Domain\Model\User();
-        $objectStorageHoldingExactlyOneUsersWthWriteAccessii = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $usersWthWriteAccessii = new User();
+        $objectStorageHoldingExactlyOneUsersWthWriteAccessii = new ObjectStorage();
         $objectStorageHoldingExactlyOneUsersWthWriteAccessii->attach($usersWthWriteAccessii);
         $this->subject->setUsersWthWriteAccessii($objectStorageHoldingExactlyOneUsersWthWriteAccessii);
 
@@ -549,7 +546,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addUsersWthWriteAccessiiToObjectStorageHoldingUsersWthWriteAccessii()
     {
-        $usersWthWriteAccessii = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWthWriteAccessii = new User();
         $usersWthWriteAccessiiObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $usersWthWriteAccessiiObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($usersWthWriteAccessii));
@@ -563,7 +560,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeUsersWthWriteAccessiiFromObjectStorageHoldingUsersWthWriteAccessii()
     {
-        $usersWthWriteAccessii = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWthWriteAccessii = new User();
         $usersWthWriteAccessiiObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $usersWthWriteAccessiiObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($usersWthWriteAccessii));
@@ -577,7 +574,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUsersWithModificationAccessReturnsInitialValueForUser()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getUsersWithModificationAccess()
@@ -589,8 +586,8 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setUsersWithModificationAccessForObjectStorageContainingUserSetsUsersWithModificationAccess()
     {
-        $usersWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\User();
-        $objectStorageHoldingExactlyOneUsersWithModificationAccess = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $usersWithModificationAcces = new User();
+        $objectStorageHoldingExactlyOneUsersWithModificationAccess = new ObjectStorage();
         $objectStorageHoldingExactlyOneUsersWithModificationAccess->attach($usersWithModificationAcces);
         $this->subject->setUsersWithModificationAccess($objectStorageHoldingExactlyOneUsersWithModificationAccess);
 
@@ -606,7 +603,7 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addUsersWithModificationAccesToObjectStorageHoldingUsersWithModificationAccess()
     {
-        $usersWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithModificationAcces = new User();
         $usersWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $usersWithModificationAccessObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($usersWithModificationAcces));
@@ -620,12 +617,22 @@ class ThreadTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeUsersWithModificationAccesFromObjectStorageHoldingUsersWithModificationAccess()
     {
-        $usersWithModificationAcces = new \AgoraTeam\Agora\Domain\Model\User();
+        $usersWithModificationAcces = new User();
         $usersWithModificationAccessObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $usersWithModificationAccessObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($usersWithModificationAcces));
         $this->inject($this->subject, 'usersWithModificationAccess', $usersWithModificationAccessObjectStorageMock);
 
         $this->subject->removeUsersWithModificationAcces($usersWithModificationAcces);
+    }
+
+    protected function setUp()
+    {
+        $this->subject = new Thread();
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

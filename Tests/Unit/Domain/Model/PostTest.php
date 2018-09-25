@@ -21,6 +21,12 @@ namespace AgoraTeam\Agora\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use AgoraTeam\Agora\Domain\Model\Post;
+use AgoraTeam\Agora\Domain\Model\Voting;
+use AgoraTeam\Agora\Domain\Model\Attachment;
+use AgoraTeam\Agora\Domain\Model\User;
+
 /**
  * Test case for class \AgoraTeam\Agora\Domain\Model\Post.
  *
@@ -39,7 +45,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     protected function setUp()
     {
-        $this->subject = new \AgoraTeam\Agora\Domain\Model\Post();
+        $this->subject = new Post();
     }
 
     protected function tearDown()
@@ -102,7 +108,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getQuotedPostsReturnsInitialValueForPost()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getQuotedPosts()
@@ -114,8 +120,8 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setQuotedPostsForObjectStorageContainingPostSetsQuotedPosts()
     {
-        $quotedPost = new \AgoraTeam\Agora\Domain\Model\Post();
-        $objectStorageHoldingExactlyOneQuotedPosts = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $quotedPost = new Post();
+        $objectStorageHoldingExactlyOneQuotedPosts = new ObjectStorage();
         $objectStorageHoldingExactlyOneQuotedPosts->attach($quotedPost);
         $this->subject->setQuotedPosts($objectStorageHoldingExactlyOneQuotedPosts);
 
@@ -131,7 +137,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addQuotedPostToObjectStorageHoldingQuotedPosts()
     {
-        $quotedPost = new \AgoraTeam\Agora\Domain\Model\Post();
+        $quotedPost = new Post();
         $quotedPostsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $quotedPostsObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($quotedPost));
@@ -145,7 +151,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeQuotedPostFromObjectStorageHoldingQuotedPosts()
     {
-        $quotedPost = new \AgoraTeam\Agora\Domain\Model\Post();
+        $quotedPost = new Post();
         $quotedPostsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $quotedPostsObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($quotedPost));
@@ -170,7 +176,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setVotingForVotingSetsVoting()
     {
-        $votingFixture = new \AgoraTeam\Agora\Domain\Model\Voting();
+        $votingFixture = new Voting();
         $this->subject->setVoting($votingFixture);
 
         $this->assertAttributeEquals(
@@ -185,7 +191,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getAttachmentsReturnsInitialValueForAttachment()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getAttachments()
@@ -197,8 +203,8 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setAttachmentsForObjectStorageContainingAttachmentSetsAttachments()
     {
-        $attachment = new \AgoraTeam\Agora\Domain\Model\Attachment();
-        $objectStorageHoldingExactlyOneAttachments = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $attachment = new Attachment();
+        $objectStorageHoldingExactlyOneAttachments = new ObjectStorage();
         $objectStorageHoldingExactlyOneAttachments->attach($attachment);
         $this->subject->setAttachments($objectStorageHoldingExactlyOneAttachments);
 
@@ -214,7 +220,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addAttachmentToObjectStorageHoldingAttachments()
     {
-        $attachment = new \AgoraTeam\Agora\Domain\Model\Attachment();
+        $attachment = new Attachment();
         $attachmentsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $attachmentsObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($attachment));
@@ -228,7 +234,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeAttachmentFromObjectStorageHoldingAttachments()
     {
-        $attachment = new \AgoraTeam\Agora\Domain\Model\Attachment();
+        $attachment = new Attachment();
         $attachmentsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $attachmentsObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($attachment));
@@ -253,7 +259,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setCreatorForUserSetsCreator()
     {
-        $creatorFixture = new \AgoraTeam\Agora\Domain\Model\User();
+        $creatorFixture = new User();
         $this->subject->setCreator($creatorFixture);
 
         $this->assertAttributeEquals(
@@ -268,7 +274,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getHistoricalVersionsReturnsInitialValueForPost()
     {
-        $newObjectStorage = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $newObjectStorage = new ObjectStorage();
         $this->assertEquals(
             $newObjectStorage,
             $this->subject->getHistoricalVersions()
@@ -280,8 +286,8 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setHistoricalVersionsForObjectStorageContainingPostSetsHistoricalVersions()
     {
-        $historicalVersion = new \AgoraTeam\Agora\Domain\Model\Post();
-        $objectStorageHoldingExactlyOneHistoricalVersions = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
+        $historicalVersion = new Post();
+        $objectStorageHoldingExactlyOneHistoricalVersions = new ObjectStorage();
         $objectStorageHoldingExactlyOneHistoricalVersions->attach($historicalVersion);
         $this->subject->setHistoricalVersions($objectStorageHoldingExactlyOneHistoricalVersions);
 
@@ -297,7 +303,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function addHistoricalVersionToObjectStorageHoldingHistoricalVersions()
     {
-        $historicalVersion = new \AgoraTeam\Agora\Domain\Model\Post();
+        $historicalVersion = new Post();
         $historicalVersionsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('attach'), array(), '', false);
         $historicalVersionsObjectStorageMock->expects($this->once())->method('attach')->with($this->equalTo($historicalVersion));
@@ -311,7 +317,7 @@ class PostTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function removeHistoricalVersionFromObjectStorageHoldingHistoricalVersions()
     {
-        $historicalVersion = new \AgoraTeam\Agora\Domain\Model\Post();
+        $historicalVersion = new Post();
         $historicalVersionsObjectStorageMock = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage',
             array('detach'), array(), '', false);
         $historicalVersionsObjectStorageMock->expects($this->once())->method('detach')->with($this->equalTo($historicalVersion));

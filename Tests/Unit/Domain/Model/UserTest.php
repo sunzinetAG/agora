@@ -37,16 +37,6 @@ class UserTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
-    {
-        $this->subject = new \AgoraTeam\Agora\Domain\Model\User();
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
-
     /**
      * @test
      */
@@ -355,5 +345,15 @@ class UserTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->inject($this->subject, 'groups', $groupsObjectStorageMock);
 
         $this->subject->removeGroup($group);
+    }
+
+    protected function setUp()
+    {
+        $this->subject = new \AgoraTeam\Agora\Domain\Model\User();
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }

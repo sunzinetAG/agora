@@ -40,16 +40,6 @@ class AttachmentTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
-    {
-        $this->subject = new Attachment();
-    }
-
-    protected function tearDown()
-    {
-        unset($this->subject);
-    }
-
     /**
      * @test
      */
@@ -99,5 +89,15 @@ class AttachmentTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             'file',
             $this->subject
         );
+    }
+
+    protected function setUp()
+    {
+        $this->subject = new Attachment();
+    }
+
+    protected function tearDown()
+    {
+        unset($this->subject);
     }
 }
