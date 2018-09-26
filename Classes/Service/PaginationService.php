@@ -178,7 +178,7 @@ class PaginationService implements SingletonInterface
 
         /** @var QueryResult $posts */
         $threads = $this->threadRepository->findByForum($thread->getForum())->toArray();
-        $position = array_search($thread, $threads) + 1;
+        $position = array_search($thread, $threads, true) + 1;
         if (false == $position) {
             return 0;
         }
