@@ -110,54 +110,54 @@ class SearchController extends ActionController
      * @param \AgoraTeam\Agora\Domain\Model\Dto\Search $search
      * @return void
      */
-    public function listAction( 
-    		\AgoraTeam\Agora\Domain\Model\Dto\Search $search = null
-    		) {	
-    			$demand = $this->createDemandObjectFromSettings($this->settings);
-    			$demand->setActionAndClass(__METHOD__, __CLASS__);
-    			
-    			$openUserForums = $this->forumRepository->findAccessibleUserForums();
-     			
-    			if (is_null($search)) {
-    				$search = $this->objectManager->get(\AgoraTeam\Agora\Domain\Model\Dto\Search::class);
-    			}
- 
-    			// If order field is empty, generate field value form fields OrderBy and Directions
-     			if (empty($search->getOrder())) {
-    				$search->setOrder($search->getOrderBy() . ' ' .  $search->getOrderDirection());
-      			}
-      			$demand->setSearch($search);
- 
-      			// If themes are not included from the search filter, as themes set openUserforums 
-      			if (empty($search->getThemes())) {
-      				$search->setThemes($openUserForums);
-      			}
- 
-      			// Initialise search query
-      			$whereToSearch = $demand->getSearch()->getRadius();
-      			$results = $this->postRepository->findDemanded($demand);
-      			
-      			if ($whereToSearch==2) {
-      				$results2 = [];
-      				foreach ($results as $key=>$value) {
-      					$firstPost = $this->postRepository->findFirstPostOnThread($value->getThread()->getUid(), $search->getSword());
-      					$currentUid = $value->getUid();
-      					$firstPostUid = $firstPost->getUid(); 
- 	      				if ($currentUid == $firstPostUid) {
-	      					$results2[] = $value;
-	      				}
-      				}
-      				$results = $results2;
-       			}
+    public function listAction(
+        \AgoraTeam\Agora\Domain\Model\Dto\Search $search = null
+    ) {
+        if (is_null($search)) {
+            return;
+        }
 
-     			$assignedValues = [  
-    				'results' => $results,	
-    				'search' => $search,
-    				'themes' => $this->forumRepository->findAccessibleUserForumsAsMatrix(),
-     				'demand' => $demand,
-    				'settings' => $this->settings
-    			];
-    			
-     			$this->view->assignMultiple($assignedValues);
-    }     
+        $demand = $this->createDemandObjectFromSettings($this->settings);
+        $demand->setActionAndClass(__METHOD__, __CLASS__);
+
+        $openUserForums = $this->forumRepository->findAccessibleUserForums();
+
+        // If order field is empty, generate field value form fields OrderBy and Directions
+        if (empty($search->getOrder())) {
+            $search->setOrder($search->getOrderBy() . ' ' .  $search->getOrderDirection());
+        }
+        $demand->setSearch($search);
+
+        // If themes are not included from the search filter, as themes set openUserforums
+        if (empty($search->getThemes())) {
+            $search->setThemes($openUserForums);
+        }
+
+        // Initialise search query
+        $whereToSearch = $demand->getSearch()->getRadius();
+        $results = $this->postRepository->findDemanded($demand);
+
+        if ($whereToSearch==2) {
+            $results2 = [];
+            foreach ($results as $key=>$value) {
+                $firstPost = $this->postRepository->findFirstPostOnThread($value->getThread()->getUid(), $search->getSword());
+                $currentUid = $value->getUid();
+                $firstPostUid = $firstPost->getUid();
+                if ($currentUid == $firstPostUid) {
+                    $results2[] = $value;
+                }
+            }
+            $results = $results2;
+        }
+
+        $assignedValues = [
+            'results' => $results,
+            'search' => $search,
+            'themes' => $this->forumRepository->findAccessibleUserForumsAsMatrix(),
+            'demand' => $demand,
+            'settings' => $this->settings
+        ];
+
+        $this->view->assignMultiple($assignedValues);
+    }
 }
