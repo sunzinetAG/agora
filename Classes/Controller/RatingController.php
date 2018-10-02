@@ -51,11 +51,20 @@ class RatingController extends ActionController
     protected $ratingRepository = null;
 
     /**
+     * @var \Sunzinet\SzComments\Service\AuthorizationService
+     * @inject
+     */
+    protected $authorizationService;
+
+    /**
      * @param \AgoraTeam\Agora\Domain\Model\Post $post
      * @param string $rateType
      */
     public function rateAction($post, $rateType)
     {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         // @todo add returnMessage in JsonFormat
         $this->authenticationService->assertReadAuthorization($post);
 

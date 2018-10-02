@@ -68,6 +68,12 @@ class PostController extends ActionController
     protected $threadRepository;
 
     /**
+     * @var \AgoraTeam\Agora\Domain\Service\AuthorizationService
+     * @inject
+     */
+    protected $authorizationService;
+
+    /**
      * action list
      *
      * @param \AgoraTeam\Agora\Domain\Model\Thread $thread
@@ -228,6 +234,9 @@ class PostController extends ActionController
      */
     public function createAction(\AgoraTeam\Agora\Domain\Model\Post $newPost)
     {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         try {
             $this->authenticationService->assertNewPostAuthorization($newPost->getThread());
         } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
@@ -282,6 +291,9 @@ class PostController extends ActionController
         \AgoraTeam\Agora\Domain\Model\Post $originalPost,
         \AgoraTeam\Agora\Domain\Model\Post $post = null
     ) {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         try {
             $this->authenticationService->assertEditPostAuthorization($originalPost);
         } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
@@ -322,6 +334,9 @@ class PostController extends ActionController
         \AgoraTeam\Agora\Domain\Model\Post $post,
         string $tags = ''
     ) {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         try {
             $this->authenticationService->assertEditPostAuthorization($originalPost);
         } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
@@ -393,6 +408,9 @@ class PostController extends ActionController
      */
     public function deleteAction(\AgoraTeam\Agora\Domain\Model\Post $post)
     {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         try {
             $this->authenticationService->assertDeletePostAuthorization($post);
         } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
@@ -467,6 +485,9 @@ class PostController extends ActionController
      */
     public function confirmDeleteAction(Post $post)
     {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         try {
             $this->authenticationService->assertDeletePostAuthorization($post);
         } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
