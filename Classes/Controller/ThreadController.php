@@ -47,6 +47,12 @@ class ThreadController extends ActionController
     protected $threadRepository = null;
 
     /**
+     * @var \AgoraTeam\Agora\Domain\Service\AuthorizationService
+     * @inject
+     */
+    protected $authorizationService;
+
+    /**
      * action list
      *
      * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
@@ -113,6 +119,9 @@ class ThreadController extends ActionController
         \AgoraTeam\Agora\Domain\Model\Thread $thread = null,
         $text = ''
     ) {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         $this->authenticationService->assertNewThreadAuthorization($forum);
 
         $this->view->assign('forum', $forum)
@@ -136,6 +145,9 @@ class ThreadController extends ActionController
         $text,
         $tags = ''
     ) {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         $this->authenticationService->assertNewThreadAuthorization($forum);
 
         if ($tags) {
