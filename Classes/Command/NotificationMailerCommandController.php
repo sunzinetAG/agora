@@ -102,24 +102,27 @@ class NotificationMailerCommandController extends CommandController
 
         $usersIds = $this->notificationRepository->findUserListFromNotifcationsByLimit($amounfOfUsersPerRun);
         foreach ($usersIds as $key => $val) {
-            $user = $this->userRepository->findByUid($val);
-            if ($user->getEmail()) {
-                $userNotifications = $this->notificationService->getNotificationsByUser($user);
-                $this->signalSlotDispatcher->dispatch(
-                    __CLASS__,
-                    'afterGettingUserNotifications',
-                    [$user, &$userNotifications]
+            if (!$user = $this->userRepository->findByUid($val)) {
+                continue;
+            }
+            if (!$user->getEmail()) {
+                continue;
+            }
+            $userNotifications = $this->notificationService->getNotificationsByUser($user);
+            $this->signalSlotDispatcher->dispatch(
+                __CLASS__,
+                'afterGettingUserNotifications',
+                [$user, &$userNotifications]
+            );
+            if (!empty($userNotifications)) {
+                $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
+                $mailSent = $this->mailService->sendMail(
+                    [$user->getEmail() => $user->getLastName()],
+                    [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
+                    $settings['email']['notificationSubject'],
+                    'Notification',
+                    ['groupedNotifications' => $groupedNotifications, 'user' => $user]
                 );
-                if (!empty($userNotifications)) {
-                    $groupedNotifications = $this->notificationService->groupNotificationsByType($userNotifications);
-                    $mailSent = $this->mailService->sendMail(
-                        [$user->getEmail() => $user->getLastName()],
-                        [$settings['email']['defaultEmailAdress'] => $settings['email']['defaultEmailUserName']],
-                        $settings['email']['notificationSubject'],
-                        'Notification',
-                        ['groupedNotifications' => $groupedNotifications, 'user' => $user]
-                    );
-                }
             }
             //  Even if the users email is not set, dump the notifications
             $this->notificationService->markUserNotificationsAsSent($user);
