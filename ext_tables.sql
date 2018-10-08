@@ -294,6 +294,8 @@ CREATE TABLE tx_agora_domain_model_notification (
 	l10n_parent      INT(11) DEFAULT '0'             NOT NULL,
 	l10n_diffsource  MEDIUMBLOB,
 
+	observer         TINYINT(1) UNSIGNED DEFAULT '0' NOT NULL,
+
 	PRIMARY KEY (uid),
 	KEY parent (pid),
 	KEY t3ver_oid (t3ver_oid, t3ver_wsid),

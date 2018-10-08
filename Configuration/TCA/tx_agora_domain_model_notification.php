@@ -161,6 +161,9 @@ return [
                 'readOnly' => true
             ),
         ),
+        'observer' => array(
+            'exclude' => 1,
+        ),
         'thread' => array(
             'exclude' => 1,
             'label' => $lll . 'tx_agora_domain_model_notification.thread',
