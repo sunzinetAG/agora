@@ -424,17 +424,24 @@ class ActionConverterCommandController extends CommandController
             $observers = $thread->getObservers();
             /** @var User $observer */
             foreach ($observers as $observer) {
+                $ownerUid = $observer->getUid();
+
                 $notification = new Notification();
                 $notification->setType($action->getType());
                 $notification->setTitle($action->getTitle());
                 $notification->setUser($action->getUser());
-                $notification->setOwner($observer->getUid());
+                $notification->setOwner($ownerUid);
                 $notification->setThread($thread->getUid());
                 $notification->setPage($action->getPage());
                 $notification->setTstamp($action->getTstamp());
 
                 if ($post) {
                     $notification->setPost($post->getUid());
+                }
+
+                $creatorUid = $thread->getCreator()->getUid();
+                if ($creatorUid != $ownerUid) {
+                    $notification->isObserver(true);
                 }
 
                 $notifications[] = $notification;
