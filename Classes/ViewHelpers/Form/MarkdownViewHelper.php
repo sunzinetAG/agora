@@ -59,15 +59,12 @@ class MarkdownViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractTagBas
     {
         parent::initializeArguments();
         $this->registerTagAttribute('data-provide', 'string', '');
-        $this->registerTagAttribute('autofocus', 'string',
-            'Specifies that a text area should automatically get focus when the page loads');
+        $this->registerTagAttribute('autofocus', 'string', 'Specifies that a text area should automatically get focus when the page loads');
         $this->registerTagAttribute('rows', 'int', 'The number of rows of a text area');
         $this->registerTagAttribute('cols', 'int', 'The number of columns of a text area');
-        $this->registerTagAttribute('disabled', 'string',
-            'Specifies that the input element should be disabled when the page loads');
+        $this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
         $this->registerTagAttribute('placeholder', 'string', 'The placeholder of the textarea');
-        $this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper',
-            false, 'f3-form-error');
+        $this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', false, 'f3-form-error');
         $this->registerUniversalTagAttributes();
     }
 

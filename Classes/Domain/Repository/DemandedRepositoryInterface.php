@@ -8,7 +8,7 @@ namespace AgoraTeam\Agora\Domain\Repository;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-use  AgoraTeam\Agora\Domain\Model\DemandInterface;
+use AgoraTeam\Agora\Domain\Model\DemandInterface;
 
 /**
  * Demand domain model interface

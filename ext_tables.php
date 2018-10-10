@@ -43,9 +43,9 @@ if (TYPO3_MODE === 'BE') {
     'Forumpages'
 );
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-	$_EXTKEY,
-	'Forumsearch',
-	'Forumsearch'
+    $_EXTKEY,
+    'Forumsearch',
+    'Forumsearch'
 );
 
 $pluginSignature = str_replace('_', '', $_EXTKEY) . '_widgets';
@@ -65,8 +65,8 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignat
 $pluginSignature = str_replace('_', '', $_EXTKEY) . '_forumsearch';
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-	$pluginSignature,
-	'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForms/flexform_search.xml'
+    $pluginSignature,
+    'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForms/flexform_search.xml'
 );
 
 /*-----------------------------------------------------------------------

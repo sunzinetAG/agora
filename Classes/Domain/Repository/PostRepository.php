@@ -168,7 +168,8 @@ class PostRepository extends AbstractDemandedRepository
             $query->logicalAnd(
                 $query->equals('thread.uid', $thread),
                 $query->like("text", '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($sword, '') . '%')
-            ))->setOrderings(array('crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING));
+            )
+        )->setOrderings(array('crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING));
 
         return $query->execute()->getFirst();
     }
@@ -278,7 +279,6 @@ class PostRepository extends AbstractDemandedRepository
         $constraints[] = $query->greaterThan('thread', 0);
 
         if ($searchRadius == 2) {
-
             $threadsWithSearchedWord = $this->threadRepository->findDemanded($demand);
             if (!count($threadsWithSearchedWord)) {
                 $threadsWithSearchedWord = array(0 => '-1');
@@ -289,7 +289,6 @@ class PostRepository extends AbstractDemandedRepository
         }
 
         if (!empty($searchSubject)) {
-
             $searchFields = array(0 => 'text');
 
             if (is_null($searchRadius) || $searchRadius == 2) {
@@ -311,8 +310,7 @@ class PostRepository extends AbstractDemandedRepository
                 foreach ($searchFields as $field) {
                     $subConstraints = [];
                     foreach ($searchSubjectSplitted as $searchSubjectSplittedPart) {
-                        $subConstraints[] = $query->like($field,
-                            '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubjectSplittedPart, '') . '%');
+                        $subConstraints[] = $query->like($field, '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubjectSplittedPart, '') . '%');
                     }
                     $searchConstraints[] = $query->logicalAnd($subConstraints);
                 }
@@ -323,8 +321,7 @@ class PostRepository extends AbstractDemandedRepository
             } else {
                 foreach ($searchFields as $field) {
                     if (!empty($searchSubject)) {
-                        $searchConstraints[] = $query->like($field,
-                            '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubject, '') . '%');
+                        $searchConstraints[] = $query->like($field, '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubject, '') . '%');
                     }
                 }
                 if (count($searchConstraints)) {

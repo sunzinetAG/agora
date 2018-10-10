@@ -42,5 +42,4 @@ class ActionRepository extends Repository
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
     }
-
 }

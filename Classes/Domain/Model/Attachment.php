@@ -82,5 +82,4 @@ class Attachment extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->file = $file;
     }
-
 }

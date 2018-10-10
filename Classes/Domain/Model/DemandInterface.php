@@ -1,7 +1,6 @@
 <?php
 namespace AgoraTeam\Agora\Domain\Model;
 
-
 /***************************************************************
  *  Copyright notice
  *  (c) 2015 Philipp Thiele <philipp.thiele@phth.de>
@@ -26,5 +25,4 @@ namespace AgoraTeam\Agora\Domain\Model;
  */
 interface DemandInterface
 {
-	
 }

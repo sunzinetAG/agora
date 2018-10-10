@@ -43,5 +43,4 @@ class AttachmentController extends ActionController
     public function downloadAction()
     {
     }
-
 }

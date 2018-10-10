@@ -15,28 +15,28 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class ForumDemand extends AbstractEntity implements DemandInterface
 {
- 
+
     /** @var \AgoraTeam\Agora\Domain\Model\Dto\Search */
     protected $search;
 
     /** @var string */
     protected $order;
-    
+
     /** @var int */
     protected $limit;
-    
+
     /** @var int */
     protected $offset;
- 
+
     /** @var string */
     protected $action = '';
 
     /** @var string */
     protected $class = '';
-    
+
     /** @var int */
     protected $storagePage;
- 
+
     /**
      * Set order
      *
@@ -58,7 +58,7 @@ class ForumDemand extends AbstractEntity implements DemandInterface
     {
         return $this->order;
     }
- 
+
     /**
      * Get search object
      *
@@ -80,7 +80,7 @@ class ForumDemand extends AbstractEntity implements DemandInterface
         $this->search = $search;
         return $this;
     }
- 
+
     /**
      * @return string
      */
@@ -106,7 +106,7 @@ class ForumDemand extends AbstractEntity implements DemandInterface
     {
         return $this->class;
     }
-    
+
     /**
      * Set limit
      *
@@ -115,10 +115,10 @@ class ForumDemand extends AbstractEntity implements DemandInterface
      */
     public function setLimit($limit)
     {
-    	$this->limit = (int)$limit;
-    	return $this;
+        $this->limit = (int)$limit;
+        return $this;
     }
-    
+
     /**
      * Get limit
      *
@@ -126,9 +126,9 @@ class ForumDemand extends AbstractEntity implements DemandInterface
      */
     public function getLimit()
     {
-    	return $this->limit;
+        return $this->limit;
     }
-    
+
     /**
      * Set offset
      *
@@ -137,10 +137,10 @@ class ForumDemand extends AbstractEntity implements DemandInterface
      */
     public function setOffset($offset)
     {
-    	$this->offset = (int)$offset;
-    	return $this;
+        $this->offset = (int)$offset;
+        return $this;
     }
-    
+
     /**
      * Get offset
      *
@@ -148,7 +148,7 @@ class ForumDemand extends AbstractEntity implements DemandInterface
      */
     public function getOffset()
     {
-    	return $this->offset;
+        return $this->offset;
     }
 
     /**
@@ -172,7 +172,7 @@ class ForumDemand extends AbstractEntity implements DemandInterface
         $this->class = $controller;
         return $this;
     }
-    
+
     /**
      * Set list of storage pages
      *
@@ -181,10 +181,10 @@ class ForumDemand extends AbstractEntity implements DemandInterface
      */
     public function setStoragePage($storagePage)
     {
-    	$this->storagePage = $storagePage;
-    	return $this;
+        $this->storagePage = $storagePage;
+        return $this;
     }
-    
+
     /**
      * Get list of storage pages
      *
@@ -192,7 +192,6 @@ class ForumDemand extends AbstractEntity implements DemandInterface
      */
     public function getStoragePage()
     {
-    	return $this->storagePage;
+        return $this->storagePage;
     }
-    
 }

@@ -52,14 +52,14 @@ if (!defined('TYPO3_MODE')) {
 );
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-	'AgoraTeam.' . $_EXTKEY,
-	'Forumsearch',
-	array(
-		'Search' => 'list',
-	),
-	array(
-		'Search' => 'list',
-	)
+    'AgoraTeam.' . $_EXTKEY,
+    'Forumsearch',
+    array(
+        'Search' => 'list',
+    ),
+    array(
+        'Search' => 'list',
+    )
 );
 
 

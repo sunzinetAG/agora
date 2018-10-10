@@ -58,5 +58,4 @@ class RatingRepository extends Repository
 
         return $query->execute()->getFirst();
     }
-
 }

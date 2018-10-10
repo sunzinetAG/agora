@@ -62,5 +62,4 @@ class TagRepository extends Repository
         $query->getQuerySettings()->setRespectStoragePage(false);
         return $query->execute();
     }
-
 }

@@ -54,5 +54,4 @@ class VotingAnswer extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->answer = $answer;
     }
-
 }

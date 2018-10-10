@@ -29,45 +29,45 @@ class Search extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var string
      */
     protected $sword;
- 	
+
     /**
      * Themes
      *
      * @var array
      */
     protected $themes;
-    
+
     /**
      * Radius
      *
      * @var int
      */
     protected $radius;
-    
+
     /**
      * orderBy
      *
      * @var string
      */
     protected $orderBy;
-    
+
     /**
      * orderDirection
      *
      * @var string
      */
     protected $orderDirection;
-    
+
     /**
      * Order
      *
      * @var string
      */
     protected $order;
-    
+
     /** @var bool */
     protected $splitSubjectWords = false;
- 
+
     /**
      * Get the sword
      *
@@ -87,100 +87,100 @@ class Search extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->sword = $sword;
     }
-    
+
     /**
      * @param array $themes
      */
     public function setThemes($themes)
     {
-    	$this->themes = $themes;
+        $this->themes = $themes;
     }
-    
+
     /**
      * @return array
      */
     public function getThemes()
     {
-    	return $this->themes;
+        return $this->themes;
     }
-    
+
     /**
      * @param int $radius
      */
     public function setRadius($radius)
     {
-    	$this->radius = $radius;
+        $this->radius = $radius;
     }
-    
+
     /**
      * @return int
      */
     public function getRadius()
     {
-    	return $this->radius;
+        return $this->radius;
     }
- 
+
     /**
      * @return string
      */
     public function getOrderDirection()
     {
-    	return $this->orderDirection;
+        return $this->orderDirection;
     }
-    
+
     /**
      * @param string $orderDirection
      */
     public function setOrderDirection($orderDirection)
     {
-    	$this->orderDirection = $orderDirection;
+        $this->orderDirection = $orderDirection;
     }
- 
+
     /**
      * @return string
      */
     public function getOrderBy()
     {
-    	return $this->orderBy;
+        return $this->orderBy;
     }
- 
+
     /**
      * @param string $orderBy
      */
     public function setOrderBy($orderBy)
     {
-    	$this->orderBy = $orderBy;
+        $this->orderBy = $orderBy;
     }
-    
+
     /**
      * @return string
      */
     public function getOrder()
-    {	
-    	return $this->order;
+    {
+        return $this->order;
     }
-   
+
     /**
      * @param string $order
      */
     public function setOrder($order)
     {
-    	$this->order = $order;
+        $this->order = $order;
     }
-    
+
     /**
      * @return bool
      */
     public function isSplitSubjectWords()
     {
-    	return $this->splitSubjectWords;
+        return $this->splitSubjectWords;
     }
-    
+
     /**
      * @param bool $splitSubjectWords
      */
     public function setSplitSubjectWords($splitSubjectWords)
     {
-    	$this->splitSubjectWords = $splitSubjectWords;
+        $this->splitSubjectWords = $splitSubjectWords;
     }
 }

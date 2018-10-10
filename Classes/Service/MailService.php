@@ -105,5 +105,4 @@ class MailService implements SingletonInterface
 
         return $message->isSent();
     }
-
 }

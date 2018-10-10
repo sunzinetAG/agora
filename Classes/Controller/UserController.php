@@ -181,5 +181,4 @@ class UserController extends ActionController
         $uri = $this->generatePostUri($post, true);
         $this->redirectToUri($uri);
     }
-
 }

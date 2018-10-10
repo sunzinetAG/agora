@@ -1,6 +1,6 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-    die ('Access denied.');
+    die('Access denied.');
 }
 
 return array(
@@ -126,10 +126,10 @@ return array(
                 ),
             ),
         ),
-        'tstamp' => Array(
+        'tstamp' => array(
             'exclude' => 1,
             'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_post.tstamp',
-            'config' => Array(
+            'config' => array(
                 'type' => 'none',
                 'format' => 'date',
                 'eval' => 'date'

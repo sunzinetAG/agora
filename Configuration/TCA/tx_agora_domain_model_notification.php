@@ -1,6 +1,6 @@
 <?php
 if (!defined('TYPO3_MODE')) {
-    die ('Access denied.');
+    die('Access denied.');
 }
 
 $lll = 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:';

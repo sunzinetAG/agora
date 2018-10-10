@@ -37,8 +37,7 @@ class IsPartOfArrayViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractV
      * @return bool
      */
     public function render($dataArray, $data)
-    {	
-    	return in_array($data, $dataArray);
+    {
+        return in_array($data, $dataArray);
     }
-
 }

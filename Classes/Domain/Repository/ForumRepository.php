@@ -152,7 +152,7 @@ class ForumRepository extends Repository
 
         return $forums;
     }
-    
+
 /**
      * Function findAccessibleUserForumsByParent
      * find forums of specific parent
@@ -162,16 +162,16 @@ class ForumRepository extends Repository
      */
     public function findAccessibleUserForumsByParent($parent)
     {
- 		$constraints = array();
+        $constraints = array();
         $user = $this->getUser();
         $query = $this->createQuery();
 
         $constraints[] = $query->logicalAnd(
             $query->equals('groups_with_read_access', 0),
             $query->equals('users_with_read_access', 0),
-        	$query->equals('parent', $parent)
+            $query->equals('parent', $parent)
         );
-        
+
         if (is_a($user, '\AgoraTeam\Agora\Domain\Model\User')) {
             // Get the allowed forums for the logged in user
             $flattenedGroups = $user->getFlattenedGroupUids();
@@ -191,7 +191,7 @@ class ForumRepository extends Repository
 
         return $forums;
     }
-    
+
     /**
      * Function findAccessibleUserForumsAsMatrix
      * find forums and childrens and generate matrix
@@ -200,14 +200,13 @@ class ForumRepository extends Repository
      */
     public function findAccessibleUserForumsAsMatrix()
     {
-    	$allAccessibleForums = $this->findVisibleRootForums();
-    	$matrix = [];
-    	
-    	foreach ($allAccessibleForums as $key => $value) {
-    		$matrix[$key]['item'] = $value;
-    		$matrix[$key]['children'] = $this->findAccessibleUserForumsByParent($value->getUid());
-    	}
-    	return $matrix;
+        $allAccessibleForums = $this->findVisibleRootForums();
+        $matrix = [];
 
+        foreach ($allAccessibleForums as $key => $value) {
+            $matrix[$key]['item'] = $value;
+            $matrix[$key]['children'] = $this->findAccessibleUserForumsByParent($value->getUid());
+        }
+        return $matrix;
     }
 }

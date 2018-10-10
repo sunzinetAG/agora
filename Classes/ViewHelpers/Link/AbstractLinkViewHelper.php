@@ -155,5 +155,4 @@ abstract class AbstractLinkViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\A
 
         return $this->tag->render();
     }
-
 }

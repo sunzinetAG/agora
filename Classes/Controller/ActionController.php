@@ -193,4 +193,3 @@ abstract class ActionController extends \TYPO3\CMS\Extbase\Mvc\Controller\Action
         return $uri;
     }
 }
-

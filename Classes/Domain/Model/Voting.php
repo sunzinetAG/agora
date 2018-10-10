@@ -127,5 +127,4 @@ class Voting extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->answers = $answers;
     }
-
 }

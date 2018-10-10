@@ -155,5 +155,4 @@ class Vote extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->user = $user;
     }
-
 }

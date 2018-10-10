@@ -46,7 +46,7 @@ class SearchController extends ActionController
      * @inject
      */
     protected $threadRepository = null;
-    
+
     /**
      * postRepository
      *
@@ -54,59 +54,62 @@ class SearchController extends ActionController
      * @inject
      */
     protected $postRepository;
-  	
+
     /**
-     * 
+     *
      * @param array $settings
      * @param string $class
      * @throws \UnexpectedValueException
      * @return \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand
      */
-	protected function createDemandObjectFromSettings(
-			$settings,
-			$class = 'AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand'
-			) {
-				$class = isset($settings['demandClass']) && !empty($settings['demandClass']) ? $settings['demandClass'] : $class;
-				/* @var $demand \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand */
-				$demand = $this->objectManager->get($class, $settings);
-				if (!$demand instanceof \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand) {
-					throw new \UnexpectedValueException(
-							sprintf('The demand object must be an instance of \AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand, but %s given!',
-									$class),
-							1423157953);
-				}
- 				
-				if ($settings['search']['limit'] != null) {
-					$demand->setLimit($settings['search']['limit']); 
-				}
-				
-				if ($settings['orderBy']) {
-					$demand->setOrder($settings['orderBy'] . ' ' . $settings['orderDirection']);
-				}
-				
-				$this->contentObj = $this->configurationManager->getContentObject();
- 				$demand->setStoragePage($this->contentObj->data['pages']);
-				
-				return $demand;
-	}
- 
- 	/**
- 	 * Action initializeList
- 	 *
- 	 * @return void
- 	 */
- 	public function initializeListAction()
- 	{
- 		/** @var MvcPropertyMappingConfiguration $propertyMappingConfiguration * */
- 		$propertyMappingConfiguration = $this->arguments['search']->getPropertyMappingConfiguration();
- 		$propertyMappingConfiguration->allowProperties('themes');
- 		$propertyMappingConfiguration->allowProperties('radius');
- 		$propertyMappingConfiguration->allowProperties('orderBy');
- 	}
- 
+    protected function createDemandObjectFromSettings(
+        $settings,
+        $class = 'AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand'
+    ) {
+        $class = isset($settings['demandClass']) && !empty($settings['demandClass']) ? $settings['demandClass'] : $class;
+        /* @var $demand \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand */
+        $demand = $this->objectManager->get($class, $settings);
+        if (!$demand instanceof \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand) {
+            throw new \UnexpectedValueException(
+                sprintf(
+                    'The demand object must be an instance of \AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand, but %s given!',
+                    $class
+                ),
+                1423157953
+            );
+        }
+
+        if ($settings['search']['limit'] != null) {
+            $demand->setLimit($settings['search']['limit']);
+        }
+
+        if ($settings['orderBy']) {
+            $demand->setOrder($settings['orderBy'] . ' ' . $settings['orderDirection']);
+        }
+
+        $this->contentObj = $this->configurationManager->getContentObject();
+        $demand->setStoragePage($this->contentObj->data['pages']);
+
+        return $demand;
+    }
+
+    /**
+     * Action initializeList
+     *
+     * @return void
+     */
+    public function initializeListAction()
+    {
+        /** @var MvcPropertyMappingConfiguration $propertyMappingConfiguration * */
+        $propertyMappingConfiguration = $this->arguments['search']->getPropertyMappingConfiguration();
+        $propertyMappingConfiguration->allowProperties('themes');
+        $propertyMappingConfiguration->allowProperties('radius');
+        $propertyMappingConfiguration->allowProperties('orderBy');
+    }
+
     /**
      * Action list
-     * 
+     *
      * @param \AgoraTeam\Agora\Domain\Model\Dto\Search $search
      * @return void
      */
@@ -139,7 +142,7 @@ class SearchController extends ActionController
 
         if ($whereToSearch==2) {
             $results2 = [];
-            foreach ($results as $key=>$value) {
+            foreach ($results as $key => $value) {
                 $firstPost = $this->postRepository->findFirstPostOnThread($value->getThread()->getUid(), $search->getSword());
                 $currentUid = $value->getUid();
                 $firstPostUid = $firstPost->getUid();

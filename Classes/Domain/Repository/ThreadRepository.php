@@ -212,8 +212,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
                 foreach ($searchFields as $field) {
                     $subConstraints = [];
                     foreach ($searchSubjectSplitted as $searchSubjectSplittedPart) {
-                        $subConstraints[] = $query->like($field,
-                            '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubjectSplittedPart, '') . '%');
+                        $subConstraints[] = $query->like($field, '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubjectSplittedPart, '') . '%');
                     }
                     $searchConstraints[] = $query->logicalAnd($subConstraints);
                 }
@@ -224,8 +223,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
             } else {
                 foreach ($searchFields as $field) {
                     if (!empty($searchSubject)) {
-                        $searchConstraints[] = $query->like($field,
-                            '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubject, '') . '%');
+                        $searchConstraints[] = $query->like($field, '%' . $GLOBALS['TYPO3_DB']->escapeStrForLike($searchSubject, '') . '%');
                     }
                 }
 
@@ -279,5 +277,4 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
 
         return $result;
     }
-
 }
