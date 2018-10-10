@@ -88,6 +88,12 @@ class PostController extends ActionController
     protected $threadRepository;
 
     /**
+     * @var \AgoraTeam\Agora\Domain\Service\AuthorizationService
+     * @inject
+     */
+    protected $authorizationService;
+
+    /**
      * action list
      *
      * @param Thread $thread
@@ -100,7 +106,12 @@ class PostController extends ActionController
      */
     public function listAction(Thread $thread, $page = 1)
     {
-        $this->authenticationService->assertReadAuthorization($thread);
+        try {
+            $this->authenticationService->assertReadAuthorization($thread);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
+
         $observedThread = [];
         $paginator = '';
 
@@ -195,7 +206,11 @@ class PostController extends ActionController
      */
     public function showAction(Post $post)
     {
-        $this->authenticationService->assertReadAuthorization($post);
+        try {
+            $this->authenticationService->assertReadAuthorization($post);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
 
         $user = $this->authenticationService->getUser();
         $this->view->assign('post', $post);
@@ -211,7 +226,11 @@ class PostController extends ActionController
      */
     public function showHistoryAction(Post $post)
     {
-        $this->authenticationService->assertReadAuthorization($post);
+        try {
+            $this->authenticationService->assertReadAuthorization($post);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
         $this->view->assign('post', $post);
     }
 
@@ -232,7 +251,11 @@ class PostController extends ActionController
         Post $quotedPost = null,
         Thread $thread = null
     ) {
-        $this->authenticationService->assertNewPostAuthorization($thread);
+        try {
+            $this->authenticationService->assertNewPostAuthorization($thread);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
         $quote = '';
         if (self::QUOTE_MODE == $mode) {
             $qpCreator = $quotedPost->getCreator();
@@ -271,7 +294,14 @@ class PostController extends ActionController
      */
     public function createAction(Post $newPost)
     {
-        $this->authenticationService->assertNewPostAuthorization($newPost->getThread());
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
+        try {
+            $this->authenticationService->assertNewPostAuthorization($newPost->getThread());
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
 
         $newPost->setForum($newPost->getThread()->getForum());
         $user = $this->authenticationService->getUser();
@@ -323,7 +353,15 @@ class PostController extends ActionController
         Post $originalPost,
         Post $post = null
     ) {
-        $this->authenticationService->assertEditPostAuthorization($originalPost);
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
+        try {
+            $this->authenticationService->assertEditPostAuthorization($originalPost);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
+
         $isFirstPost = false;
         if ($post === null) {
             $post = $this->postService->copy($originalPost);
@@ -365,7 +403,14 @@ class PostController extends ActionController
         Post $post,
         string $tags = ''
     ) {
-        $this->authenticationService->assertEditPostAuthorization($originalPost);
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
+        try {
+            $this->authenticationService->assertEditPostAuthorization($originalPost);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
 
         $thread = $originalPost->getThread();
         // Only process if there are changes within the text
@@ -439,7 +484,14 @@ class PostController extends ActionController
      */
     public function deleteAction(Post $post)
     {
-        $this->authenticationService->assertDeletePostAuthorization($post);
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
+        try {
+            $this->authenticationService->assertDeletePostAuthorization($post);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
 
         // check if post is first post
         $firstPost = $this->postRepository->findByThread($post->getThread())->getFirst();
@@ -483,7 +535,14 @@ class PostController extends ActionController
      */
     public function confirmDeleteAction(Post $post)
     {
-        $this->authenticationService->assertDeletePostAuthorization($post);
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
+        try {
+            $this->authenticationService->assertDeletePostAuthorization($post);
+        } catch (\TYPO3\CMS\Core\Error\Http\PageNotFoundException $exception) {
+            $GLOBALS['TSFE']->pageNotFoundAndExit();
+        }
 
         $this->view->assign('post', $post);
         $this->view->assign('user', $this->authenticationService->getUser());

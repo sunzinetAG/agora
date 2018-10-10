@@ -86,20 +86,20 @@ class SearchController extends ActionController
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\InvalidQueryException
      */
     public function listAction(
-        Search $search = null
+        \AgoraTeam\Agora\Domain\Model\Dto\Search $search = null
     ) {
+        if (is_null($search)) {
+            return;
+        }
+
         $demand = $this->createDemandObjectFromSettings($this->settings);
         $demand->setActionAndClass(__METHOD__, __CLASS__);
 
         $openUserForums = $this->forumRepository->findAccessibleUserForums();
 
-        if (is_null($search)) {
-            $search = $this->objectManager->get(Search::class);
-        }
-
         // If order field is empty, generate field value form fields OrderBy and Directions
         if (empty($search->getOrder())) {
-            $search->setOrder($search->getOrderBy() . ' ' . $search->getOrderDirection());
+            $search->setOrder($search->getOrderBy() . ' ' .  $search->getOrderDirection());
         }
         $demand->setSearch($search);
 
@@ -110,13 +110,12 @@ class SearchController extends ActionController
 
         // Initialise search query
         $whereToSearch = $demand->getSearch()->getRadius();
-        $results = $this->postRepository->findDemanded($demand, $this->threadRepository);
+        $results = $this->postRepository->findDemanded($demand);
 
-        if ($whereToSearch == 2) {
+        if ($whereToSearch==2) {
             $results2 = [];
-            foreach ($results as $key => $value) {
-                $firstPost = $this->postRepository->findFirstPostOnThread($value->getThread()->getUid(),
-                    $search->getSword());
+            foreach ($results as $key=>$value) {
+                $firstPost = $this->postRepository->findFirstPostOnThread($value->getThread()->getUid(), $search->getSword());
                 $currentUid = $value->getUid();
                 $firstPostUid = $firstPost->getUid();
                 if ($currentUid == $firstPostUid) {
@@ -126,63 +125,10 @@ class SearchController extends ActionController
             $results = $results2;
         }
 
-
-        $accessibleUserForums = $this->forumRepository->findVisibleRootForums();
-        $user = $this->authenticationService->getUser();
-        /** @var Forum $forum */
-               foreach ($accessibleUserForums as $forum) {
-//            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forum,__FILE__ . " " . __LINE__);
-            if ($forum->isAccessibleForUser($user)) {
-
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forum,__FILE__ . " " . __LINE__);
-
-
-
-//                    $forumMatrix = [];
-//
-//
-//                    $subforum =  $forum->getSubForums();
-//
-//                    $forumArray = [
-//                        'item' => $forum,
-//                        'children' => $subforum
-//                    ];
-//
-//                    array_push($forumMatrix, $forumArray);
-//
-                $themes = $this->forumRepository->findAccessibleUserForumsAsMatrix();
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($themes,__FILE__ . " " . __LINE__);
-//
-//
-//
-//                    foreach($subforum as $key => $currentForum) {
-//                            $forumArray['item'] = $currentForum;
-//                            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forumArray['item'],__FILE__ . " " . __LINE__);
-//                        do {
-//                            $children = $currentForum->getSubForums();
-//                            $forumArray['children'] = $children;
-//                            array_push($forumMatrix, $forumArray);
-//                            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($forumMatrix,__FILE__ . " " . __LINE__);die;
-//                        } while ($children > 0);
-//                   }
-
-
-
-            } else {
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump('false',__FILE__ . " " . __LINE__);
-            }
-        }
-
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($accessibleUserForums,__FILE__ . " " . __LINE__);
-        $themes = $this->forumRepository->findAccessibleUserForumsAsMatrix();
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($themes,__FILE__ . " " . __LINE__);
-        die;
-//
-//        die;
         $assignedValues = [
             'results' => $results,
             'search' => $search,
-            'themes' => $themes,
+            'themes' => $this->forumRepository->findAccessibleUserForumsAsMatrix(),
             'demand' => $demand,
             'settings' => $this->settings
         ];
@@ -195,33 +141,33 @@ class SearchController extends ActionController
      * @param array $settings
      * @param string $class
      * @throws \UnexpectedValueException
-     * @return ForumDemand
+     * @return \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand
      */
-    protected function createDemandObjectFromSettings(
-        $settings,
-        $class = 'AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand'
-    ) {
-        $class = isset($settings['demandClass']) && !empty($settings['demandClass']) ? $settings['demandClass'] : $class;
-        /* @var $demand \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand */
-        $demand = $this->objectManager->get($class, $settings);
-        if (!$demand instanceof ForumDemand) {
-            throw new \UnexpectedValueException(
-                sprintf('The demand object must be an instance of \AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand, but %s given!',
-                    $class),
-                1423157953);
-        }
+	protected function createDemandObjectFromSettings(
+			$settings,
+			$class = 'AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand'
+			) {
+				$class = isset($settings['demandClass']) && !empty($settings['demandClass']) ? $settings['demandClass'] : $class;
+				/* @var $demand \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand */
+				$demand = $this->objectManager->get($class, $settings);
+				if (!$demand instanceof \AgoraTeam\Agora\Domain\Model\Dto\ForumDemand) {
+					throw new \UnexpectedValueException(
+							sprintf('The demand object must be an instance of \AgoraTeam\\Agora\\Domain\\Model\\Dto\\ForumDemand, but %s given!',
+									$class),
+							1423157953);
+				}
 
-        if ($settings['search']['limit'] != null) {
-            $demand->setLimit($settings['search']['limit']);
-        }
+				if ($settings['search']['limit'] != null) {
+					$demand->setLimit($settings['search']['limit']);
+				}
 
-        if ($settings['orderBy']) {
-            $demand->setOrder($settings['orderBy'] . ' ' . $settings['orderDirection']);
-        }
+				if ($settings['orderBy']) {
+					$demand->setOrder($settings['orderBy'] . ' ' . $settings['orderDirection']);
+				}
 
-        $this->contentObj = $this->configurationManager->getContentObject();
-        $demand->setStoragePage($this->contentObj->data['pages']);
+				$this->contentObj = $this->configurationManager->getContentObject();
+ 				$demand->setStoragePage($this->contentObj->data['pages']);
 
-        return $demand;
-    }
+				return $demand;
+	}
 }

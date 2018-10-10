@@ -94,6 +94,11 @@ class Notification extends Entity
     protected $forum = 0;
 
     /**
+     * @var bool $observer
+     */
+    protected $observer = false;
+
+    /**
      * @return int
      */
     public function getType(): int
@@ -299,5 +304,18 @@ class Notification extends Entity
     public function setForum(int $forum)
     {
         $this->forum = $forum;
+    }
+
+    /**
+     * @param bool|null $observer
+     * @return bool|bool
+     */
+    public function isObserver(bool $observer = null)
+    {
+        if (!is_null($observer)) {
+            $this->observer = $observer;
+        }
+
+        return $this->observer;
     }
 }

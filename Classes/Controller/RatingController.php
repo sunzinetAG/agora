@@ -55,6 +55,12 @@ class RatingController extends ActionController
     protected $ratingRepository = null;
 
     /**
+     * @var \Sunzinet\SzComments\Service\AuthorizationService
+     * @inject
+     */
+    protected $authorizationService;
+
+    /**
      * @param Post $post
      * @param string $rateType
      * @throws \TYPO3\CMS\Core\Error\Http\PageNotFoundException
@@ -65,6 +71,9 @@ class RatingController extends ActionController
      */
     public function rateAction($post, $rateType)
     {
+        $userWritableAccessUid = $this->settings['userWritableAccess'];
+        $this->authorizationService->hasUserWritableAccess($userWritableAccessUid);
+
         // @todo add returnMessage in JsonFormat
         $this->authenticationService->assertReadAuthorization($post);
 
