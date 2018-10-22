@@ -143,6 +143,7 @@ CREATE TABLE tx_agora_domain_model_thread (
 	t3ver_tstamp                    INT(11) DEFAULT 0               NOT NULL,
 	t3ver_move_id                   INT(11) DEFAULT 0               NOT NULL,
 	sorting                         INT(11) DEFAULT 0               NOT NULL,
+	ratings                         INT(11) UNSIGNED DEFAULT 0      NOT NULL,
 
 	sys_language_uid                INT(11) DEFAULT 0               NOT NULL,
 	l10n_parent                     INT(11) DEFAULT 0               NOT NULL,

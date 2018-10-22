@@ -43,6 +43,14 @@ class RatingController extends ActionController
     protected $postRepository = null;
 
     /**
+     * threadRepository
+     *
+     * @var \AgoraTeam\Agora\Domain\Repository\ThreadRepository
+     * @inject
+     */
+    protected $threadRepository = null;
+
+    /**
      * ratingRepository
      *
      * @var \AgoraTeam\Agora\Domain\Repository\RatingRepository
@@ -116,7 +124,13 @@ class RatingController extends ActionController
 
         $post->addRating($rating);
 
+        $thread = $post->getThread();
+        if ($thread->getFirstPost()->getUid() === $post->getUid()) {
+            $thread->setRatings($post->getRatingcount());
+        }
+
         $this->postRepository->update($post);
+        $this->threadRepository->update($thread);
         $this->ratingRepository->add($rating);
         $this->persistenceManager->persistAll();
     }
@@ -129,8 +143,15 @@ class RatingController extends ActionController
     protected function neutralize($post, $rating)
     {
         $post->removeRating($rating);
-        $this->ratingRepository->remove($rating);
+
+        $thread = $post->getThread();
+        if ($thread->getFirstPost()->getUid() === $post->getUid()) {
+            $thread->setRatings($post->getRatingcount());
+        }
+
         $this->postRepository->update($post);
+        $this->threadRepository->update($thread);
+        $this->ratingRepository->remove($rating);
         $this->persistenceManager->persistAll();
     }
 }
