@@ -262,19 +262,77 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
      * @param Forum $forum
      * @param $offset
      * @param $limit
+     * @param $sort
      * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    public function findByThreadPaginated(Forum $forum, $offset, $limit)
+    public function findByThreadPaginated(Forum $forum, $offset, $limit, $sort)
     {
+        $sort = $this->getSortingField($this->getSessionSorting($sort));
+
         $query = $this->createQuery();
+        $result = $this->buildSortingQuery($sort, $forum, $offset, $limit, $query);
+
+        return $result;
+    }
+
+    /**
+     * @param $sort
+     * @param Forum $forum
+     * @param $offset
+     * @param $limit
+     * @param \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $query
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    private function buildSortingQuery($sort, $forum, $offset, $limit, $query)
+    {
         $result = $query->matching(
             $query->equals('forum', $forum)
         )
-            ->setOrderings(array('tstamp' => QueryInterface::ORDER_DESCENDING))
+            ->setOrderings(array($sort => QueryInterface::ORDER_DESCENDING))
             ->setOffset((integer) $offset)
             ->setLimit((integer)$limit)
             ->execute();
 
         return $result;
+    }
+
+    /**
+     * @param string $sort
+     * @return string
+     */
+    private function getSortingField($sort)
+    {
+        switch ($sort) {
+            case 'posts':
+                $newSortField = 'posts';
+                break;
+            case 'views':
+                $newSortField = 'views';
+                break;
+            case 'ratings':
+                $newSortField = 'ratings';
+                break;
+            case 'observers':
+                $newSortField = 'observers';
+                break;
+            default:
+                $newSortField = 'tstamp';
+                break;
+        }
+
+        return $newSortField;
+    }
+
+    /**
+     * @param string $sort
+     * @return string
+     */
+    private function getSessionSorting($sort)
+    {
+        if ($sort != null) {
+            $GLOBALS['TSFE']->fe_user->setKey('ses', 'forumSorting', $sort);
+        }
+
+        return $GLOBALS['TSFE']->fe_user->getKey('ses', 'forumSorting');
     }
 }

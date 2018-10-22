@@ -281,5 +281,12 @@ return array(
                 'maxitems' => 9999,
             ),
         ),
+        'ratings' => array(
+            'exclude' => 1,
+            'label' => 'LLL:EXT:agora/Resources/Private/Language/locallang_db.xlf:tx_agora_domain_model_thread.ratings',
+            'config' => array(
+                'type' => 'inline'
+            ),
+        ),
     ),
 );

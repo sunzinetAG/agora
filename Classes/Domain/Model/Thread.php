@@ -114,6 +114,13 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     protected $readers = null;
 
     /**
+     * ratings
+     *
+     * @var integer
+     */
+    protected $ratings = null;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -499,5 +506,26 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
         }
 
         return $return;
+    }
+
+    /**
+     * Sets the replies
+     *
+     * @param integer $ratings
+     * @return void
+     */
+    public function setRatings($ratings)
+    {
+        $this->ratings = $ratings;
+    }
+
+    /**
+     * Returns the ratings
+     *
+     * @return integer
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
     }
 }

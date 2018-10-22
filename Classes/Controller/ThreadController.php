@@ -57,9 +57,10 @@ class ThreadController extends ActionController
      *
      * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
      * @param string $page
+     * @param string $sort
      * @return void
      */
-    public function listAction(\AgoraTeam\Agora\Domain\Model\Forum $forum, $page = 1)
+    public function listAction(\AgoraTeam\Agora\Domain\Model\Forum $forum, $page = 1, $sort = null)
     {
         $this->authenticationService->assertReadAuthorization($forum);
         $paginator = '';
@@ -82,7 +83,7 @@ class ThreadController extends ActionController
             throw new TargetNotFoundException('Page was not found');
         }
 
-        $threads = $this->threadRepository->findByThreadPaginated($forum, $offset, $limit);
+        $threads = $this->threadRepository->findByThreadPaginated($forum, $offset, $limit, $sort);
 
         $this->view->assignMultiple(
             array(
