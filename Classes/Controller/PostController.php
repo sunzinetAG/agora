@@ -144,6 +144,15 @@ class PostController extends ActionController
                 'observedThread' => $observedThread
             )
         );
+
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'listPosts',
+            [
+                'posts' => $posts,
+                'user' => $user
+            ]
+        );
     }
 
     /**
