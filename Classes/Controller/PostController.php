@@ -519,6 +519,15 @@ class PostController extends ActionController
             $limit = $this->settings['post']['numberOfItemsInLatestView'];
         }
         $latestPosts = $this->postRepository->findLatestPostsForUser($limit);
+
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'listLatestPosts',
+            [
+                'posts' => $latestPosts
+            ]
+        );
+
         $this->view->assign('latestPosts', $latestPosts);
     }
 }
