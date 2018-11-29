@@ -41,6 +41,17 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
     protected $forumRepository;
 
     /**
+     * @var \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     */
+    protected $queryBuilder;
+
+    public function initializeObject()
+    {
+        $connectionPool = $this->objectManager->get(ConnectionPool::class);
+        $this->queryBuilder = $connectionPool->getQueryBuilderForTable('tx_agora_domain_model_thread');
+    }
+
+    /**
      * Find threads by forum
      *
      * @param \AgoraTeam\Agora\Domain\Model\Forum $forum
@@ -269,8 +280,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
     {
         $sort = $this->getSortingField($this->getSessionSorting($sort));
 
-        $query = $this->createQuery();
-        $result = $this->buildSortingQuery($sort, $forum, $offset, $limit, $query);
+        $result = $this->buildSortingQuery($sort, $forum, $offset, $limit);
 
         return $result;
     }
@@ -280,20 +290,23 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
      * @param Forum $forum
      * @param $offset
      * @param $limit
-     * @param \TYPO3\CMS\Extbase\Persistence\QueryResultInterface $query
      * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    private function buildSortingQuery($sort, $forum, $offset, $limit, $query)
+    private function buildSortingQuery($sort, $forum, $offset, $limit)
     {
-        $result = $query->matching(
-            $query->equals('forum', $forum)
-        )
-            ->setOrderings(array($sort => QueryInterface::ORDER_DESCENDING))
-            ->setOffset((integer) $offset)
-            ->setLimit((integer)$limit)
-            ->execute();
+        $queryBuilder = clone $this->queryBuilder;
+        $queryBuilder->select('*')
+            ->from('tx_agora_domain_model_thread', 'thread')
+            ->where($queryBuilder->expr()->eq('forum', $forum->getUid()))
+            ->orderBy($sort, QueryInterface::ORDER_DESCENDING)
+            ->setFirstResult((integer) $offset)
+            ->setMaxResults((integer) $limit);
 
-        return $result;
+        $query = $this->createQuery();
+        $sql = str_replace('`', '', $queryBuilder->getSQL());
+        $query->statement($sql);
+
+        return $query->execute();
     }
 
     /**
@@ -313,7 +326,21 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
                 $newSortField = 'ratings';
                 break;
             case 'observers':
-                $newSortField = 'observers';
+                $queryBuilder = clone $this->queryBuilder;
+                $queryBuilder->select('thread.uid')
+                    ->from('tx_agora_domain_model_thread', 'thread')
+                    ->innerJoin('thread', 'tx_agora_feuser_thread_mm', 'mm', $queryBuilder->expr()->eq('thread.uid', 'mm.uid_foreign'))
+                    ->where($queryBuilder->expr()->eq('mm.uid_local', (int) $GLOBALS['TSFE']->fe_user->user['uid']));
+
+                $uids = [];
+                foreach ($queryBuilder->execute()->fetchAll() as $row) {
+                    $uids[] = $row['uid'];
+                }
+                if (!empty($uids)) {
+                    $newSortField = 'FIELD(uid, ' . implode(',', $uids) . ')';
+                } else {
+                    $newSortField = 'observers';
+                }
                 break;
             default:
                 $newSortField = 'tstamp';
