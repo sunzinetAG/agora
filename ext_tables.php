@@ -62,13 +62,6 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignat
     'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForms/flexform_forumpages.xml'
 );
 
-$pluginSignature = str_replace('_', '', $_EXTKEY) . '_forumsearch';
-$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-    $pluginSignature,
-    'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForms/flexform_search.xml'
-);
-
 /*-----------------------------------------------------------------------
  * Add static files
  *----------------------------------------------------------------------*/
