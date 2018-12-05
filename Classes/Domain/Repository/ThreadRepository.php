@@ -317,7 +317,23 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
     {
         switch ($sort) {
             case 'posts':
-                $newSortField = 'posts';
+                $queryBuilder = clone $this->queryBuilder;
+                $queryBuilder->select('thread.uid')
+                    ->addSelectLiteral('COUNT(post.uid) as postsCount')
+                    ->from('tx_agora_domain_model_thread', 'thread')
+                    ->innerJoin('thread', 'tx_agora_domain_model_post', 'post', $queryBuilder->expr()->eq('thread.uid', 'post.thread'))
+                    ->groupBy('thread.uid')
+                    ->orderBy('postsCount', QueryInterface::ORDER_ASCENDING);
+
+                $uids = [];
+                foreach ($queryBuilder->execute()->fetchAll() as $row) {
+                    $uids[] = $row['uid'];
+                }
+                if (!empty($uids)) {
+                    $newSortField = 'FIELD(thread.uid, ' . implode(',', $uids) . ')';
+                } else {
+                    $newSortField = 'posts';
+                }
                 break;
             case 'views':
                 $newSortField = 'views';
