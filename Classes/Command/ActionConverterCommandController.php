@@ -439,7 +439,10 @@ class ActionConverterCommandController extends CommandController
                     $notification->setPost($post->getUid());
                 }
 
-                $creatorUid = $thread->getCreator()->getUid();
+                $creatorUid = 0;
+                if ($creator = $thread->getCreator()) {
+                    $creatorUid = $thread->getCreator()->getUid();
+                }
                 if ($creatorUid != $ownerUid) {
                     $notification->isObserver(true);
                 }
