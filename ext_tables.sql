@@ -124,6 +124,7 @@ CREATE TABLE tx_agora_domain_model_thread (
 	posts                           INT(11) UNSIGNED DEFAULT 0      NOT NULL,
 	tags                            INT(11) UNSIGNED DEFAULT 0      NOT NULL,
 	views                           INT(11) UNSIGNED DEFAULT 0      NOT NULL,
+	latest_post_tstamp              INT(11) UNSIGNED DEFAULT 0      NOT NULL,
 
 	tstamp                          INT(11) UNSIGNED DEFAULT 0      NOT NULL,
 	crdate                          INT(11) UNSIGNED DEFAULT 0      NOT NULL,

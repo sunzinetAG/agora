@@ -262,6 +262,7 @@ class PostController extends ActionController
 
         $thread = $newPost->getThread();
         $thread->addPost($newPost);
+        $thread->setLatestPostTstamp($now);
 
         $this->threadRepository->update($thread);
 

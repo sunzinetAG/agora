@@ -299,6 +299,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
             ->from('tx_agora_domain_model_thread', 'thread')
             ->where($queryBuilder->expr()->eq('forum', $forum->getUid()))
             ->orderBy($sort, QueryInterface::ORDER_DESCENDING)
+            ->addOrderBy('latest_post_tstamp', QueryInterface::ORDER_DESCENDING)
             ->setFirstResult((integer) $offset)
             ->setMaxResults((integer) $limit);
 
@@ -359,7 +360,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
                 }
                 break;
             default:
-                $newSortField = 'tstamp';
+                $newSortField = 'latest_post_tstamp';
                 break;
         }
 

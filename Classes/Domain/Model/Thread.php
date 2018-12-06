@@ -121,6 +121,11 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     protected $ratings = null;
 
     /**
+     * @var int
+     */
+    protected $latestPostTstamp = 0;
+
+    /**
      * __construct
      */
     public function __construct()
@@ -527,5 +532,21 @@ class Thread extends Entity implements AccessibleInterface, NotifiableInterface
     public function getRatings()
     {
         return $this->ratings;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLatestPostTstamp(): int
+    {
+        return $this->latestPostTstamp;
+    }
+
+    /**
+     * @param int $latestPostTstamp
+     */
+    public function setLatestPostTstamp($latestPostTstamp)
+    {
+        $this->latestPostTstamp = $latestPostTstamp;
     }
 }
