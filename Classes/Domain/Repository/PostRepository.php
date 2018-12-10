@@ -124,15 +124,14 @@ class PostRepository extends AbstractDemandedRepository
         $openUserForums = $this->forumRepository->findAccessibleUserForums();
         $query = $this->createQuery();
         $constraints['original_post'] = $query->equals('original_post', 0);
+        $constraints['thread_posts'] = $query->greaterThan('thread.posts', 1);
         if ($openUserForums && count($openUserForums) > 0) {
             $constraints['forum'] = $query->in('forum', $openUserForums);
         }
         $result = $query
             ->matching(
                 $query->logicalAnd(
-                    $query->greaterThan('thread.posts', 1),
-                    $query->equals('original_post', 0),
-                    $query->equals('topic', '')
+                    $constraints
                 )
             )
             ->setOrderings(array('publishing_date' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING))
