@@ -130,7 +130,9 @@ class PostRepository extends AbstractDemandedRepository
         $result = $query
             ->matching(
                 $query->logicalAnd(
-                    $constraints
+                    $query->greaterThan('thread.posts', 1),
+                    $query->equals('original_post', 0),
+                    $query->equals('topic', '')
                 )
             )
             ->setOrderings(array('publishing_date' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING))
