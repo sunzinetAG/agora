@@ -59,15 +59,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
      */
     public function findByForum(\AgoraTeam\Agora\Domain\Model\Forum $forum)
     {
-        $query = $this->createQuery();
-        $result = $query
-            ->matching(
-                $query->equals('forum', $forum)
-            )
-            ->setOrderings(array('tstamp' => QueryInterface::ORDER_DESCENDING))
-            ->execute();
-
-        return $result;
+        return $this->findByThreadPaginated($forum);
     }
 
     /**
@@ -276,7 +268,7 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
      * @param $sort
      * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    public function findByThreadPaginated(Forum $forum, $offset, $limit, $sort)
+    public function findByThreadPaginated(Forum $forum, $offset = null, $limit = null, $sort = null)
     {
         $sort = $this->getSortingField($this->getSessionSorting($sort));
 
@@ -292,16 +284,21 @@ class ThreadRepository extends \AgoraTeam\Agora\Domain\Repository\AbstractDemand
      * @param $limit
      * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    private function buildSortingQuery($sort, $forum, $offset, $limit)
+    private function buildSortingQuery($sort, $forum, $offset = null, $limit = null)
     {
         $queryBuilder = clone $this->queryBuilder;
         $queryBuilder->select('*')
             ->from('tx_agora_domain_model_thread', 'thread')
             ->where($queryBuilder->expr()->eq('forum', $forum->getUid()))
             ->orderBy($sort, QueryInterface::ORDER_DESCENDING)
-            ->addOrderBy('latest_post_tstamp', QueryInterface::ORDER_DESCENDING)
-            ->setFirstResult((integer) $offset)
-            ->setMaxResults((integer) $limit);
+            ->addOrderBy('latest_post_tstamp', QueryInterface::ORDER_DESCENDING);
+
+        if (!is_null($offset)) {
+            $queryBuilder->setFirstResult((integer) $offset);
+        }
+        if (!is_null($limit)) {
+            $queryBuilder->setMaxResults((integer) $limit);
+        }
 
         $query = $this->createQuery();
         $sql = str_replace('`', '', $queryBuilder->getSQL());

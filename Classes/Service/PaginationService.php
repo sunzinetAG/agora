@@ -185,7 +185,7 @@ class PaginationService implements SingletonInterface
 
         /** @var QueryResult $posts */
         $threads = $this->threadRepository->findByForum($thread->getForum())->toArray();
-        $i = 1;
+        $i = 0;
         $position = 0;
         foreach ($threads as $offset) {
             $i++;
