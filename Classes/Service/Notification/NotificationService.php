@@ -192,6 +192,7 @@ class NotificationService implements SingletonInterface
                     if ($userNotification->getUser() == $v->getUser() &&
                         $userNotification->getOwner() == $v->getOwner() &&
                         $userNotification->getUid() != $v->getUid() &&
+                        $userNotification->getPost() &&
                         $userNotification->getPost()->getUid() == $v->getPost()->getUid()
                     ) {
                         if (!array_key_exists($k, $notiToRevoke)) {
