@@ -172,6 +172,7 @@ class ThreadController extends ActionController
 
         $thread->setForum($forum);
         $thread->addPost($post);
+        $thread->setLatestPostTstamp($now);
         if (is_a($this->authenticationService->getUser(), '\AgoraTeam\Agora\Domain\Model\User')) {
             $thread->setCreator($this->authenticationService->getUser());
         }
