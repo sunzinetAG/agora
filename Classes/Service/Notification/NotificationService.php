@@ -193,12 +193,12 @@ class NotificationService implements SingletonInterface
                         $userNotification->getOwner() == $v->getOwner() &&
                         $userNotification->getUid() != $v->getUid() &&
                         $userNotification->getPost() &&
+                        $v->getPost() &&
                         $userNotification->getPost()->getUid() == $v->getPost()->getUid()
                     ) {
                         if (!array_key_exists($k, $notiToRevoke)) {
                             $notiToRevoke[$key][$key] = $tmpNotifications[$key];
                             $notiToRevoke[$key][$k] = $tmpNotifications[$k];
-                            $alreadyFound[$v] = $v;
                             unset($tmpNotifications[$k]);
                             unset($userNotifications[$key]);
                         }
