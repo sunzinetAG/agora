@@ -101,8 +101,13 @@ class NotificationMailerCommandController extends CommandController
         }
 
         $usersIds = $this->notificationRepository->findUserListFromNotifcationsByLimit($amounfOfUsersPerRun);
-        foreach ($usersIds as $key => $val) {
-            if (!$user = $this->userRepository->findByUid($val)) {
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'getExtraUserIds',
+            [&$usersIds]
+        );
+        foreach ($usersIds as $userId) {
+            if (!$user = $this->userRepository->findByUid($userId['owner'])) {
                 continue;
             }
             if (!$user->getEmail()) {
@@ -125,7 +130,7 @@ class NotificationMailerCommandController extends CommandController
                 );
             }
             //  Even if the users email is not set, dump the notifications
-            $this->notificationService->markUserNotificationsAsSent($user);
+            $this->notificationService->markUserNotificationsAsSent($user, $userId);
         }
 
         return true;
