@@ -247,7 +247,7 @@ class NotificationService implements SingletonInterface
     /**
      * @param $notifications
      */
-    public function markUserNotificationsAsSent($user, $chatMessageUid = 0)
+    public function markUserNotificationsAsSent($user, $userId)
     {
         $notifications = $this->notificationRepository->findByOwner($user);
         foreach ($notifications as $notification) {
@@ -256,13 +256,11 @@ class NotificationService implements SingletonInterface
             $this->notificationRepository->remove($notification);
         }
 
-        if ($chatMessageUid) {
-            $this->signalSlotDispatcher->dispatch(
-                __CLASS__,
-                'markChatMessagesAsSent',
-                [$chatMessageUid]
-            );
-        }
+        $this->signalSlotDispatcher->dispatch(
+            __CLASS__,
+            'markChatMessagesAsSent',
+            [$userId]
+        );
     }
 
     /**

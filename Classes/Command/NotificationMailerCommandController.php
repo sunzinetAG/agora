@@ -130,8 +130,7 @@ class NotificationMailerCommandController extends CommandController
                 );
             }
             //  Even if the users email is not set, dump the notifications
-            $chatMessageUid = $userId['chatMessageUid'];
-            $this->notificationService->markUserNotificationsAsSent($user, $chatMessageUid);
+            $this->notificationService->markUserNotificationsAsSent($user, $userId);
         }
 
         return true;
